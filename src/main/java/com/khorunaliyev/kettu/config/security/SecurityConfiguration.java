@@ -19,12 +19,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(endpoint -> endpoint
-                                .baseUri("/oauth2/authorize"))
+                .oauth2Login(Customizer.withDefaults());
 
-                        .successHandler(new CustomOAuth2SuccessHandler())
-                );
         return http.build();
     }
 }

@@ -27,7 +27,7 @@ public class TestController {
         }
         return principal;
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping("/test")
     public ResponseEntity<User> getAdmin(){
         return ResponseEntity.ok(userRepository.findByEmail("khorunaliyev@gmail.com").get());

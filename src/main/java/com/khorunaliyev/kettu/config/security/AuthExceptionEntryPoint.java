@@ -1,13 +1,16 @@
 package com.khorunaliyev.kettu.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Component
 public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
@@ -16,15 +19,26 @@ public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        String json = """
-            {
-              "status": 401,
-              "error": "Unauthorized",
-              "message": "Authentication is required to access this resource",
-              "path": "%s"
-            }
-            """.formatted(request.getRequestURI());
+        System.out.println("SALOM");
+        System.out.println(authException.getClass());
 
-        response.getWriter().write(json);
+        String message;
+
+        if (authException instanceof UsernameNotFoundException) {
+            message = "User not found";
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+        }
+        else{
+            message = "Missing or invalid token";
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+
+        response.getWriter().write(new ObjectMapper().writeValueAsString(
+                Map.of(
+                        "error", "UNAUTHORIZED",
+                        "message", message
+                )
+        ));
     }
 }

@@ -1,9 +1,10 @@
 package com.khorunaliyev.kettu.controller;
 
-import com.khorunaliyev.kettu.entity.Student;
-import com.khorunaliyev.kettu.repository.StudentRepository;
+import com.khorunaliyev.kettu.entity.User;
+import com.khorunaliyev.kettu.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class TestController {
 
-    private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
 
 
     @GetMapping("/")
@@ -26,10 +27,10 @@ public class TestController {
         }
         return principal;
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/test")
-    public ResponseEntity<Student> test(){
-        return ResponseEntity.ok(studentRepository.findByName("Tursunali").get());
+    public ResponseEntity<User> getAdmin(){
+        return ResponseEntity.ok(userRepository.findByEmail("khorunaliyev@gmail.com").get());
     }
 
 

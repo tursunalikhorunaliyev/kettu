@@ -66,8 +66,9 @@ public class JWTGenerator {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails instanceof User customUserDetails) {
             claims.put("email", customUserDetails.getUsername());
-            claims.put("roles", userDetails.getAuthorities().stream()
+            claims.put("roles", customUserDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
+                    .map(auth -> auth.replace("ROLE_", "")) // remove prefix for token clarity
                     .collect(Collectors.toList()));
         }
         return generateToken(claims, userDetails);

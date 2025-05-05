@@ -25,13 +25,22 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/public/**", "/oauth2/**", "/login/**", "/auth/**").permitAll()
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers("/api/public/**", "/oauth2/**", "/login/**", "/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
                         .successHandler(successHandler)
-                );
+                ).exceptionHandling(handling ->
+                        handling.authenticationEntryPoint((request, response, authException) -> {
+                            // Handle 401 Unauthorized responses with JSON
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Unauthorized: Missing or invalid token\"}");
+                        })
+                );;
 //                .exceptionHandling(handling ->
 //                        handling.authenticationEntryPoint((request, response, authException) -> {
 //                            // Handle 401 Unauthorized responses with JSON

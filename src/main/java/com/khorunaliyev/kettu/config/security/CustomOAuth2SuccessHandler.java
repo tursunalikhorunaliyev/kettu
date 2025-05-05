@@ -1,6 +1,8 @@
 package com.khorunaliyev.kettu.config.security;
 
+import com.khorunaliyev.kettu.entity.Role;
 import com.khorunaliyev.kettu.entity.User;
+import com.khorunaliyev.kettu.repository.RoleRepository;
 import com.khorunaliyev.kettu.repository.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,12 +15,16 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 @Component
 @RequiredArgsConstructor
 public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final JWTGenerator jwtService;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -30,8 +36,30 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
         // Save or update user
         User user = userRepository.findByEmail(email).orElseGet(() -> new User());
+
+        Role userRole = roleRepository.findByName("USER")
+                .orElseGet(() -> {
+                    Role role = new Role();
+                    role.setName("USER");
+                    return roleRepository.save(role);
+                });
+        Role adminRole = roleRepository.findByName("ADMIN")
+                .orElseGet(() -> {
+                    Role role = new Role();
+                    role.setName("ADMIN");
+                    return roleRepository.save(role);
+                });
+
+        Set<Role> userRoles = new HashSet<>();
+        userRoles.add(userRole);
+
+        if(email.equals("khorunaliyev@gmail.com")){
+            userRoles.add(adminRole);
+        }
+
         user.setEmail(email);
         user.setName(name);
+        user.setRoles(userRoles);
         userRepository.save(user);
 
         // Generate JWT

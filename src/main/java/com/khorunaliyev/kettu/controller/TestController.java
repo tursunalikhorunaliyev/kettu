@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/public")
 @RequiredArgsConstructor
 public class TestController {
 
@@ -31,6 +31,11 @@ public class TestController {
     @GetMapping("/test")
     public ResponseEntity<User> getAdmin(){
         return ResponseEntity.ok(userRepository.findByEmail("khorunaliyev@gmail.com").get());
+    }
+
+    @GetMapping("/hello")
+    public ResponseEntity<String> hello(){
+        return ResponseEntity.ok("Hello");
     }
 
 

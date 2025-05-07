@@ -19,8 +19,8 @@ public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        System.out.println("SALOM");
-        System.out.println(authException.getClass());
+/*        System.out.println("SALOM");
+        System.out.println(authException.getClass());*/
 
         String message;
 

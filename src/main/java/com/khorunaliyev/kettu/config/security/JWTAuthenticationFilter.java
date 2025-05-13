@@ -48,9 +48,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     }
 
     //Bu shart emas
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getRequestURI();
-        return path.startsWith("/api/public") || path.startsWith("/oauth2") || path.startsWith("/login") || path.startsWith("/api/files");
-    }
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+//        String path = request.getRequestURI();
+//        return path.startsWith("/api/public") || path.startsWith("/oauth2") || path.startsWith("/login") || path.startsWith("/api/files");
+//    }
 }

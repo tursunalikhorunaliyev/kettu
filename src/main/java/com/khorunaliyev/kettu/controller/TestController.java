@@ -33,6 +33,7 @@ public class TestController {
         return ResponseEntity.ok(userRepository.findByEmail("khorunaliyev@gmail.com").get());
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/hello")
     public ResponseEntity<String> hello(){
         return ResponseEntity.ok("Hello");

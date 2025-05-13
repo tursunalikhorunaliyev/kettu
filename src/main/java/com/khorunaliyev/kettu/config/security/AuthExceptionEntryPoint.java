@@ -24,6 +24,8 @@ public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
 
         String message;
 
+
+        //Kerak emas
         if (authException instanceof UsernameNotFoundException) {
             message = "User not found";
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);

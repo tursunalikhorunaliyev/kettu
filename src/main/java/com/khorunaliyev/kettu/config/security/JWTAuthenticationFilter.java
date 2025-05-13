@@ -46,6 +46,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
 
     }
+
+    //Bu shart emas
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();

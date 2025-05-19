@@ -19,27 +19,11 @@ public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-/*        System.out.println("SALOM");
-        System.out.println(authException.getClass());*/
-
-        String message;
-
-
-        //Kerak emas
-        if (authException instanceof UsernameNotFoundException) {
-            message = "User not found";
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-
-        }
-        else{
-            message = "Missing or invalid token";
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(
                 Map.of(
                         "error", "UNAUTHORIZED",
-                        "message", message
+                        "message", "Missing or invalid token"
                 )
         ));
     }

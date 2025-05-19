@@ -28,13 +28,17 @@ public class TestController {
         return principal;
     }
 
-    //@PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/bool")
+    public ResponseEntity<Boolean> getBool(){
+        return ResponseEntity.ok(true);
+    }
+
     @GetMapping("/test")
     public ResponseEntity<User> getAdmin(){
         return ResponseEntity.ok(userRepository.findByEmail("khorunaliyev@gmail.com").get());
     }
 
-    //@PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/hello")
     public ResponseEntity<String> hello(){
         return ResponseEntity.ok("Hello");

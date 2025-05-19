@@ -28,6 +28,11 @@ public class TestController {
         return principal;
     }
 
+    @GetMapping("/bool")
+    public ResponseEntity<Boolean> getBool(){
+        return ResponseEntity.ok(true);
+    }
+
     @GetMapping("/test")
     public ResponseEntity<User> getAdmin(){
         return ResponseEntity.ok(userRepository.findByEmail("khorunaliyev@gmail.com").get());

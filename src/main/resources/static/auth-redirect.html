@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Login Successful</title>
+    <style>
+        body {
+          font-family: sans-serif;
+          text-align: center;
+          margin-top: 100px;
+        }
+        button {
+          padding: 12px 24px;
+          font-size: 16px;
+          background-color: #007BFF;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          margin-top: 30px;
+        }
+        button:hover {
+          background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>✅ You have successfully logged in!</h1>
+<p>Click the button below to continue to the app.</p>
+
+<button onclick="openApp()">Open App</button>
+
+<script>
+    const token = new URLSearchParams(window.location.search).get("token");
+
+    function openApp() {
+      window.location.href = `thekettu://auth?token=${token}`;
+    }
+
+    // Optional: auto-open after delay (can be removed if unwanted)
+    // setTimeout(openApp, 3000);
+</script>
+</body>
+</html>

@@ -65,9 +65,10 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         // Generate JWT
         String jwtToken = jwtService.generateToken(user);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"token\": \"" + jwtToken + "\"}");
+        response.sendRedirect("https://thekettu.com/auth-redirect.html?token=" + jwtToken);
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        response.getWriter().write("{\"token\": \"" + jwtToken + "\"}");
 
         // Redirect to Flutter app via deep link with token
         //response.sendRedirect("http://localhost:8080/user?token=" + jwtToken);

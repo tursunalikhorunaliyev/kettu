@@ -34,7 +34,7 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/secure/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/public/**", "/oauth2/**", "/login/**", "/auth/**","/api/files/**").permitAll()
+                        .requestMatchers("/api/public/**", "/oauth2/**", "/login/**", "/api/auth/**","/api/files/**","/auth-redirect.html").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig.authorizationRequestResolver(authResolver))

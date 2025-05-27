@@ -15,6 +15,6 @@ public class TestAudit extends AuditEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 }

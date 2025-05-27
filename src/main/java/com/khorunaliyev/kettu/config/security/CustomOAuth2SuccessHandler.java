@@ -65,7 +65,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         // Generate JWT
         String jwtToken = jwtService.generateToken(user);
 
-        response.sendRedirect("https://thekettu.com/auth-redirect.html?token=" + jwtToken);
+        response.sendRedirect("http://localhost:8080/auth-redirect.html?token=" + jwtToken);
 //        response.setContentType("application/json");
 //        response.setCharacterEncoding("UTF-8");
 //        response.getWriter().write("{\"token\": \"" + jwtToken + "\"}");

@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
@@ -53,5 +54,13 @@ public class GlobalControllerExceptionHandlerAdviser {
         response.put("error", "Method Not Allowed");
         response.put("message", "Request method '" + ex.getMethod() + "' is not supported for this endpoint");
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(response);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(NoHandlerFoundException ex) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("error", "Not Found");
+        errorDetails.put("message", "The requested resource was not found");
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 }

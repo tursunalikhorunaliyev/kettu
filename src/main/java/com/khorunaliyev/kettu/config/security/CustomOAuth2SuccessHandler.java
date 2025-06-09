@@ -1,16 +1,15 @@
 package com.khorunaliyev.kettu.config.security;
 
-import com.khorunaliyev.kettu.entity.Role;
-import com.khorunaliyev.kettu.entity.User;
-import com.khorunaliyev.kettu.repository.RoleRepository;
-import com.khorunaliyev.kettu.repository.UserRepository;
+import com.khorunaliyev.kettu.entity.auth.Role;
+import com.khorunaliyev.kettu.entity.auth.User;
+import com.khorunaliyev.kettu.repository.auth.RoleRepository;
+import com.khorunaliyev.kettu.repository.auth.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 

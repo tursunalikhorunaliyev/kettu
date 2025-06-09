@@ -30,4 +30,8 @@ public class Region extends AuditEntity {
     @OneToMany(mappedBy = "region",cascade = CascadeType.ALL, orphanRemoval = true)
     List<City> cities;
 
+
+    @Column(nullable = false)
+    private Integer activeItemCount;
+
 }

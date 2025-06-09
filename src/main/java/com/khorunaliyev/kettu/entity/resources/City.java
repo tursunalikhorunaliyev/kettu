@@ -25,4 +25,8 @@ public class City extends AuditEntity {
     private Region region;
 
 
+    @Column(nullable = false)
+    private Integer activeItemCount;
+
+
 }

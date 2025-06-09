@@ -12,15 +12,20 @@ import java.util.List;
 @Entity
 @Table(name = "country")
 public class Country extends AuditEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 56)
     private String name;
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Region> regions;
+
+
+    @Column(nullable = false)
+    private Integer activeItemCount = 0;
 
 }

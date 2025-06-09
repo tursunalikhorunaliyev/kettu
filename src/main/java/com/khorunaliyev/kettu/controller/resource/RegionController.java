@@ -29,8 +29,6 @@ public class RegionController {
         return ResponseEntity.ok(regionRepository.findAll());
     }
 
-
-
     @PostMapping("/save")
     public void save(@RequestParam(name = "country_id") Long id, @RequestParam(name = "region_name") String name){
         Optional<Country> optionalCountry = countryRepository.findById(id);

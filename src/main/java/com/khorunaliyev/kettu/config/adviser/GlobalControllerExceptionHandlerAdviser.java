@@ -1,20 +1,35 @@
 package com.khorunaliyev.kettu.config.adviser;
 
+import com.khorunaliyev.kettu.dto.reponse.Response;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.nio.file.AccessDeniedException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestControllerAdvice
 public class GlobalControllerExceptionHandlerAdviser {
+
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Response> handleNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new Response("NOT_FOUND", ex.getMessage()));
+    }
+
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException ex) {
@@ -62,5 +77,55 @@ public class GlobalControllerExceptionHandlerAdviser {
         errorDetails.put("error", "Not Found");
         errorDetails.put("message", "The requested resource was not found");
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Response> handleConflict(DataIntegrityViolationException ex) {
+        String message = "Data integrity violation";
+
+        Throwable rootCause = getRootCause(ex);
+        if (rootCause instanceof SQLIntegrityConstraintViolationException) {
+            String sqlMessage = rootCause.getMessage(); // this contains the DB error text
+
+            if (sqlMessage != null) {
+                // Example: Duplicate entry 'USA' for key 'country.code_UNIQUE'
+                Pattern pattern = Pattern.compile("key '(.+?)'");
+                Matcher matcher = pattern.matcher(sqlMessage);
+
+                if (matcher.find()) {
+                    String constraint = matcher.group(1); // e.g., country.code_UNIQUE
+                    String table = extractTableNameFromConstraint(constraint);
+                    message = "Duplicate value violates unique constraint on table: " + table;
+                } else {
+                    message = "Unique constraint violation: " + sqlMessage;
+                }
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new Response("Error", message));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Response> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return ResponseEntity.badRequest().body(new Response("Validation error", errors));
+    }
+
+    private Throwable getRootCause(Throwable throwable) {
+        Throwable cause = throwable.getCause();
+        return (cause == null || cause == throwable) ? throwable : getRootCause(cause);
+    }
+
+    private String extractTableNameFromConstraint(String constraint) {
+        // This is optional, based on naming convention like table_column_UNIQUE
+        if (constraint.contains(".")) {
+            return constraint.split("\\.")[0]; // Extract 'country' from 'country.code_UNIQUE'
+        }
+        return "unknown";
     }
 }

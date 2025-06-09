@@ -1,7 +1,7 @@
 package com.khorunaliyev.kettu.controller;
 
-import com.khorunaliyev.kettu.entity.User;
-import com.khorunaliyev.kettu.repository.UserRepository;
+import com.khorunaliyev.kettu.entity.auth.User;
+import com.khorunaliyev.kettu.repository.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

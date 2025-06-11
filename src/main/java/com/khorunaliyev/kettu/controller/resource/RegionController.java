@@ -1,43 +1,39 @@
 package com.khorunaliyev.kettu.controller.resource;
 
-import com.khorunaliyev.kettu.entity.resources.Country;
-import com.khorunaliyev.kettu.entity.resources.Region;
-import com.khorunaliyev.kettu.repository.resource.CountryRepository;
-import com.khorunaliyev.kettu.repository.resource.RegionRepository;
+import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.request.NewRegionRequest;
+import com.khorunaliyev.kettu.dto.request.RegionNameRequest;
+import com.khorunaliyev.kettu.services.resource.RegionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/resources/region")
 @RequiredArgsConstructor
 public class RegionController {
 
-    private final RegionRepository regionRepository;
-    private final CountryRepository countryRepository;
-
-    @GetMapping("/")
-    public ResponseEntity<Region> getRegion(@RequestParam Long id){
-        return ResponseEntity.ok(regionRepository.findById(id).orElse(null));
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<Region>> getAll(){
-        return ResponseEntity.ok(regionRepository.findAll());
-    }
+    private final RegionService regionService;
 
     @PostMapping("/save")
-    public void save(@RequestParam(name = "country_id") Long id, @RequestParam(name = "region_name") String name){
-        Optional<Country> optionalCountry = countryRepository.findById(id);
-        if(optionalCountry.isPresent()){
-            Region region = new Region();
-            region.setName(name);
-            optionalCountry.get().getRegions().add(region);
-            countryRepository.save(optionalCountry.get());
-        }
+    public ResponseEntity<Response> save(@RequestBody @Valid NewRegionRequest request) {
+        return regionService.createRegion(request.getCountryId(), request.getName());
     }
 
+    @GetMapping("/")
+    public ResponseEntity<Response> byCountry(@RequestParam Long country){
+        return regionService.getByCountry(country);
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<Response> importFromExcel(@RequestParam("country_id") Long countryId, @RequestParam("file") MultipartFile file) {
+        return regionService.importFromExcel(countryId, file);
+    }
+
+    @PatchMapping("/{id}/update")
+    public ResponseEntity<Response> updateRegion(@PathVariable("id") Long regionId, @RequestBody @Valid RegionNameRequest request){
+        return  regionService.updateRegionName(regionId, request.getName());
+    }
 }

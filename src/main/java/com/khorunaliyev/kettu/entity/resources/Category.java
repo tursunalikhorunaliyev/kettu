@@ -27,5 +27,5 @@ public class Category extends AuditEntity {
 
 
     @Column(nullable = false)
-    private Integer activeItemCount;
+    private Integer activeItemCount = 0;
 }

@@ -26,7 +26,7 @@ public class City extends AuditEntity {
 
 
     @Column(nullable = false)
-    private Integer activeItemCount;
+    private Integer activeItemCount = 0;
 
 
 }

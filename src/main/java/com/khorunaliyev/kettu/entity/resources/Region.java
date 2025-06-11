@@ -18,7 +18,7 @@ public class Region extends AuditEntity {
     private Long id;
 
 
-    @Column(nullable = false, unique = true, length = 1001)
+    @Column(nullable = false, unique = true, length = 85)
     private String name;
 
 
@@ -32,6 +32,6 @@ public class Region extends AuditEntity {
 
 
     @Column(nullable = false)
-    private Integer activeItemCount;
+    private Integer activeItemCount = 0;
 
 }

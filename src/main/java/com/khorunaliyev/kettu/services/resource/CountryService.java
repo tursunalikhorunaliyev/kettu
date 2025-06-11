@@ -30,7 +30,7 @@ public class CountryService {
         return new ResponseEntity<>(new Response("Country created", null), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Response> all() {
+    public ResponseEntity<Response> getAll() {
         return ResponseEntity.ok(new Response("All countries", countryRepository.findAllBy()));
     }
 

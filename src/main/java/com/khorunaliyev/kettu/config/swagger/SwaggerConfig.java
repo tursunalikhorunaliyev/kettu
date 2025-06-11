@@ -8,21 +8,21 @@ import org.springframework.context.annotation.Bean;
 
 public class SwaggerConfig {
 
-//    @Bean
-//    public OpenAPI customOpenAPI() {
-//        return new OpenAPI()
-//                .info(new Info()
-//                        .title("My Spring Boot API")
-//                        .version("1.0")
-//                        .description("API documentation for my Spring Boot project")
-//                        .contact(new Contact().name("Tursunali Dev").email("you@example.com")));
-//    }
-//
-//    @Bean
-//    public GroupedOpenApi publicApi() {
-//        return GroupedOpenApi.builder()
-//                .group("public")
-//                .pathsToMatch("/api/**")
-//                .build();
-//    }
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("My Spring Boot API")
+                        .version("1.0")
+                        .description("API documentation for my Spring Boot project")
+                        .contact(new Contact().name("Tursunali Dev").email("you@example.com")));
+    }
+
+    @Bean
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("public")
+                .pathsToMatch("/api/**")
+                .build();
+    }
 }

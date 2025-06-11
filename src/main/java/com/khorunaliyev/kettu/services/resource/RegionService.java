@@ -28,7 +28,7 @@ public class RegionService {
     private final CountryRepository countryRepository;
 
     public ResponseEntity<Response> getByCountry(Long countryId){
-        return ResponseEntity.ok(new Response("All regions", regionRepository.findByCountry_Id(countryId)));
+        return ResponseEntity.ok(new Response("Success", regionRepository.findByCountry_Id(countryId)));
     }
 
     public ResponseEntity<Response> createRegion(Long countryId, String name){

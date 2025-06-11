@@ -45,7 +45,7 @@ public class GlobalControllerExceptionHandlerAdviser {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Response> handleNotFound(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new Response("NOT_FOUND", ex.getMessage()));
+                .body(new Response(ex.getMessage(), null));
     }
 
 

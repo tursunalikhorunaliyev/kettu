@@ -19,21 +19,21 @@ import java.time.LocalDateTime;
 public class AuditEntity {
 
     @CreatedDate
-    @Column(name = "createdAt", updatable = false)
+    @Column(name = "createdAt", updatable = false, nullable = false)
     protected LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "updatedAt")
+    @Column(name = "updatedAt", nullable = false)
     protected LocalDateTime updatedAt;
 
     @CreatedBy
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by",updatable = false)
+    @JoinColumn(name = "created_by",updatable = false, nullable = false)
     protected User createdBy;
 
     @LastModifiedBy
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updated_by")
+    @JoinColumn(name = "updated_by", nullable = false)
     protected User updatedBy;
 
 }

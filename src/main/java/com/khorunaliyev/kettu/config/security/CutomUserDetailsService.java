@@ -1,6 +1,6 @@
 package com.khorunaliyev.kettu.config.security;
 
-import com.khorunaliyev.kettu.repository.UserRepository;
+import com.khorunaliyev.kettu.repository.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

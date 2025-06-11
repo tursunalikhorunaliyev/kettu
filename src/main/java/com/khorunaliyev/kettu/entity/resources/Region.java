@@ -18,7 +18,7 @@ public class Region extends AuditEntity {
     private Long id;
 
 
-    @Column(nullable = false, unique = true, length = 1001)
+    @Column(nullable = false, unique = true, length = 85)
     private String name;
 
 
@@ -29,5 +29,9 @@ public class Region extends AuditEntity {
 
     @OneToMany(mappedBy = "region",cascade = CascadeType.ALL, orphanRemoval = true)
     List<City> cities;
+
+
+    @Column(nullable = false)
+    private Integer activeItemCount = 0;
 
 }

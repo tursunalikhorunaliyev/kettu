@@ -3,6 +3,7 @@ package com.khorunaliyev.kettu.entity.resources;
 import com.khorunaliyev.kettu.entity.audit.AuditEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -26,5 +27,5 @@ public class Category extends AuditEntity {
 
 
     @Column(nullable = false)
-    private Integer activeItemCount;
+    private Integer activeItemCount = 0;
 }

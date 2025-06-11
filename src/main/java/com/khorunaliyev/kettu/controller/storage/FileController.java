@@ -1,4 +1,4 @@
-package com.khorunaliyev.kettu.controller;
+package com.khorunaliyev.kettu.controller.storage;
 
 import com.khorunaliyev.kettu.services.r2service.R2Service;
 import lombok.RequiredArgsConstructor;

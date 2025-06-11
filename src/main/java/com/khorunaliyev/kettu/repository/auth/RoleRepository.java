@@ -1,6 +1,6 @@
-package com.khorunaliyev.kettu.repository;
+package com.khorunaliyev.kettu.repository.auth;
 
-import com.khorunaliyev.kettu.entity.Role;
+import com.khorunaliyev.kettu.entity.auth.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

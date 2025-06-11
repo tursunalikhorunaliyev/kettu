@@ -1,7 +1,7 @@
 package com.khorunaliyev.kettu.config.auditor;
 
-import com.khorunaliyev.kettu.entity.User;
-import com.khorunaliyev.kettu.repository.UserRepository;
+import com.khorunaliyev.kettu.entity.auth.User;
+import com.khorunaliyev.kettu.repository.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;

@@ -1,6 +1,5 @@
-package com.khorunaliyev.kettu.entity;
+package com.khorunaliyev.kettu.entity.auth;
 
-import com.khorunaliyev.kettu.entity.audit.AuditEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,13 +7,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "test_audit")
-public class TestAudit extends AuditEntity {
+@Table(name = "role")
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String name;
+
 }

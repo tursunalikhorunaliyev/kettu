@@ -1,6 +1,6 @@
-package com.khorunaliyev.kettu.repository;
+package com.khorunaliyev.kettu.repository.auth;
 
-import com.khorunaliyev.kettu.entity.User;
+import com.khorunaliyev.kettu.entity.auth.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

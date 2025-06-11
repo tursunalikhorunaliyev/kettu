@@ -1,9 +1,7 @@
-package com.khorunaliyev.kettu.entity;
+package com.khorunaliyev.kettu.entity.auth;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

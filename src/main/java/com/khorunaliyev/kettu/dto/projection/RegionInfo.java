@@ -7,9 +7,6 @@ import java.util.List;
  * Projection for {@link com.khorunaliyev.kettu.entity.resources.Region}
  */
 public interface RegionInfo {
-    LocalDateTime getCreatedAt();
-
-    LocalDateTime getUpdatedAt();
 
     Long getId();
 

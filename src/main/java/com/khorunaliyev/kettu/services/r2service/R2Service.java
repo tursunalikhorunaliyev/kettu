@@ -43,4 +43,17 @@ public class R2Service {
             throw new RuntimeException("Failed to read object bytes from R2", e);
         }
     }
+
+    public void deleteFile(String key) {
+        try {
+            DeleteObjectRequest request = DeleteObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .build();
+            s3Client.deleteObject(request);
+            System.out.println("File deleted: " + key);
+        } catch (S3Exception e) {
+            System.err.println("Error deleting file: " + e.awsErrorDetails().errorMessage());
+        }
+    }
 }

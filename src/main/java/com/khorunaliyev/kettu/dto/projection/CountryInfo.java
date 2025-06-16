@@ -7,9 +7,6 @@ import java.util.List;
  * Projection for {@link com.khorunaliyev.kettu.entity.resources.Country}
  */
 public interface CountryInfo {
-    LocalDateTime getCreatedAt();
-
-    LocalDateTime getUpdatedAt();
 
     Long getId();
 

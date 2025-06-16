@@ -34,7 +34,7 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/secure/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/public/**", "/oauth2/**", "/login/**", "/api/auth/**","/api/files/**","/auth-redirect.html","/swagger-ui/**",
+                        .requestMatchers("/admin/**","/api/public/**", "/oauth2/**", "/login/**", "/api/auth/**","/api/files/**","/auth-redirect.html","/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/swagger-ui.html",

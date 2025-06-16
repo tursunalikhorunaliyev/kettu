@@ -33,7 +33,7 @@ public class CountryController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Response> save(){
+    public ResponseEntity<Response> getAll(){
       return countryService.getAll();
     }
 }

@@ -4,6 +4,7 @@ import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.request.NearbyNameRequest;
 import com.khorunaliyev.kettu.services.resource.NearbyThingsService;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,13 @@ public class NearbyThingsController {
         return nearbyThingsService.updateName(id, request.getName());
     }
 
-    @PostMapping("/{id}/update-image")
+    @PostMapping("/{id}/update-icon")
     public ResponseEntity<Response> updateIcon(@PathVariable("id") Long id, @RequestParam("icon") MultipartFile file){
         return nearbyThingsService.updateIcon(id, file);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<Response> getAll(){
+        return nearbyThingsService.getAll();
     }
 }

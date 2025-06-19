@@ -28,7 +28,7 @@ public class Region extends AuditEntity {
 
 
     @OneToMany(mappedBy = "region",cascade = CascadeType.ALL, orphanRemoval = true)
-    List<City> cities;
+    List<District> cities;
 
 
     @Column(nullable = false)

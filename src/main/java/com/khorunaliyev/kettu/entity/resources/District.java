@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "city")
-public class City extends AuditEntity {
+@Table(name = "district")
+public class District extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -27,6 +27,5 @@ public class City extends AuditEntity {
 
     @Column(nullable = false)
     private Integer activeItemCount = 0;
-
 
 }

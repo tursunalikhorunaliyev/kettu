@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NewCityRequest extends CityNameRequest{
+public class NewDistrictRequest extends DistrictNameRequest {
     @NotNull
     @Positive
     private Long regionId;

@@ -14,5 +14,5 @@ public interface RegionInfo {
 
     Integer getActiveItemCount();
 
-    List<CityInfo> getCities();
+    List<DistrictInfo> getCities();
 }

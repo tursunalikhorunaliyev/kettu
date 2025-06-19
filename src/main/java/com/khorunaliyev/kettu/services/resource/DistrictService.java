@@ -2,9 +2,9 @@ package com.khorunaliyev.kettu.services.resource;
 
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.entity.resources.City;
+import com.khorunaliyev.kettu.entity.resources.District;
 import com.khorunaliyev.kettu.entity.resources.Region;
-import com.khorunaliyev.kettu.repository.resource.CityRepository;
+import com.khorunaliyev.kettu.repository.resource.DistrictRepository;
 import com.khorunaliyev.kettu.repository.resource.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
@@ -22,50 +22,50 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CityService {
+public class DistrictService {
 
-    private final CityRepository cityRepository;
+    private final DistrictRepository districtRepository;
     private final RegionRepository regionRepository;
 
     public ResponseEntity<Response> createCity(Long regionId, String name){
         Region region = regionRepository.findById(regionId).orElseThrow(() -> new ResourceNotFoundException("Region not found"));
-        City city = new City();
-        city.setName(name);
-        city.setRegion(region);
-        cityRepository.save(city);
-        return new ResponseEntity<>(new Response("City created", null), HttpStatus.CREATED);
+        District district = new District();
+        district.setName(name);
+        district.setRegion(region);
+        districtRepository.save(district);
+        return new ResponseEntity<>(new Response("District created", null), HttpStatus.CREATED);
     }
 
     public ResponseEntity<Response> importFromExcel(Long regionId, MultipartFile file){
         Region region = regionRepository.findById(regionId).orElseThrow(() -> new ResourceNotFoundException("Region not found"));
         try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0);
-            List<City> cities = new ArrayList<>();
+            List<District> districts = new ArrayList<>();
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue; // Skip header row
                 String name = row.getCell(0).getStringCellValue();
                 if (name != null) {
-                    City city = new City();
-                    city.setName(name);
-                    city.setRegion(region);
-                    cities.add(city);
+                    District district = new District();
+                    district.setName(name);
+                    district.setRegion(region);
+                    districts.add(district);
                 }
             }
-            cityRepository.saveAll(cities);
+            districtRepository.saveAll(districts);
             return new ResponseEntity<>(new Response("Successfully imported", null), HttpStatus.CREATED);
         } catch (IOException e) {
             return new ResponseEntity<>(new Response("Failed, something went wrong", null), HttpStatus.BAD_REQUEST);
         }
     }
     public ResponseEntity<Response> updateCityName(Long cityId, String name){
-        City city = cityRepository.findById(cityId).orElseThrow(() -> new ResourceNotFoundException("City not found"));
-        city.setName(name);
-        cityRepository.save(city);
-        return ResponseEntity.ok(new Response("City updated", null));
+        District district = districtRepository.findById(cityId).orElseThrow(() -> new ResourceNotFoundException("City not found"));
+        district.setName(name);
+        districtRepository.save(district);
+        return ResponseEntity.ok(new Response("District updated", null));
     }
 
     public ResponseEntity<Response> getByRegion(Long regionId){
-        return ResponseEntity.ok(new Response("Success",cityRepository.findByRegion_Id(regionId)));
+        return ResponseEntity.ok(new Response("Success",districtRepository.findByRegion_Id(regionId)));
 
     }
 }

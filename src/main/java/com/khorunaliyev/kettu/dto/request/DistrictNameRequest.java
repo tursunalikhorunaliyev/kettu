@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CityNameRequest {
+public class DistrictNameRequest {
 
     @NotNull
     @Size(min = 1, max = 100)

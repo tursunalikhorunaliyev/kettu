@@ -1,4 +1,4 @@
-package com.khorunaliyev.kettu.dto.request;
+package com.khorunaliyev.kettu.dto.request.region;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NewDistrictRequest extends DistrictNameRequest {
+public class NewRegionRequest extends RegionNameRequest{
     @NotNull
     @Positive
-    private Long regionId;
+    private Long countryId;
 }

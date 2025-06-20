@@ -1,4 +1,4 @@
-package com.khorunaliyev.kettu.dto.request;
+package com.khorunaliyev.kettu.dto.request.category;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RegionNameRequest {
+public class CategoryNameRequest {
     @NotNull
-    @Size(min = 1, max = 85)
+    @Size(min = 1, max = 100)
     private String name;
 }

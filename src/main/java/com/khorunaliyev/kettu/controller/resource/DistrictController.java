@@ -1,8 +1,8 @@
 package com.khorunaliyev.kettu.controller.resource;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.request.DistrictNameRequest;
-import com.khorunaliyev.kettu.dto.request.NewDistrictRequest;
+import com.khorunaliyev.kettu.dto.request.district.DistrictNameRequest;
+import com.khorunaliyev.kettu.dto.request.district.NewDistrictRequest;
 import com.khorunaliyev.kettu.services.resource.DistrictService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

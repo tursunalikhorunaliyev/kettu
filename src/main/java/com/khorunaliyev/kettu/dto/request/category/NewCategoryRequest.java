@@ -1,4 +1,4 @@
-package com.khorunaliyev.kettu.dto.request;
+package com.khorunaliyev.kettu.dto.request.category;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

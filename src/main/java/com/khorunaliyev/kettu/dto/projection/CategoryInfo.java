@@ -10,6 +10,4 @@ public interface CategoryInfo {
     Long getId();
 
     String getName();
-
-    FeatureInfo getFeature();
 }

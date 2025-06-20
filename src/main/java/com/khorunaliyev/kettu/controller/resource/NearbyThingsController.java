@@ -1,10 +1,9 @@
 package com.khorunaliyev.kettu.controller.resource;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.request.NearbyNameRequest;
+import com.khorunaliyev.kettu.dto.request.nearby.NearbyNameRequest;
 import com.khorunaliyev.kettu.services.resource.NearbyThingsService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

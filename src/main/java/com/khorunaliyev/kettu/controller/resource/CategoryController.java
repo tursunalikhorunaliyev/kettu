@@ -1,12 +1,11 @@
 package com.khorunaliyev.kettu.controller.resource;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.request.CategoryNameRequest;
-import com.khorunaliyev.kettu.dto.request.NewCategoryRequest;
+import com.khorunaliyev.kettu.dto.request.category.CategoryNameRequest;
+import com.khorunaliyev.kettu.dto.request.category.NewCategoryRequest;
 import com.khorunaliyev.kettu.services.resource.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

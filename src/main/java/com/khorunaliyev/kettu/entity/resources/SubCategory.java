@@ -3,16 +3,13 @@ package com.khorunaliyev.kettu.entity.resources;
 import com.khorunaliyev.kettu.entity.audit.AuditEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "sub_category")
+public class SubCategory extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -24,13 +21,11 @@ public class Category {
 
 
     @ManyToOne
-    @JoinColumn(name = "feature_id")
-    private Feature feature;
+    @JoinColumn(name = "category_id")
+    private Category category;
 
 
     @Column(nullable = false)
     private Integer activeItemCount = 0;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SubCategory> subCategories;
 }

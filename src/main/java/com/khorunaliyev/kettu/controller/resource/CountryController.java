@@ -1,6 +1,6 @@
 package com.khorunaliyev.kettu.controller.resource;
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.request.CountryNameRequest;
+import com.khorunaliyev.kettu.dto.request.country.CountryNameRequest;
 import com.khorunaliyev.kettu.services.resource.CountryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

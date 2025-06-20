@@ -1,4 +1,4 @@
-package com.khorunaliyev.kettu.dto.request;
+package com.khorunaliyev.kettu.dto.request.district;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

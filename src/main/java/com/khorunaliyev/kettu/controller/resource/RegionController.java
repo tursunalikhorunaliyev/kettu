@@ -1,8 +1,8 @@
 package com.khorunaliyev.kettu.controller.resource;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.request.NewRegionRequest;
-import com.khorunaliyev.kettu.dto.request.RegionNameRequest;
+import com.khorunaliyev.kettu.dto.request.region.NewRegionRequest;
+import com.khorunaliyev.kettu.dto.request.region.RegionNameRequest;
 import com.khorunaliyev.kettu.services.resource.RegionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

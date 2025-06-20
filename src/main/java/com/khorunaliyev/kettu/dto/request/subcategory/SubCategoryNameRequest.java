@@ -1,16 +1,15 @@
-package com.khorunaliyev.kettu.dto.request;
+package com.khorunaliyev.kettu.dto.request.subcategory;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class NearbyNameRequest {
+public class SubCategoryNameRequest {
     @NotNull
-    @NotBlank
-    @Max(100)
+    @Size(min = 1, max = 100)
     private String name;
 }

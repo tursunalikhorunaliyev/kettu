@@ -6,6 +6,7 @@ import com.khorunaliyev.kettu.entity.resources.NearbyThings;
 import com.khorunaliyev.kettu.repository.resource.NearbyThingsRepository;
 import com.khorunaliyev.kettu.services.r2service.R2Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,12 +22,11 @@ public class NearbyThingsService {
 
     public ResponseEntity<Response> createThing(String name, MultipartFile file) {
         NearbyThings nearbyThings = new NearbyThings();
-
-        nearbyThingsRepository.save(nearbyThings);
         try {
             String icon = r2Service.upload(file);
+            System.out.println(icon);
             nearbyThings.setName(name);
-            nearbyThings.setIcon(icon);
+            nearbyThings.setIcon("https://storage.thekettu.com/"+icon);
             nearbyThingsRepository.save(nearbyThings);
             return new ResponseEntity<>(new Response("Nearby things created", null), HttpStatus.CREATED);
         } catch (Exception e) {

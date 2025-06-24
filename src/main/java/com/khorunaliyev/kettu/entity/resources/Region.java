@@ -6,12 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "region")
-public class Region extends AuditEntity {
+public class Region {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -22,13 +23,13 @@ public class Region extends AuditEntity {
     private String name;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")
     private Country country;
 
 
     @OneToMany(mappedBy = "region",cascade = CascadeType.ALL, orphanRemoval = true)
-    List<District> cities;
+    Set<District> districts;
 
 
     @Column(nullable = false)

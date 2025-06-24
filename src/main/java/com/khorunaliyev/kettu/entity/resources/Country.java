@@ -6,12 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "country")
-public class Country extends AuditEntity {
+public class Country {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +23,8 @@ public class Country extends AuditEntity {
     private String name;
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Region> regions;
-
+    private Set<Region> regions;
 
     @Column(nullable = false)
     private Integer activeItemCount = 0;
-
 }

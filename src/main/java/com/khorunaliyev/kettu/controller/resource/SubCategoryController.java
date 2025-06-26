@@ -16,8 +16,8 @@ public class SubCategoryController {
 
     private final SubCategoryService subCategoryService;
 
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<Response> getByCategoryId(@PathVariable("categoryId") Long categoryId) {
+    @GetMapping
+    public ResponseEntity<Response> getByCategoryId(@RequestParam Long categoryId) {
         return subCategoryService.getSubCategoriesByCategoryId(categoryId);
     }
 

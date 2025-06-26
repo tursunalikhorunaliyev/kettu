@@ -23,12 +23,12 @@ public class Region {
     private String name;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "country_id")
     private Country country;
 
 
-    @OneToMany(mappedBy = "region",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "region",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     Set<District> districts;
 
 

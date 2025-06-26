@@ -22,7 +22,7 @@ public class Country {
     @Column(unique = true, nullable = false, length = 56)
     private String name;
 
-    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private Set<Region> regions;
 
     @Column(nullable = false)

@@ -1,5 +1,7 @@
 package com.khorunaliyev.kettu.dto.projection;
 
+import com.khorunaliyev.kettu.entity.resources.Country;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -14,4 +16,6 @@ public interface RegionInfo {
     String getName();
 
     Integer getActiveItemCount();
+
+    CountryInfo getCountry();
 }

@@ -28,7 +28,7 @@ public class Region {
     private Country country;
 
 
-    @OneToMany(mappedBy = "region",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "region",cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
     Set<District> districts;
 
 

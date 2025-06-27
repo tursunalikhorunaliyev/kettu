@@ -16,6 +16,4 @@ public interface RegionInfo {
     String getName();
 
     Integer getActiveItemCount();
-
-    CountryInfo getCountry();
 }

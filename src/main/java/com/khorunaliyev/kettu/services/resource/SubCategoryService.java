@@ -47,7 +47,7 @@ public class SubCategoryService {
 
 
     public ResponseEntity<Response> getSubCategoriesByCategoryId(Long categoryId) {
-        List<SubCategory> subCategories = subCategoryRepository.findByCategory_Id(categoryId);
+        List<SubCategory> subCategories = subCategoryRepository.findByCategoryId(categoryId);
         return ResponseEntity.ok(new Response("SubCategories", subCategories));
     }
 

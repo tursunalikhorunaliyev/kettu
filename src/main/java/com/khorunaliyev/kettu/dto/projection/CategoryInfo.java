@@ -11,17 +11,4 @@ public interface CategoryInfo {
     String getName();
 
     Integer getActiveItemCount();
-
-    List<SubCategory> getSubCategories();
-
-    /**
-     * Projection for {@link com.khorunaliyev.kettu.entity.resources.SubCategory}
-     */
-    interface SubCategory {
-        Long getId();
-
-        String getName();
-
-        Integer getActiveItemCount();
-    }
 }

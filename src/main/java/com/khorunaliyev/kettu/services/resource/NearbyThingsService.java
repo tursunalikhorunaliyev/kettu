@@ -26,7 +26,7 @@ public class NearbyThingsService {
             String icon = r2Service.upload(file);
             System.out.println(icon);
             nearbyThings.setName(name);
-            nearbyThings.setIcon("https://storage.thekettu.com/"+icon);
+            nearbyThings.setIcon(icon);
             nearbyThingsRepository.save(nearbyThings);
             return new ResponseEntity<>(new Response("Nearby things created", null), HttpStatus.CREATED);
         } catch (Exception e) {

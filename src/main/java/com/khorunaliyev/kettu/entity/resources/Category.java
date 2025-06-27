@@ -31,6 +31,6 @@ public class Category {
     @Column(nullable = false)
     private Integer activeItemCount = 0;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<SubCategory> subCategories;
 }

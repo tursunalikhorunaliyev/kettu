@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("api/resources/city")
+@RequestMapping("api/resources/districts")
 @RequiredArgsConstructor
 public class DistrictController {
     private final DistrictService districtService;

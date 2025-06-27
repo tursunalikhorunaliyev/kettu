@@ -24,7 +24,7 @@ public class Category {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feature_id")
+    @JoinColumn(name = "feature_id", nullable = false)
     private Feature feature;
 
 

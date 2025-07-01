@@ -22,11 +22,13 @@ public class PlaceRequest {
     @Size(min = 1, max = 500)
     private String description;
 
-
     @NotNull
     @NotEmpty
     private List<PlacePhoto> placePhotos;
 
     @NotNull
     private PlaceLocationRequest placeLocation;
+
+    @NotNull
+    private List<Long> nearbyThings;
 }

@@ -7,20 +7,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PlaceLocationRequest {
+public class PlaceMetaDataRequest {
     @NotNull
     @Positive
-    private Long countryId;
+    private Long featureId;
     @NotNull
     @Positive
-    private Long regionId;
+    private Long categoryId;
     @NotNull
     @Positive
-    private Long districtId;
-    @NotNull
-    @Positive
-    private double lat_;
-    @NotNull
-    @Positive
-    private double long_;
+    private Long subcategoryId;
 }

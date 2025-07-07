@@ -2,6 +2,7 @@ package com.khorunaliyev.kettu.entity.place;
 
 import com.khorunaliyev.kettu.entity.audit.AuditEntity;
 import com.khorunaliyev.kettu.entity.auth.User;
+import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import com.khorunaliyev.kettu.entity.resources.NearbyThings;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -52,5 +53,8 @@ public class Place extends AuditEntity {
     @Column(nullable = false)
     private Integer likesCount = 0;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PlaceStatus status = PlaceStatus.MODERATION;
 
 }

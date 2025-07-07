@@ -1,13 +1,114 @@
 package com.khorunaliyev.kettu.services.place;
 
+import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.request.place.PlaceLocationRequest;
+import com.khorunaliyev.kettu.dto.request.place.PlaceMetaDataRequest;
+import com.khorunaliyev.kettu.dto.request.place.PlacePhotoRequest;
+import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
+import com.khorunaliyev.kettu.entity.place.Place;
+import com.khorunaliyev.kettu.entity.place.PlaceLocation;
+import com.khorunaliyev.kettu.entity.place.PlaceMetaData;
+import com.khorunaliyev.kettu.entity.place.PlacePhoto;
+import com.khorunaliyev.kettu.entity.resources.Category;
+import com.khorunaliyev.kettu.entity.resources.Country;
+import com.khorunaliyev.kettu.entity.resources.NearbyThings;
+import com.khorunaliyev.kettu.entity.resources.SubCategory;
+import com.khorunaliyev.kettu.repository.place.PlaceRepository;
+import com.khorunaliyev.kettu.repository.resource.*;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class PlaceService {
-    public ResponseEntity<Response> createPlace(String name, String description, List<String> photos){
+
+    private final CountryRepository countryRepository;
+    private final RegionRepository regionRepository;
+    private final DistrictRepository districtRepository;
+    private final NearbyThingsRepository nearbyThingsRepository;
+    private final FeatureRepository featureRepository;
+    private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
+    private final PlaceRepository placeRepository;
+
+
+
+
+    @Transactional
+    public ResponseEntity<Response> createPlace(String name, String description, PlaceMetaDataRequest placeMetaDataRequest, List<PlacePhotoRequest> placePhotos, PlaceLocationRequest location, List<Long> nearByThings) {
+        Place place = new Place();
+
+        //PlaceLocation creation
+        PlaceLocation placeLocation = new PlaceLocation();
+        placeLocation.setCountry(countryRepository.findById(location.getCountryId()).orElseThrow(() -> new RequestRejectedException("Country not found")));
+        placeLocation.setRegion(regionRepository.findById(location.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("Region not found")));
+        placeLocation.setDistrict(districtRepository.findById(location.getDistrictId()).orElseThrow(() -> new ResourceNotFoundException("District not found")));
+        placeLocation.setLat_(location.getLat_());
+        placeLocation.setLong_(location.getLong_());
+        placeLocation.setPlace(place);
+
+
+        //PlacePhoto entities creation
+        List<PlacePhoto> placePhotoEntities = placePhotos.stream().map(placePhotoRequest -> {
+            PlacePhoto placePhoto = new PlacePhoto();
+            placePhoto.setImage(placePhotoRequest.getImageName());
+            placePhoto.setMain(placePhotoRequest.isMain());
+            placePhoto.setPlace(place);
+            return placePhoto;
+        }).toList();
+
+
+        //Place NearbyThings finding
+        Set<NearbyThings> placeNearbyThings = new HashSet<>(nearbyThingsRepository.findAllByIds(nearByThings));
+        if (placeNearbyThings.size() != nearByThings.size())
+            throw new ResourceNotFoundException("Nearby things not found or not found fully");
+
+
+        //PlaceMetaData creating
+        PlaceMetaData placeMetaData = new PlaceMetaData();
+        placeMetaData.setFeature(featureRepository.findById(placeMetaDataRequest.getFeatureId()).orElseThrow(() -> new ResourceNotFoundException("Feature not found")));
+        placeMetaData.setCategory(categoryRepository.findById(placeMetaDataRequest.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category not found")));
+        placeMetaData.setSubCategory(subCategoryRepository.findById(placeMetaDataRequest.getSubcategoryId()).orElseThrow(() -> new ResourceNotFoundException("Subcategory not found")));
+        placeMetaData.setPlace(place);
+
+
+
+        place.setName(name.trim());
+        place.setDescription(description.trim());
+        place.setLocation(placeLocation);
+        place.setPhotos(placePhotoEntities);
+        place.setNearbyThings(placeNearbyThings);
+        place.setMetaData(placeMetaData);
+        placeRepository.save(place);
+
+        return ResponseEntity.ok(new Response("Place successfully created", null));
+
+    }
+
+    public ResponseEntity<Response> changePlaceStatus(Long placeID,PlaceStatus status){
+        Place place = placeRepository.findById(placeID).orElseThrow(() -> new ResourceNotFoundException("Place not found"));
+
+        if(status == PlaceStatus.ACTIVE){
+            Category category = place.getMetaData().getCategory();
+            category.setActiveItemCount(category.getActiveItemCount()+1);
+            categoryRepository.save(category);
+
+            SubCategory subCategory = place.getMetaData().getSubCategory();
+            subCategory.setActiveItemCount(subCategory.getActiveItemCount()+1);
+            subCategoryRepository.save(subCategory);
+
+        }
+
+
+        place.setStatus(status);
     }
 }

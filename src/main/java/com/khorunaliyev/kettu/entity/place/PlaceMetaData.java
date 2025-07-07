@@ -17,7 +17,6 @@ public class PlaceMetaData {
     @Column(name = "id", nullable = false)
     private Long id;
 
-
     @OneToOne
     @MapsId // uses placeId from Place
     @JoinColumn(name = "place_id",nullable = false)
@@ -34,6 +33,4 @@ public class PlaceMetaData {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_category_id", nullable = false)
     private SubCategory subCategory;
-
-
 }

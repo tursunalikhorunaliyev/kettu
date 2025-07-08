@@ -35,7 +35,7 @@ public class Place extends AuditEntity {
     @OneToOne(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private PlaceLocation location;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER,optional = false)
     private PlaceMetaData metaData;
 
     @ManyToMany

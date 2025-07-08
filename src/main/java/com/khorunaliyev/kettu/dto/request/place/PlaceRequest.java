@@ -29,5 +29,8 @@ public class PlaceRequest {
     private PlaceLocationRequest placeLocation;
 
     @NotNull
+    private PlaceMetaDataRequest placeMetaData;
+
+    @NotNull
     private List<Long> nearbyThings;
 }

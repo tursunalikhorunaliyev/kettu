@@ -1,19 +1,17 @@
 package com.khorunaliyev.kettu.services.place;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.request.place.PlaceLocationRequest;
 import com.khorunaliyev.kettu.dto.request.place.PlaceMetaDataRequest;
 import com.khorunaliyev.kettu.dto.request.place.PlacePhotoRequest;
+import com.khorunaliyev.kettu.dto.request.place.PlaceRequest;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
-import com.khorunaliyev.kettu.entity.place.Place;
-import com.khorunaliyev.kettu.entity.place.PlaceLocation;
-import com.khorunaliyev.kettu.entity.place.PlaceMetaData;
-import com.khorunaliyev.kettu.entity.place.PlacePhoto;
-import com.khorunaliyev.kettu.entity.resources.Category;
-import com.khorunaliyev.kettu.entity.resources.Country;
-import com.khorunaliyev.kettu.entity.resources.NearbyThings;
-import com.khorunaliyev.kettu.entity.resources.SubCategory;
+import com.khorunaliyev.kettu.entity.place.*;
+import com.khorunaliyev.kettu.entity.resources.*;
+import com.khorunaliyev.kettu.repository.place.PlaceHistoryRepository;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
 import jakarta.transaction.Transactional;
@@ -40,7 +38,8 @@ public class PlaceService {
     private final SubCategoryRepository subCategoryRepository;
     private final PlaceRepository placeRepository;
 
-
+    private final ObjectMapper objectMapper;
+    private final PlaceHistoryRepository placeHistoryRepository;
 
 
     @Transactional
@@ -81,7 +80,6 @@ public class PlaceService {
         placeMetaData.setPlace(place);
 
 
-
         place.setName(name.trim());
         place.setDescription(description.trim());
         place.setLocation(placeLocation);
@@ -94,21 +92,121 @@ public class PlaceService {
 
     }
 
-    public ResponseEntity<Response> changePlaceStatus(Long placeID,PlaceStatus status){
+    public ResponseEntity<Response> changePlaceStatus(Long placeID, PlaceStatus status, String changeReason) {
         Place place = placeRepository.findById(placeID).orElseThrow(() -> new ResourceNotFoundException("Place not found"));
 
-        if(status == PlaceStatus.ACTIVE){
+        String snapshotJson;
+        try {
+            snapshotJson = objectMapper.writeValueAsString(place);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to create snapshot", e);
+        }
+
+
+        if (status == PlaceStatus.ACTIVE) {
             Category category = place.getMetaData().getCategory();
-            category.setActiveItemCount(category.getActiveItemCount()+1);
+            category.setActiveItemCount(category.getActiveItemCount() + 1);
             categoryRepository.save(category);
 
             SubCategory subCategory = place.getMetaData().getSubCategory();
-            subCategory.setActiveItemCount(subCategory.getActiveItemCount()+1);
+            subCategory.setActiveItemCount(subCategory.getActiveItemCount() + 1);
             subCategoryRepository.save(subCategory);
 
+            Country country = place.getLocation().getCountry();
+            country.setActiveItemCount(country.getActiveItemCount() + 1);
+            countryRepository.save(country);
+
+            Region region = place.getLocation().getRegion();
+            region.setActiveItemCount(region.getActiveItemCount() + 1);
+            regionRepository.save(region);
+
+            District district = place.getLocation().getDistrict();
+            district.setActiveItemCount(district.getActiveItemCount() + 1);
+        }
+
+        if (place.getStatus() == PlaceStatus.ACTIVE && (status != PlaceStatus.ACTIVE)) {
+            Category category = place.getMetaData().getCategory();
+            category.setActiveItemCount(category.getActiveItemCount() - 1);
+            categoryRepository.save(category);
+
+            SubCategory subCategory = place.getMetaData().getSubCategory();
+            subCategory.setActiveItemCount(subCategory.getActiveItemCount() - 1);
+            subCategoryRepository.save(subCategory);
+
+            Country country = place.getLocation().getCountry();
+            country.setActiveItemCount(country.getActiveItemCount() - 1);
+            countryRepository.save(country);
+
+            Region region = place.getLocation().getRegion();
+            region.setActiveItemCount(region.getActiveItemCount() - 1);
+            regionRepository.save(region);
+
+            District district = place.getLocation().getDistrict();
+            district.setActiveItemCount(district.getActiveItemCount() - 1);
+        }
+
+        try {
+            PlaceHistory placeHistory = new PlaceHistory();
+            placeHistory.setPlace(place);
+            placeHistory.setPlaceSnapshotJson(snapshotJson);
+            if (changeReason != null) placeHistory.setChangeReason(changeReason);
+            placeHistoryRepository.save(placeHistory);
+        } catch (Exception e) {
+            throw new RequestRejectedException("Request rejected");
         }
 
 
         place.setStatus(status);
+        placeRepository.save(place);
+
+
+        return ResponseEntity.ok(new Response("Place updated", null));
     }
+
+
+    public ResponseEntity<Response> update(Long placeId, PlaceRequest request){
+        Place place = placeRepository.findById(placeId).orElseThrow(() -> new ResourceNotFoundException("Place not found"));
+
+
+        String snapshot;
+        try {
+            snapshot = objectMapper.writeValueAsString(place);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to snapshot place", e);
+        }
+
+        if(request.getName()!=null) place.setName(request.getName().trim());
+        if(request.getDescription()!=null) place.setDescription(request.getDescription().trim());
+
+        if(request.getNearbyThings()!=null){
+            Set<NearbyThings> things = new HashSet<>(nearbyThingsRepository.findAllByIds(request.getNearbyThings()));
+            if (things.size() != request.getNearbyThings().size()) throw new ResourceNotFoundException("Some nearby things not found");
+            place.setNearbyThings(things);
+        }
+
+        if(request.getPlacePhotos()!=null){
+            List<PlacePhoto> newPhotos = request.getPlacePhotos().stream().map(p -> {
+                PlacePhoto photo = new PlacePhoto();
+                photo.setImage(p.getImageName());
+                photo.setMain(p.isMain());
+                photo.setPlace(place);
+                return photo;
+            }).toList();
+            place.setPhotos(newPhotos);
+        }
+
+
+        if (request.getPlaceLocation() != null) {
+            PlaceLocation loc = new PlaceLocation();
+            loc.setPlace(place);
+            loc.setCountry(countryRepository.findById(request.getPlaceLocation().getCountryId()).orElseThrow(() -> new ResourceNotFoundException("Country not found")));
+            loc.setRegion(regionRepository.findById(request.getPlaceLocation().getRegionId()).orElseThrow(() -> new ResourceNotFoundException("Region not found")));
+            loc.setDistrict(districtRepository.findById(request.getPlaceLocation().getDistrictId()).orElseThrow(() -> new ResourceNotFoundException("District not found")));
+            loc.setLat_(request.getPlaceLocation().getLat_());
+            loc.setLong_(request.getPlaceLocation().getLong_());
+            place.setLocation(loc);
+        }
+
+    }
+
 }

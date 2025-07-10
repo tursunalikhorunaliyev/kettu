@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.*;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +24,10 @@ public class NearbyThingsService {
     public ResponseEntity<Response> createThing(String name, MultipartFile file) {
         NearbyThings nearbyThings = new NearbyThings();
         try {
-            String icon = r2Service.upload(file);
+            ResponseEntity<Response> icon = r2Service.upload(file);
             System.out.println(icon);
             nearbyThings.setName(name);
-            nearbyThings.setIcon(icon);
+            nearbyThings.setIcon((String) Objects.requireNonNull(icon.getBody()).data());
             nearbyThingsRepository.save(nearbyThings);
             return new ResponseEntity<>(new Response("Nearby things created", null), HttpStatus.CREATED);
         } catch (Exception e) {
@@ -45,8 +46,8 @@ public class NearbyThingsService {
         NearbyThings nearbyThings = nearbyThingsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nearby things not found"));
         try {
             String oldIcon = nearbyThings.getIcon();
-            String icon = r2Service.upload(newIcon);
-            nearbyThings.setIcon(icon);
+            ResponseEntity<Response> icon = r2Service.upload(newIcon);
+            nearbyThings.setIcon((String) Objects.requireNonNull(icon.getBody()).data());
             nearbyThingsRepository.save(nearbyThings);
             r2Service.deleteFile(oldIcon);
             return ResponseEntity.ok(new Response("Nearby things has updated", null));

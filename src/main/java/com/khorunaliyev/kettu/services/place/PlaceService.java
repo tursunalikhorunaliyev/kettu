@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khorunaliyev.kettu.component.PlaceDiffChecker;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
+import com.khorunaliyev.kettu.dto.projection.PlaceInfo;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.request.place.PlaceLocationRequest;
 import com.khorunaliyev.kettu.dto.request.place.PlaceMetaDataRequest;
@@ -13,6 +14,7 @@ import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import com.khorunaliyev.kettu.entity.place.*;
 import com.khorunaliyev.kettu.entity.resources.*;
 import com.khorunaliyev.kettu.repository.place.PlaceHistoryRepository;
+import com.khorunaliyev.kettu.repository.place.PlacePhotoRepository;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
 import jakarta.transaction.Transactional;
@@ -43,10 +45,19 @@ public class PlaceService {
     private final ObjectMapper objectMapper;
     private final PlaceHistoryRepository placeHistoryRepository;
     private final PlaceDiffChecker placeDiffChecker;
+    private final PlacePhotoRepository placePhotoRepository;
 
 
     @Transactional
-    public ResponseEntity<Response> createPlace(String name, String description, PlaceMetaDataRequest placeMetaDataRequest, List<PlacePhotoRequest> placePhotos, PlaceLocationRequest location, List<Long> nearByThings) {
+    public ResponseEntity<Response> createPlace(PlaceRequest request) {
+
+        String name = request.getName();
+        String description = request.getDescription();
+        PlaceMetaDataRequest placeMetaDataRequest = request.getPlaceMetaData();
+        List<PlacePhotoRequest> placePhotos = request.getPlacePhotos();
+        PlaceLocationRequest location = request.getPlaceLocation();
+        List<Long> nearByThings = request.getNearbyThings();
+
         Place place = new Place();
 
         //PlaceLocation creation
@@ -109,31 +120,36 @@ public class PlaceService {
         if (status == PlaceStatus.ACTIVE) {
             Category category = place.getMetaData().getCategory();
             int categoryActiveItemCount = category.getActiveItemCount() + 1;
-            if(categoryActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (categoryActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             category.setActiveItemCount(categoryActiveItemCount);
             categoryRepository.save(category);
 
             SubCategory subCategory = place.getMetaData().getSubCategory();
             int subCategoryActiveItemCount = subCategory.getActiveItemCount() + 1;
-            if(subCategoryActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (subCategoryActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             subCategory.setActiveItemCount(subCategoryActiveItemCount);
             subCategoryRepository.save(subCategory);
 
             Country country = place.getLocation().getCountry();
             int countryActiveItemCount = country.getActiveItemCount() + 1;
-            if(countryActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (countryActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             country.setActiveItemCount(countryActiveItemCount);
             countryRepository.save(country);
 
             Region region = place.getLocation().getRegion();
             int regionActiveItemCount = region.getActiveItemCount() + 1;
-            if(regionActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (regionActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             region.setActiveItemCount(regionActiveItemCount);
             regionRepository.save(region);
 
             District district = place.getLocation().getDistrict();
             int districtActiveItemCount = subCategory.getActiveItemCount() + 1;
-            if(districtActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (districtActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             district.setActiveItemCount(districtActiveItemCount);
             districtRepository.save(district);
         }
@@ -141,31 +157,36 @@ public class PlaceService {
         if (place.getStatus() == PlaceStatus.ACTIVE && (status != PlaceStatus.ACTIVE)) {
             Category category = place.getMetaData().getCategory();
             int categoryActiveItemCount = category.getActiveItemCount() - 1;
-            if(categoryActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (categoryActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             category.setActiveItemCount(categoryActiveItemCount);
             categoryRepository.save(category);
 
             SubCategory subCategory = place.getMetaData().getSubCategory();
             int subCategoryActiveItemCount = subCategory.getActiveItemCount() - 1;
-            if(subCategoryActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (subCategoryActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             subCategory.setActiveItemCount(subCategoryActiveItemCount);
             subCategoryRepository.save(subCategory);
 
             Country country = place.getLocation().getCountry();
             int countryActiveItemCount = country.getActiveItemCount() - 1;
-            if(countryActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (countryActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             country.setActiveItemCount(countryActiveItemCount);
             countryRepository.save(country);
 
             Region region = place.getLocation().getRegion();
             int regionActiveItemCount = region.getActiveItemCount() - 1;
-            if(regionActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (regionActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             region.setActiveItemCount(regionActiveItemCount);
             regionRepository.save(region);
 
             District district = place.getLocation().getDistrict();
             int districtActiveItemCount = district.getActiveItemCount() - 1;
-            if(districtActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (districtActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             district.setActiveItemCount(districtActiveItemCount);
             districtRepository.save(district);
         }
@@ -223,13 +244,14 @@ public class PlaceService {
         }
 
         if (request.getPlacePhotos() != null) {
-            List<PlacePhoto> newPhotos = request.getPlacePhotos().stream().map(p -> {
+            List<PlacePhoto> newPhotos = request.getPlacePhotos().stream().map(ph -> {
                 PlacePhoto photo = new PlacePhoto();
-                photo.setImage(p.getImageName());
-                photo.setMain(p.isMain());
+                photo.setImage(ph.getImageName());
+                photo.setMain(ph.isMain());
                 photo.setPlace(place);
                 return photo;
             }).toList();
+
             place.setPhotos(newPhotos);
         }
 
@@ -259,31 +281,36 @@ public class PlaceService {
 
             Category category = place.getMetaData().getCategory();
             int categoryActiveItemCount = category.getActiveItemCount() - 1;
-            if(categoryActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (categoryActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             category.setActiveItemCount(categoryActiveItemCount);
             categoryRepository.save(category);
 
             SubCategory subCategory = place.getMetaData().getSubCategory();
             int subCategoryActiveItemCount = subCategory.getActiveItemCount() - 1;
-            if(subCategoryActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (subCategoryActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             subCategory.setActiveItemCount(subCategoryActiveItemCount);
             subCategoryRepository.save(subCategory);
 
             Country country = place.getLocation().getCountry();
             int countryActiveItemCount = country.getActiveItemCount() - 1;
-            if(countryActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (countryActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             country.setActiveItemCount(countryActiveItemCount);
             countryRepository.save(country);
 
             Region region = place.getLocation().getRegion();
             int regionActiveItemCount = region.getActiveItemCount() - 1;
-            if(regionActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (regionActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             region.setActiveItemCount(regionActiveItemCount);
             regionRepository.save(region);
 
             District district = place.getLocation().getDistrict();
             int districtActiveItemCount = district.getActiveItemCount() - 1;
-            if(districtActiveItemCount<0) return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+            if (districtActiveItemCount < 0)
+                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             district.setActiveItemCount(districtActiveItemCount);
             districtRepository.save(district);
 
@@ -293,5 +320,9 @@ public class PlaceService {
 
         return ResponseEntity.ok(new Response("Place updated", null));
 
+    }
+
+    public ResponseEntity<List<PlaceInfo>> getAllPlaces() {
+        return ResponseEntity.ok(placeRepository.findAllBy());
     }
 }

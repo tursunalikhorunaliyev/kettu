@@ -3,6 +3,7 @@ package com.khorunaliyev.kettu.config.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -34,11 +35,18 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/secure/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/public/**", "/oauth2/**", "/login/**", "/api/auth/**","/api/files/**","/auth-redirect.html","/swagger-ui/**",
+
+                        .requestMatchers(HttpMethod.POST, "/api/resources/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/resources/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/resources/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/places/**").permitAll()
+
+
+                        .requestMatchers("/api/resources/**", "/admin/**", "/api/public/**", "/oauth2/**", "/login/**", "/api/auth/**", "/api/files/**", "/auth-redirect.html", "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/swagger-ui.html",
-                                "/webjars/**").permitAll()
+                                "/webjars/**").permitAll().requestMatchers(HttpMethod.GET, "/api/resources/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig.authorizationRequestResolver(authResolver))

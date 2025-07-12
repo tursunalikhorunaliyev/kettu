@@ -8,25 +8,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "city")
-public class City extends AuditEntity {
+@Table(name = "nearby_things")
+public class NearbyThings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(unique = true, nullable = false, length = 100)
     private String name;
 
-
-    @ManyToOne
-    @JoinColumn(name = "region_id")
-    private Region region;
-
-
-    @Column(nullable = false)
-    private Integer activeItemCount = 0;
-
-
+    @Column(unique = true, nullable = false, length = 1000)
+    private String icon;
 }

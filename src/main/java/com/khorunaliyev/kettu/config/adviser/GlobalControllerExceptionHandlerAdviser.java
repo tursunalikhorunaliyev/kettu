@@ -48,7 +48,6 @@ public class GlobalControllerExceptionHandlerAdviser {
                 .body(new Response(ex.getMessage(), null));
     }
 
-
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException ex) {
         Map<String, String> response = new HashMap<>();

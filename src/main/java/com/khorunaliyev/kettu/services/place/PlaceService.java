@@ -19,6 +19,8 @@ import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.firewall.RequestRejectedException;
@@ -49,6 +51,7 @@ public class PlaceService {
 
 
     @Transactional
+    @CacheEvict(value = "places", allEntries = true)
     public ResponseEntity<Response> createPlace(PlaceRequest request) {
 
         String name = request.getName();
@@ -210,7 +213,7 @@ public class PlaceService {
         return ResponseEntity.ok(new Response("Place updated", null));
     }
 
-
+    @CacheEvict(value = "places", allEntries = true)
     public ResponseEntity<Response> update(Long placeId, PlaceRequest request) {
         Place place = placeRepository.findById(placeId).orElseThrow(() -> new ResourceNotFoundException("Place not found"));
 
@@ -323,6 +326,7 @@ public class PlaceService {
 
     }
 
+    @Cacheable("places")
     public ResponseEntity<List<PlaceInfo>> getAllPlaces() {
         return ResponseEntity.ok(placeRepository.findAllBy());
     }

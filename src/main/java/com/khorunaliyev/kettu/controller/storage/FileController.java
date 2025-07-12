@@ -17,12 +17,12 @@ public class FileController {
 
     private final R2Service r2Service;
 
-    @PostMapping("/upload")
+    @PostMapping("/upload-single")
     public ResponseEntity<Response> upload(@RequestParam("image") MultipartFile image) throws IOException {
         return r2Service.upload(image);
     }
 
-    @PostMapping("/upload/multiple")
+    @PostMapping("/upload-multiple")
     public ResponseEntity<Response> uploadMultiple(@RequestParam("images") List<MultipartFile> images){
         return r2Service.uploadMultiple(images);
     }

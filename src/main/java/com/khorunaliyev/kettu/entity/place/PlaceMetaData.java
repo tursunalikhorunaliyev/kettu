@@ -17,20 +17,18 @@ public class PlaceMetaData {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne
-    @MapsId // uses placeId from Place
-    @JoinColumn(name = "place_id",nullable = false)
+    @OneToOne(mappedBy = "metaData")
     private Place place;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "feature_id", nullable = false)
     private Feature feature;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sub_category_id", nullable = false)
     private SubCategory subCategory;
 }

@@ -34,7 +34,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
 
         // Save or update user
-        User user = userRepository.findByEmail(email).orElseGet(() -> new User());
+        User user = userRepository.findByEmail(email).orElseGet(User::new);
 
         Role userRole = roleRepository.findByName("USER")
                 .orElseGet(() -> {

@@ -39,6 +39,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/resources/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/resources/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/resources/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/places/**").permitAll()
 
 
                         .requestMatchers("/api/resources/**", "/admin/**", "/api/public/**", "/oauth2/**", "/login/**", "/api/auth/**", "/api/files/**", "/auth-redirect.html", "/swagger-ui/**",

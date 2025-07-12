@@ -1,6 +1,7 @@
 package com.khorunaliyev.kettu.services.resource;
 
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
+import com.khorunaliyev.kettu.dto.projection.SubCategoryInfo;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.entity.resources.Category;
 import com.khorunaliyev.kettu.entity.resources.SubCategory;
@@ -47,7 +48,7 @@ public class SubCategoryService {
 
 
     public ResponseEntity<Response> getSubCategoriesByCategoryId(Long categoryId) {
-        List<SubCategory> subCategories = subCategoryRepository.findByCategoryId(categoryId);
+        List<SubCategoryInfo> subCategories = subCategoryRepository.findByCategoryId(categoryId);
         return ResponseEntity.ok(new Response("SubCategories", subCategories));
     }
 

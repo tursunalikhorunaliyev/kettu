@@ -32,6 +32,8 @@ public interface PlaceInfo {
 
     Set<UserInfo> getVisitedUsers();
 
+    Set<UserInfo> getLikedUsers();
+
     Set<NearbyThingsInfo> getNearbyThings();
 
     /**

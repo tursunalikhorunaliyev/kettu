@@ -18,20 +18,18 @@ public class PlaceLocation {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne
-    @MapsId // uses placeId from Place
-    @JoinColumn(name = "place_id")
+    @OneToOne(mappedBy = "location")
     private Place place;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "district_id", nullable = false)
     private District district;
 

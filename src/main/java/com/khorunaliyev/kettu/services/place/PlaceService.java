@@ -100,6 +100,7 @@ public class PlaceService {
         place.setPhotos(placePhotoEntities);
         place.setNearbyThings(placeNearbyThings);
         place.setMetaData(placeMetaData);
+
         placeRepository.save(place);
 
         return ResponseEntity.ok(new Response("Place successfully created", null));

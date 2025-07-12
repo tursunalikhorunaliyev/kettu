@@ -2,14 +2,16 @@ package com.khorunaliyev.kettu.services.place;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.khorunaliyev.kettu.component.PlaceDiffChecker;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.projection.PlaceInfo;
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.request.place.PlaceLocationRequest;
-import com.khorunaliyev.kettu.dto.request.place.PlaceMetaDataRequest;
-import com.khorunaliyev.kettu.dto.request.place.PlacePhotoRequest;
-import com.khorunaliyev.kettu.dto.request.place.PlaceRequest;
+import com.khorunaliyev.kettu.dto.reponse.place.*;
+import com.khorunaliyev.kettu.dto.reponse.resource.IDNameDTO;
+import com.khorunaliyev.kettu.dto.reponse.resource.IDNameItemCountDTO;
+import com.khorunaliyev.kettu.dto.reponse.resource.NearbyThingsDTO;
+import com.khorunaliyev.kettu.dto.request.place.*;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import com.khorunaliyev.kettu.entity.place.*;
 import com.khorunaliyev.kettu.entity.resources.*;
@@ -27,6 +29,7 @@ import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -77,7 +80,7 @@ public class PlaceService {
         List<PlacePhoto> placePhotoEntities = placePhotos.stream().map(placePhotoRequest -> {
             PlacePhoto placePhoto = new PlacePhoto();
             placePhoto.setImage(placePhotoRequest.getImageName());
-            placePhoto.setMain(placePhotoRequest.isMain());
+            placePhoto.setMain(placePhotoRequest.getIsMain());
             placePhoto.setPlace(place);
             return placePhoto;
         }).toList();
@@ -214,7 +217,7 @@ public class PlaceService {
     }
 
     @CacheEvict(value = "places", allEntries = true)
-    public ResponseEntity<Response> update(Long placeId, PlaceRequest request) {
+    public ResponseEntity<Response> update(Long placeId, PlaceUpdateRequest request) {
         Place place = placeRepository.findById(placeId).orElseThrow(() -> new ResourceNotFoundException("Place not found"));
 
         if (place.getStatus() == PlaceStatus.MODERATION) {
@@ -227,7 +230,10 @@ public class PlaceService {
 
         String snapshot;
         try {
-            snapshot = objectMapper.writeValueAsString(place);
+            snapshot = objectMapper
+                    .copy()
+                    .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+                    .writeValueAsString(place);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to snapshot place", e);
         }
@@ -251,7 +257,7 @@ public class PlaceService {
             List<PlacePhoto> newPhotos = request.getPlacePhotos().stream().map(ph -> {
                 PlacePhoto photo = new PlacePhoto();
                 photo.setImage(ph.getImageName());
-                photo.setMain(ph.isMain());
+                photo.setMain(ph.getIsMain());
                 photo.setPlace(place);
                 return photo;
             }).toList();
@@ -327,7 +333,36 @@ public class PlaceService {
     }
 
     @Cacheable("places")
-    public ResponseEntity<List<PlaceInfo>> getAllPlaces() {
-        return ResponseEntity.ok(placeRepository.findAllBy());
+    public ResponseEntity<List<PlaceDTO>> getAllPlaces() {
+
+        List<PlaceDTO> places = placeRepository.findAllBy().stream().map(this::toDto).toList();
+
+        return ResponseEntity.ok(places);
+    }
+
+    private PlaceDTO toDto(PlaceInfo p) {
+        return new PlaceDTO(p.getId(),
+                p.getName(),
+                p.getDescription(),
+                p.getStatus(),
+                new PlacePhotoDTO(p.getPhotos().stream()
+                        .filter(PlaceInfo.PlacePhotoInfo::isIsMain)
+                        .map(PlaceInfo.PlacePhotoInfo::getImage)
+                        .findFirst().orElse(null), p.getPhotos().stream().filter(placePhotoInfo -> !placePhotoInfo.isIsMain()).map(PlaceInfo.PlacePhotoInfo::getImage).toList()),
+                new PlaceMetaDataDTO(p.getMetaData().getId(),
+                        new IDNameDTO(p.getMetaData().getFeature().getId(), p.getMetaData().getFeature().getName()),
+                        new IDNameItemCountDTO(p.getMetaData().getCategory().getId(), p.getMetaData().getCategory().getName(), p.getMetaData().getCategory().getActiveItemCount()),
+                        new IDNameItemCountDTO(p.getMetaData().getSubCategory().getId(), p.getMetaData().getSubCategory().getName(), p.getMetaData().getSubCategory().getActiveItemCount())),
+                new PlaceLocationDTO(p.getLocation().getId(),
+                        new IDNameItemCountDTO(p.getLocation().getCountry().getId(), p.getLocation().getCountry().getName(), p.getLocation().getCountry().getActiveItemCount()),
+                        new IDNameItemCountDTO(p.getLocation().getRegion().getId(), p.getLocation().getRegion().getName(), p.getLocation().getRegion().getActiveItemCount()),
+                        new IDNameDTO(p.getLocation().getDistrict().getId(), p.getLocation().getDistrict().getName())),
+                p.getNearbyThings().stream().map(ns -> new NearbyThingsDTO(ns.getId(), ns.getName(), ns.getIcon())).collect(Collectors.toSet()),
+                p.getVisitedUsers().stream().map(vu -> new UserDTO(vu.getId(), vu.getName(), vu.getEmail())).collect(Collectors.toSet()),
+                p.getLikedUsers().stream().map(lu -> new UserDTO(lu.getId(), lu.getName(), lu.getEmail())).collect(Collectors.toSet()),
+                p.getLikesCount(),
+                p.getCreatedAt(),
+                p.getUpdatedAt()
+        );
     }
 }

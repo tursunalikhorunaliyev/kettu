@@ -1,9 +1,6 @@
 package com.khorunaliyev.kettu.component;
 
-import com.khorunaliyev.kettu.dto.request.place.PlaceLocationRequest;
-import com.khorunaliyev.kettu.dto.request.place.PlaceMetaDataRequest;
-import com.khorunaliyev.kettu.dto.request.place.PlacePhotoRequest;
-import com.khorunaliyev.kettu.dto.request.place.PlaceRequest;
+import com.khorunaliyev.kettu.dto.request.place.*;
 import com.khorunaliyev.kettu.entity.place.Place;
 import com.khorunaliyev.kettu.entity.place.PlaceLocation;
 import com.khorunaliyev.kettu.entity.place.PlaceMetaData;
@@ -20,7 +17,7 @@ import java.util.stream.Collectors;
 @Component
 public class PlaceDiffChecker {
 
-    public boolean isPlaceDifferent(Place place, PlaceRequest request) {
+    public boolean isPlaceDifferent(Place place, PlaceUpdateRequest request) {
 
         if (request.getName() != null && !place.getName().trim().equalsIgnoreCase(request.getName().trim()))
             return true;
@@ -46,8 +43,10 @@ public class PlaceDiffChecker {
         }
 
         if(request.getPlacePhotos()!=null){
-            List<String> placePhotos = place.getPhotos().stream().map(PlacePhoto::getImage).toList();
-            List<String> placePhotoRequests = request.getPlacePhotos().stream().map(PlacePhotoRequest::getImageName).toList();
+            List<String> placePhotos = place.getPhotos().stream().map(placePhoto -> placePhoto.getImage()+placePhoto.isMain()).toList();
+            List<String> placePhotoRequests = request.getPlacePhotos().stream().map(placePhotoRequest -> placePhotoRequest.getImageName()+placePhotoRequest.getIsMain()).toList();
+            System.out.println(placePhotos);
+            System.out.println(request.getPlacePhotos().get(0).getIsMain());
             return !placePhotos.equals(placePhotoRequests);
         }
 

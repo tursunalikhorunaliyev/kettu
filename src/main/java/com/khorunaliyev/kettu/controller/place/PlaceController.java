@@ -2,7 +2,9 @@ package com.khorunaliyev.kettu.controller.place;
 
 import com.khorunaliyev.kettu.dto.projection.PlaceInfo;
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.reponse.place.PlaceDTO;
 import com.khorunaliyev.kettu.dto.request.place.PlaceRequest;
+import com.khorunaliyev.kettu.dto.request.place.PlaceUpdateRequest;
 import com.khorunaliyev.kettu.services.place.PlaceService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,12 +26,15 @@ public class PlaceController {
     }
 
     @PatchMapping("/{id}/update")
-    public ResponseEntity<Response> update(@PathVariable("id") Long placeId, @RequestBody @Valid PlaceRequest request){
+    public ResponseEntity<Response> update(@PathVariable("id") Long placeId, @RequestBody @Valid PlaceUpdateRequest request){
+        System.out.println("Request");
+        System.out.println(request.getPlacePhotos().get(0).getImageName());
+        System.out.println(request.getPlacePhotos().get(0).getIsMain());
         return placeService.update(placeId, request);
     }
 
     @GetMapping
-    public ResponseEntity<List<PlaceInfo>> getPlaces(){
+    public ResponseEntity<List<PlaceDTO>> getPlaces(){
         return placeService.getAllPlaces();
     }
 

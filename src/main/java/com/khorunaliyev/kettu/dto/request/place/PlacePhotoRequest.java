@@ -1,5 +1,6 @@
 package com.khorunaliyev.kettu.dto.request.place;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -12,5 +13,6 @@ public class PlacePhotoRequest {
     @NotBlank
     private String imageName;
     @NotNull
-    private boolean isMain;
+    @JsonProperty("isMain")
+    private Boolean isMain;
 }

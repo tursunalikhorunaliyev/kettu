@@ -2,6 +2,7 @@ package com.khorunaliyev.kettu.services.resource;
 
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.reponse.resource.NearbyThingsDTO;
 import com.khorunaliyev.kettu.entity.resources.NearbyThings;
 import com.khorunaliyev.kettu.repository.resource.NearbyThingsRepository;
 import com.khorunaliyev.kettu.services.r2service.R2Service;
@@ -58,6 +59,6 @@ public class NearbyThingsService {
     }
 
     public ResponseEntity<Response> getAll(){
-        return ResponseEntity.ok(new Response("Nearby things", nearbyThingsRepository.findAllBy()));
+        return ResponseEntity.ok(new Response("Nearby things", nearbyThingsRepository.findAllBy().stream().map(nearbyThingsInfo -> new NearbyThingsDTO(nearbyThingsInfo.getId(), nearbyThingsInfo.getName(), "https://storage.thekettu.com/"+nearbyThingsInfo.getIcon()))));
     }
 }

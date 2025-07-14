@@ -3,6 +3,7 @@ package com.khorunaliyev.kettu.services.resource;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.projection.SubCategoryInfo;
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.reponse.resource.IDNameItemCountDTO;
 import com.khorunaliyev.kettu.entity.resources.Category;
 import com.khorunaliyev.kettu.entity.resources.SubCategory;
 import com.khorunaliyev.kettu.repository.resource.CategoryRepository;
@@ -49,7 +50,7 @@ public class SubCategoryService {
 
     public ResponseEntity<Response> getSubCategoriesByCategoryId(Long categoryId) {
         List<SubCategoryInfo> subCategories = subCategoryRepository.findByCategoryId(categoryId);
-        return ResponseEntity.ok(new Response("SubCategories", subCategories));
+        return ResponseEntity.ok(new Response("SubCategories", subCategories.stream().map(subCategoryInfo -> new IDNameItemCountDTO(subCategoryInfo.getId(), subCategoryInfo.getName(), subCategoryInfo.getActiveItemCount()))));
     }
 
     public ResponseEntity<Response> importFromExcel(Long categoryId, MultipartFile file) {

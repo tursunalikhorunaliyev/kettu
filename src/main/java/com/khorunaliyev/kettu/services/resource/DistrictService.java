@@ -2,6 +2,7 @@ package com.khorunaliyev.kettu.services.resource;
 
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.reponse.resource.IDNameItemCountDTO;
 import com.khorunaliyev.kettu.entity.resources.District;
 import com.khorunaliyev.kettu.entity.resources.Region;
 import com.khorunaliyev.kettu.repository.resource.DistrictRepository;
@@ -65,7 +66,7 @@ public class DistrictService {
     }
 
     public ResponseEntity<Response> getByRegion(Long regionId){
-        return ResponseEntity.ok(new Response("Success",districtRepository.findByRegion_Id(regionId)));
+        return ResponseEntity.ok(new Response("Success",districtRepository.findByRegion_Id(regionId).stream().map(districtInfo -> new IDNameItemCountDTO(districtInfo.getId(), districtInfo.getName(), districtInfo.getActiveItemCount()))));
 
     }
 }

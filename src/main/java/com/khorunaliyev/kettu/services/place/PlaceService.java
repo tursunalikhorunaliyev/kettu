@@ -113,14 +113,32 @@ public class PlaceService {
 
     }
 
-    public ResponseEntity<Response> changePlaceStatus(Long placeID, PlaceStatus status, String changeReason) {
+    public ResponseEntity<Response> changePlaceStatus(Long placeID, PlaceUpdateStatusRequest request) {
+
         Place place = placeRepository.findById(placeID).orElseThrow(() -> new ResourceNotFoundException("Place not found"));
 
-        String snapshotJson;
+        String statusString = request.getStatus().trim();
+        String changeReason = request.getChangeReason();
+
+        PlaceStatus status;
         try {
-            snapshotJson = objectMapper.writeValueAsString(place);
+            status = PlaceStatus.valueOf(statusString.toUpperCase());
+        }
+        catch (RuntimeException e){
+            throw new ResourceNotFoundException("Status not found");
+        }
+
+        if(status==place.getStatus()){
+            return new ResponseEntity<>(new Response("Nothing changed", null), HttpStatus.NO_CONTENT);
+        }
+
+
+        String snapshot;
+        try {
+            PlaceHistoryDTO dto = placeHistoryDTO(place); // use your manual or MapStruct mapper
+            snapshot = objectMapper.writeValueAsString(dto);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to create snapshot", e);
+            throw new RuntimeException("Failed to snapshot place", e);
         }
 
 
@@ -154,7 +172,7 @@ public class PlaceService {
             regionRepository.save(region);
 
             District district = place.getLocation().getDistrict();
-            int districtActiveItemCount = subCategory.getActiveItemCount() + 1;
+            int districtActiveItemCount = district.getActiveItemCount() + 1;
             if (districtActiveItemCount < 0)
                 return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             district.setActiveItemCount(districtActiveItemCount);
@@ -198,20 +216,19 @@ public class PlaceService {
             districtRepository.save(district);
         }
 
-        try {
-            PlaceHistory placeHistory = new PlaceHistory();
-            placeHistory.setPlace(place);
-            placeHistory.setPlaceSnapshotJson(snapshotJson);
-            if (changeReason != null) placeHistory.setChangeReason(changeReason);
-            placeHistoryRepository.save(placeHistory);
-        } catch (Exception e) {
-            throw new RequestRejectedException("Request rejected");
-        }
-
 
         place.setStatus(status);
         placeRepository.save(place);
 
+        try {
+            PlaceHistory placeHistory = new PlaceHistory();
+            placeHistory.setPlace(place);
+            placeHistory.setPlaceSnapshotJson(snapshot);
+            if (changeReason != null) placeHistory.setChangeReason(changeReason.trim());
+            placeHistoryRepository.save(placeHistory);
+        } catch (Exception e) {
+            throw new RequestRejectedException("Request rejected");
+        }
 
         return ResponseEntity.ok(new Response("Place updated", null));
     }
@@ -230,10 +247,8 @@ public class PlaceService {
 
         String snapshot;
         try {
-            snapshot = objectMapper
-                    .copy()
-                    .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-                    .writeValueAsString(place);
+            PlaceHistoryDTO dto = placeHistoryDTO(place); // use your manual or MapStruct mapper
+            snapshot = objectMapper.writeValueAsString(dto);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to snapshot place", e);
         }
@@ -262,7 +277,8 @@ public class PlaceService {
                 return photo;
             }).toList();
 
-            place.setPhotos(newPhotos);
+            place.getPhotos().clear();
+            place.getPhotos().addAll(newPhotos);
         }
 
 
@@ -357,12 +373,40 @@ public class PlaceService {
                         new IDNameItemCountDTO(p.getLocation().getCountry().getId(), p.getLocation().getCountry().getName(), p.getLocation().getCountry().getActiveItemCount()),
                         new IDNameItemCountDTO(p.getLocation().getRegion().getId(), p.getLocation().getRegion().getName(), p.getLocation().getRegion().getActiveItemCount()),
                         new IDNameDTO(p.getLocation().getDistrict().getId(), p.getLocation().getDistrict().getName())),
-                p.getNearbyThings().stream().map(ns -> new NearbyThingsDTO(ns.getId(), ns.getName(), ns.getIcon())).collect(Collectors.toSet()),
+                p.getNearbyThings().stream().map(ns -> new NearbyThingsDTO(ns.getId(), ns.getName(), "https://storage.thekettu.com/"+ns.getIcon())).collect(Collectors.toSet()),
                 p.getVisitedUsers().stream().map(vu -> new UserDTO(vu.getId(), vu.getName(), vu.getEmail())).collect(Collectors.toSet()),
                 p.getLikedUsers().stream().map(lu -> new UserDTO(lu.getId(), lu.getName(), lu.getEmail())).collect(Collectors.toSet()),
                 p.getLikesCount(),
                 p.getCreatedAt(),
                 p.getUpdatedAt()
+        );
+    }
+
+    private PlaceHistoryDTO placeHistoryDTO(Place p) {
+        return new PlaceHistoryDTO(p.getId(),
+                p.getName(),
+                p.getDescription(),
+                p.getStatus(),
+                new PlacePhotoDTO(p.getPhotos().stream()
+                        .filter(PlacePhoto::isMain)
+                        .map(PlacePhoto::getImage)
+                        .findFirst().orElse(null), p.getPhotos().stream().filter(placePhotoInfo -> !placePhotoInfo.isMain()).map(PlacePhoto::getImage).toList()),
+                new PlaceMetaDataDTO(p.getMetaData().getId(),
+                        new IDNameDTO(p.getMetaData().getFeature().getId(), p.getMetaData().getFeature().getName()),
+                        new IDNameItemCountDTO(p.getMetaData().getCategory().getId(), p.getMetaData().getCategory().getName(), p.getMetaData().getCategory().getActiveItemCount()),
+                        new IDNameItemCountDTO(p.getMetaData().getSubCategory().getId(), p.getMetaData().getSubCategory().getName(), p.getMetaData().getSubCategory().getActiveItemCount())),
+                new PlaceLocationDTO(p.getLocation().getId(),
+                        new IDNameItemCountDTO(p.getLocation().getCountry().getId(), p.getLocation().getCountry().getName(), p.getLocation().getCountry().getActiveItemCount()),
+                        new IDNameItemCountDTO(p.getLocation().getRegion().getId(), p.getLocation().getRegion().getName(), p.getLocation().getRegion().getActiveItemCount()),
+                        new IDNameDTO(p.getLocation().getDistrict().getId(), p.getLocation().getDistrict().getName())),
+                p.getNearbyThings().stream().map(ns -> new NearbyThingsDTO(ns.getId(), ns.getName(), ns.getIcon())).collect(Collectors.toSet()),
+                p.getVisitedUsers().stream().map(vu -> new UserDTO(vu.getId(), vu.getName(), vu.getEmail())).collect(Collectors.toSet()),
+                p.getLikedUsers().stream().map(lu -> new UserDTO(lu.getId(), lu.getName(), lu.getEmail())).collect(Collectors.toSet()),
+                p.getLikesCount(),
+                p.getCreatedAt(),
+                p.getUpdatedAt(),
+                new UserDTO(p.getCreatedBy().getId(), p.getCreatedBy().getName(), p.getCreatedBy().getEmail()),
+                new UserDTO(p.getUpdatedBy().getId(), p.getUpdatedBy().getName(), p.getUpdatedBy().getEmail())
         );
     }
 }

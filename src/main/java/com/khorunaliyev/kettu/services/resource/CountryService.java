@@ -2,6 +2,7 @@ package com.khorunaliyev.kettu.services.resource;
 
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.reponse.resource.IDNameItemCountDTO;
 import com.khorunaliyev.kettu.entity.resources.Country;
 import com.khorunaliyev.kettu.repository.resource.CountryRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class CountryService {
     }
 
     public ResponseEntity<Response> getAll() {
-        return ResponseEntity.ok(new Response("All countries", countryRepository.findAllBy()));
+        return ResponseEntity.ok(new Response("All countries", countryRepository.findAllBy().stream().map(countryInfo -> new IDNameItemCountDTO(countryInfo.getId(), countryInfo.getName(), countryInfo.getActiveItemCount()))));
     }
 
     public ResponseEntity<Response> updateCountryName(Long id, String name) {

@@ -2,6 +2,7 @@ package com.khorunaliyev.kettu.services.resource;
 
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.reponse.resource.IDNameItemCountDTO;
 import com.khorunaliyev.kettu.entity.resources.Category;
 import com.khorunaliyev.kettu.entity.resources.Country;
 import com.khorunaliyev.kettu.entity.resources.Feature;
@@ -67,6 +68,6 @@ public class CategoryService {
     }
 
     public ResponseEntity<Response> getAll(){
-        return ResponseEntity.ok(new Response("Categories", categoryRepository.findAllBy()));
+        return ResponseEntity.ok(new Response("Categories", categoryRepository.findAllBy().stream().map(categoryInfo -> new IDNameItemCountDTO(categoryInfo.getId(), categoryInfo.getName(), categoryInfo.getActiveItemCount()))));
     }
 }

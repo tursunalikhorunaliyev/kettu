@@ -1,5 +1,6 @@
 package com.khorunaliyev.kettu.dto.projection;
 
+import com.khorunaliyev.kettu.entity.auth.User;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,10 @@ public interface PlaceInfo {
     Set<UserInfo> getLikedUsers();
 
     Set<NearbyThingsInfo> getNearbyThings();
+
+    User getCreatedBy();
+
+    User getUpdatedBy();
 
     /**
      * Projection for {@link com.khorunaliyev.kettu.entity.place.PlacePhoto}

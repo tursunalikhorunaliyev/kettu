@@ -2,6 +2,7 @@ package com.khorunaliyev.kettu.services.resource;
 
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.reponse.resource.IDNameItemCountDTO;
 import com.khorunaliyev.kettu.entity.resources.Country;
 import com.khorunaliyev.kettu.entity.resources.Region;
 import com.khorunaliyev.kettu.repository.resource.CountryRepository;
@@ -28,7 +29,7 @@ public class RegionService {
     private final CountryRepository countryRepository;
 
     public ResponseEntity<Response> getByCountry(Long countryId){
-        return ResponseEntity.ok(new Response("Success", regionRepository.findByCountryId(countryId)));
+        return ResponseEntity.ok(new Response("Success", regionRepository.findByCountryId(countryId).stream().map(regionInfo -> new IDNameItemCountDTO(regionInfo.getId(), regionInfo.getName(), regionInfo.getActiveItemCount()))));
     }
 
     public ResponseEntity<Response> createRegion(Long countryId, String name){

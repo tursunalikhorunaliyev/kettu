@@ -7,4 +7,6 @@ public interface DistrictInfo {
     Long getId();
 
     String getName();
+
+    Integer getActiveItemCount();
 }

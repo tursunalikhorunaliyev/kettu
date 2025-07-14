@@ -2,6 +2,7 @@ package com.khorunaliyev.kettu.services.resource;
 
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.reponse.resource.IDNameDTO;
 import com.khorunaliyev.kettu.entity.resources.Feature;
 import com.khorunaliyev.kettu.repository.resource.FeatureRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,6 @@ public class FeatureService {
     }
 
     public ResponseEntity<Response> getAll(){
-        return ResponseEntity.ok(new Response("Features", featureRepository.findAllBy()));
+        return ResponseEntity.ok(new Response("Features", featureRepository.findAllBy().stream().map(featureInfo -> new IDNameDTO(featureInfo.getId(), featureInfo.getName()))));
     }
 }

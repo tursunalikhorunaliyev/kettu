@@ -1,4 +1,4 @@
-package com.khorunaliyev.kettu.dto.mapper;
+package com.khorunaliyev.kettu.component;
 
 import com.khorunaliyev.kettu.dto.projection.PlaceInfo;
 import com.khorunaliyev.kettu.dto.reponse.place.*;
@@ -7,9 +7,10 @@ import com.khorunaliyev.kettu.dto.reponse.resource.IDNameItemCountDTO;
 import com.khorunaliyev.kettu.dto.reponse.resource.NearbyThingsDTO;
 import com.khorunaliyev.kettu.entity.place.Place;
 import com.khorunaliyev.kettu.entity.place.PlacePhoto;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
-
+@Component
 public class PlaceMappers {
     public PlaceDTO toDto(PlaceInfo p) {
         return new PlaceDTO(p.getId(),

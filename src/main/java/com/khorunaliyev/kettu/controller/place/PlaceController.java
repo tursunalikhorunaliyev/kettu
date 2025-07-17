@@ -12,6 +12,8 @@ import com.khorunaliyev.kettu.services.place.PlaceService;
 import com.khorunaliyev.kettu.services.place.UpdatePlaceService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,23 +30,28 @@ public class PlaceController {
     private final CreatePlaceService createPlaceService;
 
     @PostMapping("/save")
-    public ResponseEntity<Response> create(@RequestBody @Valid PlaceRequest request){
+    public ResponseEntity<Response> create(@RequestBody @Valid PlaceRequest request) {
         return createPlaceService.createPlace(request);
     }
 
     @PatchMapping("/{id}/update")
-    public ResponseEntity<Response> update(@PathVariable("id") Long placeId, @RequestBody @Valid PlaceUpdateRequest request){
+    public ResponseEntity<Response> update(@PathVariable("id") Long placeId, @RequestBody @Valid PlaceUpdateRequest request) {
         return updatePlaceService.update(placeId, request);
     }
 
     @PostMapping("{id}/update-status")
-    public ResponseEntity<Response> updateStatus(@PathVariable("id") Long placeID ,@RequestBody @Valid PlaceUpdateStatusRequest request){
-        return changePlaceStatusService.changePlaceStatus(placeID,request);
+    public ResponseEntity<Response> updateStatus(@PathVariable("id") Long placeID, @RequestBody @Valid PlaceUpdateStatusRequest request) {
+        return changePlaceStatusService.changePlaceStatus(placeID, request);
     }
 
     @GetMapping
-    public ResponseEntity<List<PlaceDTO>> getPlaces(){
-        return placeService.getAllPlaces();
+    public ResponseEntity<Page<PlaceDTO>> getPlaces(@RequestParam(required = false) Long categoryId,
+                                                    @RequestParam(required = false) Long districtId,
+                                                    @RequestParam(required = false) Long regionId,
+                                                    @RequestParam(required = false) Long countryId,
+                                                    Pageable pageable
+    ) {
+        return placeService.getAllPlaces(categoryId, districtId, regionId, countryId, pageable);
     }
 
 }

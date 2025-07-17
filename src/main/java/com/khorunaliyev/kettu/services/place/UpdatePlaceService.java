@@ -4,12 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khorunaliyev.kettu.component.PlaceDiffChecker;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
-import com.khorunaliyev.kettu.dto.mapper.PlaceMappers;
+import com.khorunaliyev.kettu.component.PlaceMappers;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.reponse.place.*;
-import com.khorunaliyev.kettu.dto.reponse.resource.IDNameDTO;
-import com.khorunaliyev.kettu.dto.reponse.resource.IDNameItemCountDTO;
-import com.khorunaliyev.kettu.dto.reponse.resource.NearbyThingsDTO;
 import com.khorunaliyev.kettu.dto.request.place.PlaceUpdateRequest;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import com.khorunaliyev.kettu.entity.place.*;
@@ -26,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

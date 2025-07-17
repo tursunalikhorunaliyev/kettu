@@ -3,7 +3,7 @@ package com.khorunaliyev.kettu.services.place;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
-import com.khorunaliyev.kettu.dto.mapper.PlaceMappers;
+import com.khorunaliyev.kettu.component.PlaceMappers;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.reponse.place.PlaceHistoryDTO;
 import com.khorunaliyev.kettu.dto.request.place.PlaceUpdateStatusRequest;

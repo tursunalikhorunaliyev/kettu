@@ -58,5 +58,4 @@ public class Place extends AuditEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PlaceStatus status = PlaceStatus.MODERATION;
-
 }

@@ -45,13 +45,14 @@ public class PlaceController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PlaceDTO>> getPlaces(@RequestParam(required = false) Long categoryId,
+    public ResponseEntity<Response> getPlaces(@RequestParam(required = false) Long categoryId,
+                                                    @RequestParam(required = false) Long subcategoryId,
                                                     @RequestParam(required = false) Long districtId,
                                                     @RequestParam(required = false) Long regionId,
                                                     @RequestParam(required = false) Long countryId,
                                                     Pageable pageable
     ) {
-        return placeService.getAllPlaces(categoryId, districtId, regionId, countryId, pageable);
+        return placeService.getAllPlaces(categoryId, subcategoryId, districtId, regionId, countryId, pageable);
     }
 
 }

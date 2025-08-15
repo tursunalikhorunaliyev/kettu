@@ -1,6 +1,11 @@
 package com.khorunaliyev.kettu.services.place;
+
 import com.khorunaliyev.kettu.component.PlaceMappers;
+import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
+import com.khorunaliyev.kettu.dto.projection.PlaceMetaDataInfo;
+import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.reponse.place.*;
+import com.khorunaliyev.kettu.repository.place.PlaceMetaDataRepository;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,12 +20,44 @@ public class PlaceService {
 
     private final PlaceRepository placeRepository;
     private final PlaceMappers placeMappers;
+    private final PlaceMetaDataRepository placeMetaDataRepository;
 
     @Cacheable("places")
-    public ResponseEntity<Page<PlaceDTO>> getAllPlaces(Long categoryId, Long districtId, Long regionId, Long countryId, Pageable pageable) {
-        Page<PlaceDTO> places = placeRepository.findAllBy(categoryId, districtId, regionId, countryId, pageable).map(placeMappers::toDto);
-        return ResponseEntity.ok(places);
+    public ResponseEntity<Response> getAllPlaces(Long categoryId, Long subcategoryId, Long districtId, Long regionId, Long countryId, Pageable pageable) {
+
+
+        if ((categoryId != null || subcategoryId != null) && (districtId == null && regionId == null && countryId == null)) {
+            if(categoryId!=null && categoryId<1){
+                throw new ResourceNotFoundException("Resource not found. Bad element");
+            }
+            else if(subcategoryId!=null && subcategoryId<1){
+                throw new ResourceNotFoundException("Resource not found. Bad element");
+            }
+            //find with metadata
+
+          return ResponseEntity.ok(new Response("Places", placeRepository.findPlacesByMetaData(categoryId, subcategoryId)));
+        }
+        else if((countryId!=null || regionId!=null || districtId!=null) && (categoryId==null && subcategoryId==null)){
+            if(countryId!=null && countryId<1){
+                throw new ResourceNotFoundException("Resource not found. Bad element");
+            }
+            else if(regionId!=null && regionId<1){
+                throw new ResourceNotFoundException("Resource not found. Bad element");
+            }
+            else if(districtId!= null && districtId<1){
+                throw new ResourceNotFoundException("Resource not found. Bad element");
+            }
+            return ResponseEntity.ok(new Response("ok","ok"));
+            //find with place location
+        }
+        else{
+            return ResponseEntity.ok(new Response("ok","ok"));
+
+            //find with place itself
+        }
+
     }
+
 
 //    public ResponseEntity<List<PlaceDTO>> getNearbyPlaces(LatLongRequest latLongRequest){
 //

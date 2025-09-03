@@ -30,7 +30,8 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
         DefaultOAuth2User oauthUser = (DefaultOAuth2User) authentication.getPrincipal();
         String email = oauthUser.getAttribute("email");
-        String name = oauthUser.getAttribute("picture");
+        String name = oauthUser.getAttribute("name");
+        String image = oauthUser.getAttribute("picture");
 
 
         // Save or update user
@@ -52,12 +53,14 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(userRole);
 
+        assert email != null;
         if(email.equals("khorunaliyev@gmail.com")){
             userRoles.add(adminRole);
         }
 
         user.setEmail(email);
         user.setName(name);
+        user.setImage(image);
         user.setRoles(userRoles);
         userRepository.save(user);
 

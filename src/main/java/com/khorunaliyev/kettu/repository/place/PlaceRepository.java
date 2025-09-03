@@ -1,6 +1,4 @@
 package com.khorunaliyev.kettu.repository.place;
-
-import com.khorunaliyev.kettu.dto.projection.FeatureInfo;
 import com.khorunaliyev.kettu.dto.projection.PlaceInfo;
 import com.khorunaliyev.kettu.entity.place.Place;
 import org.springframework.data.domain.Page;
@@ -38,13 +36,15 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     Page<PlaceInfo> findAllBy(@Param("categoryId") Long categoryId, @Param("subcategoryId") Long subcategoryId, @Param("districtId") Long districtId, @Param("regionId") Long regionId, @Param("countryId") Long countryId, Pageable pageable);
 
     @Query("""
-    SELECT p FROM Place p
-    JOIN p.metaData md
-    WHERE
-        (:categoryId IS NOT NULL OR :subCategoryId IS NOT NULL) AND
-        (:categoryId IS NULL OR md.category.id = :categoryId) AND
-        (:subCategoryId IS NULL OR md.subCategory.id = :subCategoryId)
-    """)
+            SELECT p FROM Place p
+            JOIN p.metaData md
+            WHERE
+                (:categoryId IS NOT NULL OR :subCategoryId IS NOT NULL) AND
+                (:categoryId IS NULL OR md.category.id = :categoryId) AND
+                (:subCategoryId IS NULL OR md.subCategory.id = :subCategoryId)
+            """)
     List<Place> findPlacesByMetaData(@Param("categoryId") Long categoryId,
                                      @Param("subCategoryId") Long subCategoryId);
+
+
 }

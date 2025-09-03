@@ -1,4 +1,4 @@
-package com.khorunaliyev.kettu.config;
+package com.khorunaliyev.kettu.config.other;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

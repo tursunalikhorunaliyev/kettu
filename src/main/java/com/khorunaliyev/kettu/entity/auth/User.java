@@ -25,6 +25,20 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String image;
+
+    @Column()
+    private String backgroundImage;
+
+    @Column(length = 500)
+    private String bio;
+
+    @Column(nullable = false)
+    private Integer placesCount = 0;
+
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",

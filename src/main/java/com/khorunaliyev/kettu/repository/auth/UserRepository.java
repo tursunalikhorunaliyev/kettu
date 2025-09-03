@@ -1,5 +1,6 @@
 package com.khorunaliyev.kettu.repository.auth;
 
+import com.khorunaliyev.kettu.dto.projection.UserInfo;
 import com.khorunaliyev.kettu.entity.auth.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByEmail(String email);
 
+
+
   @Query("SELECT u FROM User u WHERE u.email = :email")
   @Transactional(readOnly = true)
-  Optional<User> findDetachedByEmail(@Param("email") String email);
+  Optional<UserInfo> findDetachedByEmail(@Param("email") String email);
 }

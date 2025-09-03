@@ -37,9 +37,9 @@ public interface PlaceInfo {
 
     Set<NearbyThingsInfo> getNearbyThings();
 
-    User getCreatedBy();
+    UserInfo getCreatedBy();
 
-    User getUpdatedBy();
+    UserInfo getUpdatedBy();
 
     /**
      * Projection for {@link com.khorunaliyev.kettu.entity.place.PlacePhoto}

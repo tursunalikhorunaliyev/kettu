@@ -46,5 +46,6 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     List<Place> findPlacesByMetaData(@Param("categoryId") Long categoryId,
                                      @Param("subCategoryId") Long subCategoryId);
 
+    List<Place> findByCreatedBy_Id(Long id);
 
 }

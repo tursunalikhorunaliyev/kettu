@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kettu — Discover Places</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background: linear-gradient(135deg, #f7fafc, #eef2f7);
+            color: #111;
+        }
+        header#hero {
+            position: relative;
+            height: 75vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url("https://images.unsplash.com/photo-1528605248644-14dd04022da1?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1600");
+            background-size: cover;
+            background-position: center;
+            transform: scale(1.08);
+            will-change: transform;
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+        }
+        .hero-inner h1 {
+            font-size: clamp(28px, 5vw, 52px);
+            margin: 0 0 12px;
+        }
+        .hero-inner p {
+            margin: 0 0 18px;
+            opacity: 0.9;
+        }
+        .cta {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #ff6b6b, #ff4757);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        main {
+            padding: 50px 20px;
+            max-width: 1300px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+            margin: 0 0 26px;
+            font-size: 22px;
+        }
+        .grid {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+        .card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            min-height: 200px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.6s ease;
+        }
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate3d(0, var(--ty, 0px), 0) scale(var(--scale, 1));
+            will-change: transform;
+            transition: transform 0.6s ease;
+        }
+        .card:hover img {
+            --scale: 1.05;
+        }
+        .card .meta {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            color: #fff;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.6);
+            font-weight: 600;
+        }
+        footer {
+            text-align: center;
+            padding: 28px;
+            color: #475569;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+<header id="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+        <h1>Discover Restaurants, Sports & Chill Spots</h1>
+        <p>Explore 20 of the best places with Kettu</p>
+        <a href="#top" class="cta">Explore Now</a>
+    </div>
+</header>
+
+<main id="top">
+    <h2>Top 20 Picks</h2>
+    <div class="grid">
+        <!-- 20 cards -->
+        <article class="card"><img class="parallax" data-speed="0.18" src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Cozy Café"><div class="meta">Cozy Café</div></article>
+        <article class="card"><img class="parallax" data-speed="0.15" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Modern Restaurant"><div class="meta">Modern Restaurant</div></article>
+        <article class="card"><img class="parallax" data-speed="0.2" src="https://images.unsplash.com/photo-1549887534-7f9b5d3c7c5b?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Fitness Gym"><div class="meta">Fitness Gym</div></article>
+        <article class="card"><img class="parallax" data-speed="0.17" src="https://images.unsplash.com/photo-1521335629791-ce4aec67dd53?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Green Park"><div class="meta">Green Park</div></article>
+        <article class="card"><img class="parallax" data-speed="0.2" src="https://images.unsplash.com/photo-1481833761820-0509d3217039?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Chill Zone"><div class="meta">Chill Zone</div></article>
+        <article class="card"><img class="parallax" data-speed="0.14" src="https://images.unsplash.com/photo-1523978591478-c753949ff840?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Sport Field"><div class="meta">Sport Field</div></article>
+        <article class="card"><img class="parallax" data-speed="0.19" src="https://images.unsplash.com/photo-1543353071-087092ec393e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Nightlife Club"><div class="meta">Nightlife Club</div></article>
+        <article class="card"><img class="parallax" data-speed="0.16" src="https://images.unsplash.com/photo-1485217988980-11786ced9454?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Beach Spot"><div class="meta">Beach Spot</div></article>
+        <article class="card"><img class="parallax" data-speed="0.2" src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Rooftop Bar"><div class="meta">Rooftop Bar</div></article>
+        <article class="card"><img class="parallax" data-speed="0.15" src="https://images.unsplash.com/photo-1529429617124-95b109e86bb8?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Open Theater"><div class="meta">Open Theater</div></article>
+        <article class="card"><img class="parallax" data-speed="0.2" src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Art Museum"><div class="meta">Art Museum</div></article>
+        <article class="card"><img class="parallax" data-speed="0.17" src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Live Concert"><div class="meta">Live Concert</div></article>
+        <article class="card"><img class="parallax" data-speed="0.14" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Lake View"><div class="meta">Lake View</div></article>
+        <article class="card"><img class="parallax" data-speed="0.19" src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Mountain Spot"><div class="meta">Mountain Spot</div></article>
+        <article class="card"><img class="parallax" data-speed="0.18" src="https://images.unsplash.com/photo-1483683804023-6ccdb62f86ef?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="City Library"><div class="meta">City Library</div></article>
+        <article class="card"><img class="parallax" data-speed="0.16" src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Street Market"><div class="meta">Street Market</div></article>
+        <article class="card"><img class="parallax" data-speed="0.2" src="https://images.unsplash.com/photo-1498654896293-37aacf113fd9?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Botanical Garden"><div class="meta">Botanical Garden</div></article>
+        <article class="card"><img class="parallax" data-speed="0.14" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Seaside Chill"><div class="meta">Seaside Chill</div></article>
+        <article class="card"><img class="parallax" data-speed="0.18" src="https://images.unsplash.com/photo-1468070454955-c5b6932bd08d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Iconic Bridge"><div class="meta">Iconic Bridge</div></article>
+        <article class="card"><img class="parallax" data-speed="0.2" src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&w=1200" alt="Shopping Mall"><div class="meta">Shopping Mall</div></article>
+    </div>
+</main>
+
+<footer>&copy; 2025 Kettu — All rights reserved</footer>
+
+<script>
+    // Fade-in on scroll
+    const cards = document.querySelectorAll('.card');
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                io.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    cards.forEach(c => io.observe(c));
+
+    // Parallax scroll effect
+    const elems = [...document.querySelectorAll('.parallax')];
+    function update() {
+        elems.forEach(img => {
+            const rect = img.closest('.card').getBoundingClientRect();
+            const distance = rect.top + rect.height / 2 - window.innerHeight / 2;
+            const speed = parseFloat(img.dataset.speed || 0.15);
+            const offset = -distance * speed;
+            img.style.setProperty('--ty', offset + 'px');
+        });
+    }
+    window.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+    update();
+</script>
+
+</body>
+</html>

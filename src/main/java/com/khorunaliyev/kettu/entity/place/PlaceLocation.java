@@ -18,7 +18,8 @@ public class PlaceLocation {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne(mappedBy = "location")
+    @OneToOne
+    @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
     @ManyToOne(fetch = FetchType.EAGER)

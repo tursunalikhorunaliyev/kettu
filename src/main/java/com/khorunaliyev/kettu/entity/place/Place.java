@@ -32,13 +32,14 @@ public class Place extends AuditEntity {
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<PlacePhoto> photos = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "place_location_id", nullable = false)
+
+    @OneToOne(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private PlaceLocation location;
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "place_meta_data_id", nullable = false)
+    @OneToOne(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private PlaceMetaData metaData;
+
+
 
     @ManyToMany
     @JoinTable(name = "place_nearby_things", joinColumns = @JoinColumn(name = "place_id"), inverseJoinColumns = @JoinColumn(name = "thing_id"))

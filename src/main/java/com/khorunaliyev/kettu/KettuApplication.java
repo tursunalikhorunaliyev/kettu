@@ -10,9 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 @EnableCaching
 public class KettuApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(KettuApplication.class, args);
 	}
-
 }

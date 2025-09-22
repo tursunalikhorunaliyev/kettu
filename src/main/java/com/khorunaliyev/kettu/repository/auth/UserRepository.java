@@ -14,8 +14,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByEmail(String email);
 
-
-
   @Query("SELECT u FROM User u WHERE u.email = :email")
   @Transactional(readOnly = true)
   Optional<UserInfo> findDetachedByEmail(@Param("email") String email);

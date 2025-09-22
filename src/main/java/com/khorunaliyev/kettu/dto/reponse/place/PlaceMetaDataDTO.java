@@ -13,5 +13,5 @@ import lombok.Setter;
 public class PlaceMetaDataDTO {
     private Long id;
     private IDNameDTO feature;
-    private IDNameItemCountDTO category, subCategory;
+    private IDNameItemCountDTO category;
 }

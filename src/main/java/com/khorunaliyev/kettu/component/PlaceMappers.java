@@ -10,6 +10,7 @@ import com.khorunaliyev.kettu.entity.place.PlacePhoto;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
+
 @Component
 public class PlaceMappers {
     public PlaceDTO toDto(PlaceInfo p) {
@@ -23,13 +24,12 @@ public class PlaceMappers {
                         .findFirst().orElse(null), p.getPhotos().stream().filter(placePhotoInfo -> !placePhotoInfo.isIsMain()).map(PlaceInfo.PlacePhotoInfo::getImage).toList()),
                 new PlaceMetaDataDTO(p.getMetaData().getId(),
                         new IDNameDTO(p.getMetaData().getFeature().getId(), p.getMetaData().getFeature().getName()),
-                        new IDNameItemCountDTO(p.getMetaData().getCategory().getId(), p.getMetaData().getCategory().getName(), p.getMetaData().getCategory().getActiveItemCount()),
-                        new IDNameItemCountDTO(p.getMetaData().getSubCategory().getId(), p.getMetaData().getSubCategory().getName(), p.getMetaData().getSubCategory().getActiveItemCount())),
+                        new IDNameItemCountDTO(p.getMetaData().getCategory().getId(), p.getMetaData().getCategory().getName(), p.getMetaData().getCategory().getActiveItemCount())),
                 new PlaceLocationDTO(p.getLocation().getId(),
                         new IDNameItemCountDTO(p.getLocation().getCountry().getId(), p.getLocation().getCountry().getName(), p.getLocation().getCountry().getActiveItemCount()),
                         new IDNameItemCountDTO(p.getLocation().getRegion().getId(), p.getLocation().getRegion().getName(), p.getLocation().getRegion().getActiveItemCount()),
                         new IDNameDTO(p.getLocation().getDistrict().getId(), p.getLocation().getDistrict().getName())),
-                p.getNearbyThings().stream().map(ns -> new NearbyThingsDTO(ns.getId(), ns.getName(), "https://storage.thekettu.com/"+ns.getIcon())).collect(Collectors.toSet()),
+                p.getNearbyThings().stream().map(ns -> new NearbyThingsDTO(ns.getId(), ns.getName(), "https://storage.thekettu.com/" + ns.getIcon())).collect(Collectors.toSet()),
                 p.getVisitedUsers().stream().map(vu -> new UserDTO(vu.getId(), vu.getName(), vu.getEmail())).collect(Collectors.toSet()),
                 p.getLikedUsers().stream().map(lu -> new UserDTO(lu.getId(), lu.getName(), lu.getEmail())).collect(Collectors.toSet()),
                 p.getLikesCount(),
@@ -37,6 +37,7 @@ public class PlaceMappers {
                 p.getUpdatedAt()
         );
     }
+
     public PlaceHistoryDTO placeHistoryDTO(Place p) {
         return new PlaceHistoryDTO(p.getId(),
                 p.getName(),
@@ -48,8 +49,7 @@ public class PlaceMappers {
                         .findFirst().orElse(null), p.getPhotos().stream().filter(placePhotoInfo -> !placePhotoInfo.isMain()).map(PlacePhoto::getImage).toList()),
                 new PlaceMetaDataDTO(p.getMetaData().getId(),
                         new IDNameDTO(p.getMetaData().getFeature().getId(), p.getMetaData().getFeature().getName()),
-                        new IDNameItemCountDTO(p.getMetaData().getCategory().getId(), p.getMetaData().getCategory().getName(), p.getMetaData().getCategory().getActiveItemCount()),
-                        new IDNameItemCountDTO(p.getMetaData().getSubCategory().getId(), p.getMetaData().getSubCategory().getName(), p.getMetaData().getSubCategory().getActiveItemCount())),
+                        new IDNameItemCountDTO(p.getMetaData().getCategory().getId(), p.getMetaData().getCategory().getName(), p.getMetaData().getCategory().getActiveItemCount())),
                 new PlaceLocationDTO(p.getLocation().getId(),
                         new IDNameItemCountDTO(p.getLocation().getCountry().getId(), p.getLocation().getCountry().getName(), p.getLocation().getCountry().getActiveItemCount()),
                         new IDNameItemCountDTO(p.getLocation().getRegion().getId(), p.getLocation().getRegion().getName(), p.getLocation().getRegion().getActiveItemCount()),

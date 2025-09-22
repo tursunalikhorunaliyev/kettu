@@ -18,7 +18,6 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "location.region",
             "location.district",
             "metaData.category",
-            "metaData.subCategory",
             "metaData.feature",
             "photos",
             "nearbyThings",
@@ -28,20 +27,18 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     @Query("""
             SELECT p FROM Place p
             WHERE (:categoryId IS NULL OR p.metaData.category.id = :categoryId)
-            AND (:subcategoryId IS NULL OR p.metaData.subCategory.id = :subcategoryId)
             AND (:districtId IS NULL OR p.location.district.id = :districtId)
             AND (:regionId IS NULL OR p.location.region.id = :regionId)
             AND (:countryId IS NULL OR p.location.country.id = :countryId)
             """)
-    Page<PlaceInfo> findAllBy(@Param("categoryId") Long categoryId, @Param("subcategoryId") Long subcategoryId, @Param("districtId") Long districtId, @Param("regionId") Long regionId, @Param("countryId") Long countryId, Pageable pageable);
+    Page<PlaceInfo> findAllBy(@Param("categoryId") Long categoryId, @Param("districtId") Long districtId, @Param("regionId") Long regionId, @Param("countryId") Long countryId, Pageable pageable);
 
     @Query("""
             SELECT p FROM Place p
             JOIN p.metaData md
             WHERE
                 (:categoryId IS NOT NULL OR :subCategoryId IS NOT NULL) AND
-                (:categoryId IS NULL OR md.category.id = :categoryId) AND
-                (:subCategoryId IS NULL OR md.subCategory.id = :subCategoryId)
+                (:categoryId IS NULL OR md.category.id = :categoryId)
             """)
     List<Place> findPlacesByMetaData(@Param("categoryId") Long categoryId,
                                      @Param("subCategoryId") Long subCategoryId);

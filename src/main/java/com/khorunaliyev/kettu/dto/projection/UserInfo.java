@@ -2,6 +2,8 @@ package com.khorunaliyev.kettu.dto.projection;
 
 public interface UserInfo {
 
+    Long getId();
+
     String getName();
 
     String getEmail();
@@ -12,5 +14,7 @@ public interface UserInfo {
 
     String getBio();
 
-    Integer getPlacesCount();
+    Integer getCreatedPlacesCount();
+
+    Integer getVisitedPlacesCount();
 }

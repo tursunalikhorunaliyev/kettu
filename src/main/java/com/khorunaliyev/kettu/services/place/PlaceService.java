@@ -18,26 +18,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PlaceService {
 
-    private final PlaceRepository placeRepository;
-    private final PlaceMappers placeMappers;
-    private final PlaceMetaDataRepository placeMetaDataRepository;
-
     @Cacheable("places")
-    public ResponseEntity<Response> getAllPlaces(Long categoryId, Long subcategoryId, Long districtId, Long regionId, Long countryId, Pageable pageable) {
+    public ResponseEntity<Response> getAllPlaces(Long categoryId,Long districtId, Long regionId, Long countryId, Pageable pageable) {
 
 
-        if ((categoryId != null || subcategoryId != null) && (districtId == null && regionId == null && countryId == null)) {
-            if(categoryId!=null && categoryId<1){
-                throw new ResourceNotFoundException("Resource not found. Bad element");
-            }
-            else if(subcategoryId!=null && subcategoryId<1){
-                throw new ResourceNotFoundException("Resource not found. Bad element");
-            }
-            //find with metadata
 
-          return ResponseEntity.ok(new Response("Places", placeRepository.findPlacesByMetaData(categoryId, subcategoryId)));
-        }
-        else if((countryId!=null || regionId!=null || districtId!=null) && (categoryId==null && subcategoryId==null)){
+         if((countryId!=null || regionId!=null || districtId!=null) && (categoryId==null)){
             if(countryId!=null && countryId<1){
                 throw new ResourceNotFoundException("Resource not found. Bad element");
             }
@@ -47,14 +33,13 @@ public class PlaceService {
             else if(districtId!= null && districtId<1){
                 throw new ResourceNotFoundException("Resource not found. Bad element");
             }
-            return ResponseEntity.ok(new Response("ok","ok"));
-            //find with place location
+             //find with place location
         }
         else{
-            return ResponseEntity.ok(new Response("ok","ok"));
 
-            //find with place itself
+             //find with place itself
         }
+        return ResponseEntity.ok(new Response("ok","ok"));
 
     }
 

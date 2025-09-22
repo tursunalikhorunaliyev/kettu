@@ -34,7 +34,6 @@ public class UpdatePlaceService {
     private final DistrictRepository districtRepository;
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
-    private final SubCategoryRepository subCategoryRepository;
     private final CategoryRepository categoryRepository;
     private final FeatureRepository featureRepository;
     private final NearbyThingsRepository nearbyThingsRepository;
@@ -105,7 +104,6 @@ public class UpdatePlaceService {
             PlaceMetaData placeMetaData = new PlaceMetaData();
             placeMetaData.setFeature(featureRepository.findById(request.getPlaceMetaData().getFeatureId()).orElseThrow(() -> new ResourceNotFoundException("Feature not found")));
             placeMetaData.setCategory(categoryRepository.findById(request.getPlaceMetaData().getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category not found")));
-            placeMetaData.setSubCategory(subCategoryRepository.findById(request.getPlaceMetaData().getSubcategoryId()).orElseThrow(() -> new ResourceNotFoundException("Subcategory not found")));
             place.setMetaData(placeMetaData);
         }
 
@@ -120,12 +118,6 @@ public class UpdatePlaceService {
             category.setActiveItemCount(categoryActiveItemCount);
             categoryRepository.save(category);
 
-            SubCategory subCategory = place.getMetaData().getSubCategory();
-            int subCategoryActiveItemCount = subCategory.getActiveItemCount() - 1;
-            if (subCategoryActiveItemCount < 0)
-                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
-            subCategory.setActiveItemCount(subCategoryActiveItemCount);
-            subCategoryRepository.save(subCategory);
 
             Country country = place.getLocation().getCountry();
             int countryActiveItemCount = country.getActiveItemCount() - 1;

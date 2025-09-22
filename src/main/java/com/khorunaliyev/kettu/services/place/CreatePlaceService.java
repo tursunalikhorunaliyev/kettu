@@ -34,7 +34,6 @@ public class CreatePlaceService {
     private final NearbyThingsRepository nearbyThingsRepository;
     private final FeatureRepository featureRepository;
     private final CategoryRepository categoryRepository;
-    private final SubCategoryRepository subCategoryRepository;
     private final PlaceRepository placeRepository;
 
     @Transactional
@@ -73,14 +72,13 @@ public class CreatePlaceService {
         //Place NearbyThings finding
         Set<NearbyThings> placeNearbyThings = new HashSet<>(nearbyThingsRepository.findAllByIds(nearByThings));
         if (placeNearbyThings.size() != nearByThings.size())
-            throw new ResourceNotFoundException("Nearby things not found or not found fully");
+            throw new ResourceNotFoundException("Nearby things not found or  not found fully");
 
 
         //PlaceMetaData creating
         PlaceMetaData placeMetaData = new PlaceMetaData();
         placeMetaData.setFeature(featureRepository.findById(placeMetaDataRequest.getFeatureId()).orElseThrow(() -> new ResourceNotFoundException("Feature not found")));
         placeMetaData.setCategory(categoryRepository.findById(placeMetaDataRequest.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category not found")));
-        placeMetaData.setSubCategory(subCategoryRepository.findById(placeMetaDataRequest.getSubcategoryId()).orElseThrow(() -> new ResourceNotFoundException("Subcategory not found")));
         placeMetaData.setPlace(place);
 
 

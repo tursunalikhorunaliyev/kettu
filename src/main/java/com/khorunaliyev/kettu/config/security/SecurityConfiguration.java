@@ -40,6 +40,9 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PUT, "/api/resources/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/resources/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/places/**").permitAll()
+                        .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**").permitAll()
+                        // allow favicon
+                        .requestMatchers("/favicon.ico").permitAll()
 
 
                         .requestMatchers("/api/resources/**", "/admin/**", "/api/public/**", "/oauth2/**", "/login/**", "/api/auth/**", "/api/files/**", "/auth-redirect.html", "/swagger-ui/**",

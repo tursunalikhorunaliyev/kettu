@@ -2,10 +2,13 @@ package com.khorunaliyev.kettu.entity.place;
 
 import com.khorunaliyev.kettu.entity.resources.Category;
 import com.khorunaliyev.kettu.entity.resources.Feature;
-import com.khorunaliyev.kettu.entity.resources.SubCategory;
+import com.khorunaliyev.kettu.entity.resources.Tag;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,7 +20,8 @@ public class PlaceMetaData {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne(mappedBy = "metaData")
+    @OneToOne
+    @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,7 +32,7 @@ public class PlaceMetaData {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sub_category_id", nullable = false)
-    private SubCategory subCategory;
+    @ManyToMany
+    @JoinTable(name = "place_tags", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "place_meta_data_id"))
+    private Set<Tag> tags = new HashSet<>();
 }

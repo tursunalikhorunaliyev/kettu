@@ -22,12 +22,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ChangePlaceStatusService {
+public class  ChangePlaceStatusService {
 
     private final PlaceRepository placeRepository;
     private final ObjectMapper objectMapper;
     private final CategoryRepository categoryRepository;
-    private final SubCategoryRepository subCategoryRepository;
     private final CountryRepository countryRepository;
     private final RegionRepository regionRepository;
     private final DistrictRepository districtRepository;
@@ -71,13 +70,6 @@ public class ChangePlaceStatusService {
             category.setActiveItemCount(categoryActiveItemCount);
             categoryRepository.save(category);
 
-            SubCategory subCategory = place.getMetaData().getSubCategory();
-            int subCategoryActiveItemCount = subCategory.getActiveItemCount() + 1;
-            if (subCategoryActiveItemCount < 0)
-                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
-            subCategory.setActiveItemCount(subCategoryActiveItemCount);
-            subCategoryRepository.save(subCategory);
-
             Country country = place.getLocation().getCountry();
             int countryActiveItemCount = country.getActiveItemCount() + 1;
             if (countryActiveItemCount < 0)
@@ -107,13 +99,6 @@ public class ChangePlaceStatusService {
                 return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
             category.setActiveItemCount(categoryActiveItemCount);
             categoryRepository.save(category);
-
-            SubCategory subCategory = place.getMetaData().getSubCategory();
-            int subCategoryActiveItemCount = subCategory.getActiveItemCount() - 1;
-            if (subCategoryActiveItemCount < 0)
-                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
-            subCategory.setActiveItemCount(subCategoryActiveItemCount);
-            subCategoryRepository.save(subCategory);
 
             Country country = place.getLocation().getCountry();
             int countryActiveItemCount = country.getActiveItemCount() - 1;

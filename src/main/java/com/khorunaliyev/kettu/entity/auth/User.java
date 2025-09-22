@@ -35,7 +35,10 @@ public class User implements UserDetails {
     private String bio;
 
     @Column(nullable = false)
-    private Integer placesCount = 0;
+    private Integer createdPlacesCount = 0;
+
+    @Column(nullable = false)
+    private Integer visitedPlacesCount = 0;
 
 
 

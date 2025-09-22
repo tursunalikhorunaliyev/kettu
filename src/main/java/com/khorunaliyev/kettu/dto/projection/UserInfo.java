@@ -12,5 +12,7 @@ public interface UserInfo {
 
     String getBio();
 
-    Integer getPlacesCount();
+    Integer getCreatedPlacesCount();
+
+    Integer getVisitedPlacesCount();
 }

@@ -2,6 +2,8 @@ package com.khorunaliyev.kettu.dto.projection;
 
 public interface UserInfo {
 
+    Long getId();
+
     String getName();
 
     String getEmail();

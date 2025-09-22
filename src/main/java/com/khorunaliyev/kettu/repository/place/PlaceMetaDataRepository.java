@@ -11,5 +11,5 @@ import java.util.List;
 
 @Repository
 public interface PlaceMetaDataRepository extends JpaRepository<PlaceMetaData, Long> {
-    List<PlaceMetaDataInfo> findByCategory_IdAndCategory_SubCategories_Id(@Nullable Long id, @Nullable Long id1);
+    List<PlaceMetaDataInfo> findByCategory_Id(@Nullable Long id);
 }

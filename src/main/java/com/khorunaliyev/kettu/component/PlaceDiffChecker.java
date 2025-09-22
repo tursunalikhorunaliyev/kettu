@@ -30,7 +30,7 @@ public class PlaceDiffChecker {
 
             if (!Objects.equals(placeMetaData.getFeature().getId(), placeMetaDataRequest.getFeatureId())) return true;
             if (!Objects.equals(placeMetaData.getCategory().getId(), placeMetaDataRequest.getCategoryId())) return true;
-            return !Objects.equals(placeMetaData.getSubCategory().getId(), placeMetaDataRequest.getSubcategoryId());
+
         }
 
         if (request.getPlaceLocation() != null) {

@@ -32,8 +32,6 @@ public class Category {
     @Column(nullable = false)
     private Integer activeItemCount = 0;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
-    private List<SubCategory> subCategories;
 
     @ManyToMany
     @JoinTable(name = "category_tags", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))

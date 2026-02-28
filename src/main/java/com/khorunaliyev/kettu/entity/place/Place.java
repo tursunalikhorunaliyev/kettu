@@ -1,7 +1,7 @@
 package com.khorunaliyev.kettu.entity.place;
 
 import com.khorunaliyev.kettu.entity.audit.AuditEntity;
-import com.khorunaliyev.kettu.entity.auth.User;
+import com.khorunaliyev.kettu.entity.auth.AppUser;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import com.khorunaliyev.kettu.entity.resources.NearbyThings;
 import jakarta.persistence.*;
@@ -44,11 +44,11 @@ public class Place extends AuditEntity {
 
     @ManyToMany
     @JoinTable(name = "visited_users", joinColumns = @JoinColumn(name = "place_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> visitedUsers = new HashSet<>();
+    private Set<AppUser> visitedKettuUsers = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "liked_users", joinColumns = @JoinColumn(name = "place_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> likedUsers = new HashSet<>();
+    private Set<AppUser> likedKettuUsers = new HashSet<>();
 
     @Column(nullable = false)
     private Integer likesCount = 0;

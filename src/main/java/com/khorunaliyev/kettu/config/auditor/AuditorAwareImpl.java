@@ -1,6 +1,6 @@
 package com.khorunaliyev.kettu.config.auditor;
 
-import com.khorunaliyev.kettu.entity.auth.User;
+import com.khorunaliyev.kettu.entity.auth.AppUser;
 import com.khorunaliyev.kettu.repository.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.AuditorAware;
@@ -14,20 +14,20 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class AuditorAwareImpl implements AuditorAware<User> {
+public class AuditorAwareImpl implements AuditorAware<AppUser> {
 
     private final UserRepository userRepository;
 
     @Override
-    public Optional<User> getCurrentAuditor() {
+    public Optional<AppUser> getCurrentAuditor() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth instanceof AnonymousAuthenticationToken) {
             return Optional.empty();
         }
         Object principal = auth.getPrincipal();
-        if (principal instanceof User user) {
+        if (principal instanceof AppUser appUser) {
             System.out.println("USER");
-            return Optional.of(user);
+            return Optional.of(appUser);
         } else if (principal instanceof UserDetails userDetails) {
             System.out.println("USERDETAILS");
             String username = userDetails.getUsername();

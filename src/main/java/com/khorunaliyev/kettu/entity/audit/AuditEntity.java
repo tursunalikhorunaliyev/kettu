@@ -1,6 +1,6 @@
 package com.khorunaliyev.kettu.entity.audit;
 
-import com.khorunaliyev.kettu.entity.auth.User;
+import com.khorunaliyev.kettu.entity.auth.AppUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,11 +29,11 @@ public class AuditEntity {
     @CreatedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by",updatable = false, nullable = false)
-    protected User createdBy;
+    protected AppUser createdBy;
 
     @LastModifiedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updated_by", nullable = false)
-    protected User updatedBy;
+    protected AppUser updatedBy;
 
 }

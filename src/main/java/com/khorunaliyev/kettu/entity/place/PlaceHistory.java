@@ -1,17 +1,9 @@
 package com.khorunaliyev.kettu.entity.place;
 
 import com.khorunaliyev.kettu.entity.audit.AuditEntity;
-import com.khorunaliyev.kettu.entity.auth.User;
-import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
-import com.khorunaliyev.kettu.entity.resources.Feature;
-import com.khorunaliyev.kettu.entity.resources.NearbyThings;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter

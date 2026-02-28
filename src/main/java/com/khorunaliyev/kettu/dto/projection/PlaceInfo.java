@@ -1,6 +1,6 @@
 package com.khorunaliyev.kettu.dto.projection;
 
-import com.khorunaliyev.kettu.entity.auth.User;
+import com.khorunaliyev.kettu.entity.auth.AppUser;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 
 import java.time.LocalDateTime;
@@ -83,7 +83,7 @@ public interface PlaceInfo {
     }
 
     /**
-     * Projection for {@link com.khorunaliyev.kettu.entity.auth.User}
+     * Projection for {@link AppUser}
      */
     interface UserInfo {
         Long getId();

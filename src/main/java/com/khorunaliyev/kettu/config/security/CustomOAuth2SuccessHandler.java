@@ -1,7 +1,7 @@
 package com.khorunaliyev.kettu.config.security;
 
+import com.khorunaliyev.kettu.entity.auth.AppUser;
 import com.khorunaliyev.kettu.entity.auth.Role;
-import com.khorunaliyev.kettu.entity.auth.User;
 import com.khorunaliyev.kettu.repository.auth.RoleRepository;
 import com.khorunaliyev.kettu.repository.auth.UserRepository;
 import jakarta.servlet.ServletException;
@@ -35,7 +35,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
 
         // Save or update user
-        User user = userRepository.findByEmail(email).orElseGet(User::new);
+        AppUser appUser = userRepository.findByEmail(email).orElseGet(AppUser::new);
 
         Role userRole = roleRepository.findByName("USER")
                 .orElseGet(() -> {
@@ -58,14 +58,14 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
             userRoles.add(adminRole);
         }
 
-        user.setEmail(email);
-        user.setName(name);
-        user.setImage(image);
-        user.setRoles(userRoles);
-        userRepository.save(user);
+        appUser.setEmail(email);
+        appUser.setName(name);
+        appUser.setImage(image);
+        appUser.setRoles(userRoles);
+        userRepository.save(appUser);
 
         // Generate JWT
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(appUser);
 
         response.sendRedirect("http://localhost:8080/auth-redirect.html?token=" + jwtToken);
 //        response.setContentType("application/json");

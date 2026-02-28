@@ -1,20 +1,15 @@
 package com.khorunaliyev.kettu.services.user;
 
 import com.khorunaliyev.kettu.component.UserDiffChecker;
-import com.khorunaliyev.kettu.config.security.JWTGenerator;
-import com.khorunaliyev.kettu.dto.projection.PlaceInfo;
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.reponse.place.PlaceDTO;
-import com.khorunaliyev.kettu.dto.reponse.place.PlacePhotoDTO;
 import com.khorunaliyev.kettu.dto.request.user.UserUpdate;
-import com.khorunaliyev.kettu.entity.auth.User;
+import com.khorunaliyev.kettu.entity.auth.AppUser;
 import com.khorunaliyev.kettu.repository.auth.UserRepository;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -32,31 +27,31 @@ public class UserService {
     }
 
     public ResponseEntity<Response> update(Authentication authentication,UserUpdate userUpdate){
-        final User user = userRepository.findById(userUpdate.getUserId()).orElseThrow(() -> new UsernameNotFoundException("ser not found"));
-        final User userWithEmail = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("ser not found"));
-        if(!user.getId().equals(userWithEmail.getId())){
+        final AppUser appUser = userRepository.findById(userUpdate.getUserId()).orElseThrow(() -> new UsernameNotFoundException("ser not found"));
+        final AppUser appUserWithEmail = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("ser not found"));
+        if(!appUser.getId().equals(appUserWithEmail.getId())){
             return new ResponseEntity<>(new Response("Failed", "Conflict with user id") ,HttpStatus.BAD_REQUEST);
         }
-        if(userDiffChecker.isUserSame(user, userUpdate)) return new ResponseEntity<>(new Response("No difference", null), HttpStatus.NO_CONTENT);
+        if(userDiffChecker.isUserSame(appUser, userUpdate)) return new ResponseEntity<>(new Response("No difference", null), HttpStatus.NO_CONTENT);
         if(userUpdate.getName()!=null){
-            user.setName(userUpdate.getName().trim());
+            appUser.setName(userUpdate.getName().trim());
         }
         if(userUpdate.getImage()!=null){
-            user.setImage(userUpdate.getImage().trim());
+            appUser.setImage(userUpdate.getImage().trim());
         }
         if(userUpdate.getBackgroundImage()!=null){
-            user.setBackgroundImage(userUpdate.getBackgroundImage().trim());
+            appUser.setBackgroundImage(userUpdate.getBackgroundImage().trim());
         }
         if(userUpdate.getBio()!=null){
-            user.setBio(userUpdate.getBio());
+            appUser.setBio(userUpdate.getBio());
         }
-        userRepository.save(user);
-        return ResponseEntity.ok(new Response("User updated", user));
+        userRepository.save(appUser);
+        return ResponseEntity.ok(new Response("User updated", appUser));
     }
 
     public ResponseEntity<Response> getPlaces(Authentication authentication){
-        final User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return ResponseEntity.ok(new Response("User places",placeRepository.findByCreatedBy_Id(user.getId())));
+        final AppUser appUser = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return ResponseEntity.ok(new Response("User places",placeRepository.findByCreatedBy_Id(appUser.getId())));
     }
 
 

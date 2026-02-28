@@ -10,10 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Entity
 @Getter
 @Setter
-public class User implements UserDetails {
+@Entity
+@Table(name = "app_user")
+public class AppUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

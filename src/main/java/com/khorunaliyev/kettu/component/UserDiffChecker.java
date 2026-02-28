@@ -1,24 +1,22 @@
 package com.khorunaliyev.kettu.component;
 
 import com.khorunaliyev.kettu.dto.request.user.UserUpdate;
-import com.khorunaliyev.kettu.entity.auth.User;
+import com.khorunaliyev.kettu.entity.auth.AppUser;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 @Component
 public class UserDiffChecker {
 
-    public boolean isUserSame(User user, UserUpdate userUpdate) {
-        if(user.getBio()!=null && user.getBackgroundImage()==null){
+    public boolean isUserSame(AppUser appUser, UserUpdate userUpdate) {
+        if(appUser.getBio()!=null && appUser.getBackgroundImage()==null){
             return false;
         }
-        if (user.getName().trim().equals(userUpdate.getName().trim())) {
+        if (appUser.getName().trim().equals(userUpdate.getName().trim())) {
             return true;
         }
-        if (user.getImage().trim().equals(userUpdate.getImage().trim())) {
+        if (appUser.getImage().trim().equals(userUpdate.getImage().trim())) {
             return true;
         }
-        return user.getBackgroundImage().trim().equals(userUpdate.getBackgroundImage().trim());
+        return appUser.getBackgroundImage().trim().equals(userUpdate.getBackgroundImage().trim());
     }
 }

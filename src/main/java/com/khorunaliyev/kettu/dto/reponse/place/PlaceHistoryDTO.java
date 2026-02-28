@@ -1,7 +1,6 @@
 package com.khorunaliyev.kettu.dto.reponse.place;
 
 import com.khorunaliyev.kettu.dto.reponse.resource.NearbyThingsDTO;
-import com.khorunaliyev.kettu.entity.auth.User;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

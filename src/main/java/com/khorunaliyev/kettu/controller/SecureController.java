@@ -1,6 +1,6 @@
 package com.khorunaliyev.kettu.controller;
 
-import com.khorunaliyev.kettu.entity.auth.User;
+import com.khorunaliyev.kettu.entity.auth.AppUser;
 import com.khorunaliyev.kettu.repository.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class SecureController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/me")
-    public ResponseEntity<User> getAdmin(){
+    public ResponseEntity<AppUser> getAdmin(){
         return ResponseEntity.ok(userRepository.findByEmail("khorunaliyev@gmail.com").get());
     }
 }

@@ -10,7 +10,6 @@ import com.khorunaliyev.kettu.entity.place.Place;
 import com.khorunaliyev.kettu.entity.place.PlaceLocation;
 import com.khorunaliyev.kettu.entity.place.PlaceMetaData;
 import com.khorunaliyev.kettu.entity.place.PlacePhoto;
-import com.khorunaliyev.kettu.entity.resources.NearbyThings;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
 import jakarta.transaction.Transactional;
@@ -31,8 +30,6 @@ public class CreatePlaceService {
     private final CountryRepository countryRepository;
     private final RegionRepository regionRepository;
     private final DistrictRepository districtRepository;
-    private final NearbyThingsRepository nearbyThingsRepository;
-    private final FeatureRepository featureRepository;
     private final CategoryRepository categoryRepository;
     private final PlaceRepository placeRepository;
 
@@ -51,9 +48,10 @@ public class CreatePlaceService {
 
         //PlaceLocation creation
         PlaceLocation placeLocation = new PlaceLocation();
-        placeLocation.setCountry(countryRepository.findById(location.getCountryId()).orElseThrow(() -> new RequestRejectedException("Country not found")));
-        placeLocation.setRegion(regionRepository.findById(location.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("Region not found")));
-        placeLocation.setDistrict(districtRepository.findById(location.getDistrictId()).orElseThrow(() -> new ResourceNotFoundException("District not found")));
+
+//        placeLocation.setCountry(countryRepository.findById(location.getCountryId()).orElseThrow(() -> new RequestRejectedException("Country not found")));
+//        placeLocation.setRegion(regionRepository.findById(location.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("Region not found")));
+//        placeLocation.setDistrict(districtRepository.findById(location.getDistrictId()).orElseThrow(() -> new ResourceNotFoundException("District not found")));
         placeLocation.setLat_(location.getLat_());
         placeLocation.setLong_(location.getLong_());
         placeLocation.setPlace(place);
@@ -70,14 +68,10 @@ public class CreatePlaceService {
 
 
         //Place NearbyThings finding
-        Set<NearbyThings> placeNearbyThings = new HashSet<>(nearbyThingsRepository.findAllByIds(nearByThings));
-        if (placeNearbyThings.size() != nearByThings.size())
-            throw new ResourceNotFoundException("Nearby things not found or  not found fully");
-
 
         //PlaceMetaData creating
         PlaceMetaData placeMetaData = new PlaceMetaData();
-        placeMetaData.setFeature(featureRepository.findById(placeMetaDataRequest.getFeatureId()).orElseThrow(() -> new ResourceNotFoundException("Feature not found")));
+
         placeMetaData.setCategory(categoryRepository.findById(placeMetaDataRequest.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category not found")));
         placeMetaData.setPlace(place);
 
@@ -86,7 +80,7 @@ public class CreatePlaceService {
         place.setDescription(description.trim());
         place.setLocation(placeLocation);
         place.setPhotos(placePhotoEntities);
-        place.setNearbyThings(placeNearbyThings);
+
         place.setMetaData(placeMetaData);
 
         placeRepository.save(place);

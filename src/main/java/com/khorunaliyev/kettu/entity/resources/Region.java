@@ -1,11 +1,9 @@
 package com.khorunaliyev.kettu.entity.resources;
 
-import com.khorunaliyev.kettu.entity.audit.AuditEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -18,19 +16,15 @@ public class Region {
     @Column(name = "id", nullable = false)
     private Long id;
 
-
     @Column(nullable = false, unique = true, length = 85)
     private String name;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-
     @OneToMany(mappedBy = "region",cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
     Set<District> districts;
-
 
     @Column(nullable = false)
     private Integer activeItemCount = 0;

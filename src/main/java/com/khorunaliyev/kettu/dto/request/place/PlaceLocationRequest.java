@@ -10,15 +10,6 @@ import lombok.Setter;
 public class PlaceLocationRequest {
     @NotNull
     @Positive
-    private Long countryId;
-    @NotNull
-    @Positive
-    private Long regionId;
-    @NotNull
-    @Positive
-    private Long districtId;
-    @NotNull
-    @Positive
     private double lat_;
     @NotNull
     @Positive

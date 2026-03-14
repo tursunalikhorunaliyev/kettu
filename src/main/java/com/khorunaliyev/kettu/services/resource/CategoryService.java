@@ -4,10 +4,7 @@ import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.reponse.resource.IDNameItemCountDTO;
 import com.khorunaliyev.kettu.entity.resources.Category;
-import com.khorunaliyev.kettu.entity.resources.Country;
-import com.khorunaliyev.kettu.entity.resources.Feature;
 import com.khorunaliyev.kettu.repository.resource.CategoryRepository;
-import com.khorunaliyev.kettu.repository.resource.FeatureRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -26,14 +23,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final FeatureRepository featureRepository;
 
 
     public ResponseEntity<Response> createCategory(String name, Long featureId){
-        Feature feature = featureRepository.findById(featureId).orElseThrow(() -> new ResourceNotFoundException("Feature not found"));
         Category category = new Category();
         category.setName(name);
-        category.setFeature(feature);
         categoryRepository.save(category);
         return new ResponseEntity<>(new Response("Category created", null), HttpStatus.CREATED);
     }
@@ -45,8 +39,8 @@ public class CategoryService {
         return ResponseEntity.ok(new Response("Category updated", null));
     }
 
-    public ResponseEntity<Response> importFromExcel(Long featureId, MultipartFile file){
-        Feature feature = featureRepository.findById(featureId).orElseThrow(() -> new ResourceNotFoundException("Feature not found"));
+    public ResponseEntity<Response> importFromExcel(MultipartFile file){
+
         try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0);
             List<Category> categories = new ArrayList<>();
@@ -56,7 +50,6 @@ public class CategoryService {
                 if (name != null) {
                     Category category = new Category();
                     category.setName(name);
-                    category.setFeature(feature);
                     categories.add(category);
                 }
             }

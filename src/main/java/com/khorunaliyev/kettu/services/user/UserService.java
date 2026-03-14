@@ -49,10 +49,5 @@ public class UserService {
         return ResponseEntity.ok(new Response("User updated", appUser));
     }
 
-    public ResponseEntity<Response> getPlaces(Authentication authentication){
-        final AppUser appUser = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return ResponseEntity.ok(new Response("User places",placeRepository.findByCreatedBy_Id(appUser.getId())));
-    }
-
 
 }

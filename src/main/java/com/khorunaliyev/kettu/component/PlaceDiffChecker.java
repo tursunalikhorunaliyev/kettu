@@ -4,8 +4,6 @@ import com.khorunaliyev.kettu.dto.request.place.*;
 import com.khorunaliyev.kettu.entity.place.Place;
 import com.khorunaliyev.kettu.entity.place.PlaceLocation;
 import com.khorunaliyev.kettu.entity.place.PlaceMetaData;
-import com.khorunaliyev.kettu.entity.place.PlacePhoto;
-import com.khorunaliyev.kettu.entity.resources.NearbyThings;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -28,19 +26,10 @@ public class PlaceDiffChecker {
             PlaceMetaData placeMetaData = place.getMetaData();
             PlaceMetaDataRequest placeMetaDataRequest = request.getPlaceMetaData();
 
-            if (!Objects.equals(placeMetaData.getFeature().getId(), placeMetaDataRequest.getFeatureId())) return true;
             if (!Objects.equals(placeMetaData.getCategory().getId(), placeMetaDataRequest.getCategoryId())) return true;
 
         }
 
-        if (request.getPlaceLocation() != null) {
-            PlaceLocation placeLocation = place.getLocation();
-            PlaceLocationRequest placeLocationRequest = request.getPlaceLocation();
-
-            if (!Objects.equals(placeLocation.getCountry().getId(), placeLocationRequest.getCountryId())) return true;
-            if (!Objects.equals(placeLocation.getRegion().getId(), placeLocationRequest.getRegionId())) return true;
-            return !Objects.equals(placeLocation.getDistrict().getId(), placeLocationRequest.getDistrictId());
-        }
 
         if(request.getPlacePhotos()!=null){
             List<String> placePhotos = place.getPhotos().stream().map(placePhoto -> placePhoto.getImage()+placePhoto.isMain()).toList();
@@ -50,10 +39,6 @@ public class PlaceDiffChecker {
             return !placePhotos.equals(placePhotoRequests);
         }
 
-        if(request.getNearbyThings()!=null){
-            Set<Long> placeNearbyThings = place.getNearbyThings().stream().map(NearbyThings::getId).collect(Collectors.toSet());
-            return !(new HashSet<>(request.getNearbyThings()).equals(placeNearbyThings));
-        }
 
         return false;
     }

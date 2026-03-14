@@ -9,9 +9,7 @@ import com.khorunaliyev.kettu.dto.reponse.place.PlaceHistoryDTO;
 import com.khorunaliyev.kettu.dto.request.place.PlaceUpdateStatusRequest;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import com.khorunaliyev.kettu.entity.place.Place;
-import com.khorunaliyev.kettu.entity.place.PlaceHistory;
 import com.khorunaliyev.kettu.entity.resources.*;
-import com.khorunaliyev.kettu.repository.place.PlaceHistoryRepository;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +28,6 @@ public class  ChangePlaceStatusService {
     private final CountryRepository countryRepository;
     private final RegionRepository regionRepository;
     private final DistrictRepository districtRepository;
-    private final PlaceHistoryRepository placeHistoryRepository;
     private final PlaceMappers placeMappers;
 
     public ResponseEntity<Response> changePlaceStatus(Long placeID, PlaceUpdateStatusRequest request) {
@@ -53,13 +50,7 @@ public class  ChangePlaceStatusService {
         }
 
 
-        String snapshot;
-        try {
-            PlaceHistoryDTO dto = placeMappers.placeHistoryDTO(place); // use your manual or MapStruct mapper
-            snapshot = objectMapper.writeValueAsString(dto);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to snapshot place", e);
-        }
+
 
 
         if (status == PlaceStatus.ACTIVE) {
@@ -126,15 +117,6 @@ public class  ChangePlaceStatusService {
         place.setStatus(status);
         placeRepository.save(place);
 
-        try {
-            PlaceHistory placeHistory = new PlaceHistory();
-            placeHistory.setPlace(place);
-            placeHistory.setPlaceSnapshotJson(snapshot);
-            if (changeReason != null) placeHistory.setChangeReason(changeReason.trim());
-            placeHistoryRepository.save(placeHistory);
-        } catch (Exception e) {
-            throw new RequestRejectedException("Request rejected");
-        }
 
         return ResponseEntity.ok(new Response("Place updated", null));
     }

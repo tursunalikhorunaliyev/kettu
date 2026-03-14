@@ -1,13 +1,10 @@
 package com.khorunaliyev.kettu.entity.resources;
 
-import com.khorunaliyev.kettu.entity.audit.AuditEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -20,18 +17,11 @@ public class Category {
     @Column(name = "id", nullable = false)
     private Long id;
 
-
     @Column(nullable = false, unique = true, length = 100)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feature_id", nullable = false)
-    private Feature feature;
-
-
     @Column(nullable = false)
     private Integer activeItemCount = 0;
-
 
     @ManyToMany
     @JoinTable(name = "category_tags", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))

@@ -1,7 +1,7 @@
 package com.khorunaliyev.kettu.entity.enums;
 
 public enum PlaceStatus {
-    MODERATION,
+    IN_MODERATION,
     ACTIVE,
     REJECTED,
     INACTIVE

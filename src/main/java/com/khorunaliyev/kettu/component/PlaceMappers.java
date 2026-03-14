@@ -37,31 +37,4 @@ public class PlaceMappers {
                 p.getUpdatedAt()
         );
     }
-
-    public PlaceHistoryDTO placeHistoryDTO(Place p) {
-        return new PlaceHistoryDTO(p.getId(),
-                p.getName(),
-                p.getDescription(),
-                p.getStatus(),
-                new PlacePhotoDTO(p.getPhotos().stream()
-                        .filter(PlacePhoto::isMain)
-                        .map(PlacePhoto::getImage)
-                        .findFirst().orElse(null), p.getPhotos().stream().filter(placePhotoInfo -> !placePhotoInfo.isMain()).map(PlacePhoto::getImage).toList()),
-                new PlaceMetaDataDTO(p.getMetaData().getId(),
-                        new IDNameDTO(p.getMetaData().getFeature().getId(), p.getMetaData().getFeature().getName()),
-                        new IDNameItemCountDTO(p.getMetaData().getCategory().getId(), p.getMetaData().getCategory().getName(), p.getMetaData().getCategory().getActiveItemCount())),
-                new PlaceLocationDTO(p.getLocation().getId(),
-                        new IDNameItemCountDTO(p.getLocation().getCountry().getId(), p.getLocation().getCountry().getName(), p.getLocation().getCountry().getActiveItemCount()),
-                        new IDNameItemCountDTO(p.getLocation().getRegion().getId(), p.getLocation().getRegion().getName(), p.getLocation().getRegion().getActiveItemCount()),
-                        new IDNameDTO(p.getLocation().getDistrict().getId(), p.getLocation().getDistrict().getName())),
-                p.getNearbyThings().stream().map(ns -> new NearbyThingsDTO(ns.getId(), ns.getName(), ns.getIcon())).collect(Collectors.toSet()),
-                p.getVisitedKettuUsers().stream().map(vu -> new UserDTO(vu.getId(), vu.getName(), vu.getEmail())).collect(Collectors.toSet()),
-                p.getLikedKettuUsers().stream().map(lu -> new UserDTO(lu.getId(), lu.getName(), lu.getEmail())).collect(Collectors.toSet()),
-                p.getLikesCount(),
-                p.getCreatedAt(),
-                p.getUpdatedAt(),
-                new UserDTO(p.getCreatedBy().getId(), p.getCreatedBy().getName(), p.getCreatedBy().getEmail()),
-                new UserDTO(p.getUpdatedBy().getId(), p.getUpdatedBy().getName(), p.getUpdatedBy().getEmail())
-        );
-    }
 }

@@ -1,6 +1,5 @@
 package com.khorunaliyev.kettu.entity.resources;
 
-import com.khorunaliyev.kettu.entity.audit.AuditEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

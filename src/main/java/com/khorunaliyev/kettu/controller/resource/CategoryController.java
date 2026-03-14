@@ -28,8 +28,8 @@ public class CategoryController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity<Response> importFromExcel(@RequestParam("feature_id") Long featureId, @RequestParam("file") MultipartFile file){
-        return categoryService.importFromExcel(featureId, file);
+    public ResponseEntity<Response> importFromExcel(@RequestParam("file") MultipartFile file){
+        return categoryService.importFromExcel(file);
     }
 
     @PatchMapping("/{id}/update")

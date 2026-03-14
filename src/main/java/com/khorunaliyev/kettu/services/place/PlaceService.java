@@ -21,8 +21,6 @@ public class PlaceService {
     @Cacheable("places")
     public ResponseEntity<Response> getAllPlaces(Long categoryId,Long districtId, Long regionId, Long countryId, Pageable pageable) {
 
-
-
          if((countryId!=null || regionId!=null || districtId!=null) && (categoryId==null)){
             if(countryId!=null && countryId<1){
                 throw new ResourceNotFoundException("Resource not found. Bad element");

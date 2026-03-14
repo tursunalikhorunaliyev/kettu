@@ -13,36 +13,5 @@ import java.util.List;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
-    @EntityGraph(attributePaths = {
-            "location.country",
-            "location.region",
-            "location.district",
-            "metaData.category",
-            "metaData.feature",
-            "photos",
-            "nearbyThings",
-            "likedUsers",
-            "visitedUsers"
-    })
-    @Query("""
-            SELECT p FROM Place p
-            WHERE (:categoryId IS NULL OR p.metaData.category.id = :categoryId)
-            AND (:districtId IS NULL OR p.location.district.id = :districtId)
-            AND (:regionId IS NULL OR p.location.region.id = :regionId)
-            AND (:countryId IS NULL OR p.location.country.id = :countryId)
-            """)
-    Page<PlaceInfo> findAllBy(@Param("categoryId") Long categoryId, @Param("districtId") Long districtId, @Param("regionId") Long regionId, @Param("countryId") Long countryId, Pageable pageable);
-
-    @Query("""
-            SELECT p FROM Place p
-            JOIN p.metaData md
-            WHERE
-                (:categoryId IS NOT NULL OR :subCategoryId IS NOT NULL) AND
-                (:categoryId IS NULL OR md.category.id = :categoryId)
-            """)
-    List<Place> findPlacesByMetaData(@Param("categoryId") Long categoryId,
-                                     @Param("subCategoryId") Long subCategoryId);
-
-    List<Place> findByCreatedBy_Id(Long id);
 
 }

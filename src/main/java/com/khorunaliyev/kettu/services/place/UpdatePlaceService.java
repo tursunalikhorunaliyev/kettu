@@ -11,7 +11,6 @@ import com.khorunaliyev.kettu.dto.request.place.PlaceUpdateRequest;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import com.khorunaliyev.kettu.entity.place.*;
 import com.khorunaliyev.kettu.entity.resources.*;
-import com.khorunaliyev.kettu.repository.place.PlaceHistoryRepository;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +29,10 @@ public class UpdatePlaceService {
 
     private final PlaceRepository placeRepository;
     private final PlaceDiffChecker placeDiffChecker;
-    private final PlaceHistoryRepository placeHistoryRepository;
     private final DistrictRepository districtRepository;
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
     private final CategoryRepository categoryRepository;
-    private final FeatureRepository featureRepository;
-    private final NearbyThingsRepository nearbyThingsRepository;
     private final ObjectMapper objectMapper;
     private final PlaceMappers placeMappers;
 
@@ -44,7 +40,7 @@ public class UpdatePlaceService {
     public ResponseEntity<Response> update(Long placeId, PlaceUpdateRequest request) {
         Place place = placeRepository.findById(placeId).orElseThrow(() -> new ResourceNotFoundException("Place not found"));
 
-        if (place.getStatus() == PlaceStatus.MODERATION) {
+        if (place.getStatus() == PlaceStatus.IN_MODERATION) {
             return new ResponseEntity<>(new Response("You can't update while moderation status", null), HttpStatus.BAD_REQUEST);
         }
 
@@ -52,28 +48,10 @@ public class UpdatePlaceService {
             return new ResponseEntity<>(new Response("No difference", null), HttpStatus.NO_CONTENT);
         }
 
-        String snapshot;
-        try {
-            PlaceHistoryDTO dto = placeMappers.placeHistoryDTO(place); // use your manual or MapStruct mapper
-            snapshot = objectMapper.writeValueAsString(dto);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to snapshot place", e);
-        }
-
-
-        PlaceHistory placeHistory = new PlaceHistory();
-        placeHistory.setPlace(place);
-        placeHistory.setPlaceSnapshotJson(snapshot);
 
         if (request.getName() != null) place.setName(request.getName().trim());
         if (request.getDescription() != null) place.setDescription(request.getDescription().trim());
 
-        if (request.getNearbyThings() != null) {
-            Set<NearbyThings> things = new HashSet<>(nearbyThingsRepository.findAllByIds(request.getNearbyThings()));
-            if (things.size() != request.getNearbyThings().size())
-                throw new ResourceNotFoundException("Some nearby things not found");
-            place.setNearbyThings(things);
-        }
 
         if (request.getPlacePhotos() != null) {
             List<PlacePhoto> newPhotos = request.getPlacePhotos().stream().map(ph -> {
@@ -92,9 +70,6 @@ public class UpdatePlaceService {
         if (request.getPlaceLocation() != null) {
             PlaceLocation loc = new PlaceLocation();
             loc.setPlace(place);
-            loc.setCountry(countryRepository.findById(request.getPlaceLocation().getCountryId()).orElseThrow(() -> new ResourceNotFoundException("Country not found")));
-            loc.setRegion(regionRepository.findById(request.getPlaceLocation().getRegionId()).orElseThrow(() -> new ResourceNotFoundException("Region not found")));
-            loc.setDistrict(districtRepository.findById(request.getPlaceLocation().getDistrictId()).orElseThrow(() -> new ResourceNotFoundException("District not found")));
             loc.setLat_(request.getPlaceLocation().getLat_());
             loc.setLong_(request.getPlaceLocation().getLong_());
             place.setLocation(loc);
@@ -102,14 +77,13 @@ public class UpdatePlaceService {
 
         if (request.getPlaceMetaData() != null) {
             PlaceMetaData placeMetaData = new PlaceMetaData();
-            placeMetaData.setFeature(featureRepository.findById(request.getPlaceMetaData().getFeatureId()).orElseThrow(() -> new ResourceNotFoundException("Feature not found")));
             placeMetaData.setCategory(categoryRepository.findById(request.getPlaceMetaData().getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category not found")));
             place.setMetaData(placeMetaData);
         }
 
         if (request.getPlaceLocation() != null || request.getPlacePhotos() != null || request.getName() != null || request.getDescription() != null) {
 
-            place.setStatus(PlaceStatus.MODERATION);
+            place.setStatus(PlaceStatus.IN_MODERATION);
 
             Category category = place.getMetaData().getCategory();
             int categoryActiveItemCount = category.getActiveItemCount() - 1;
@@ -142,7 +116,6 @@ public class UpdatePlaceService {
 
         }
         placeRepository.save(place);
-        placeHistoryRepository.save(placeHistory);
 
         return ResponseEntity.ok(new Response("Place updated", null));
 

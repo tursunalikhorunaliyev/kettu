@@ -1,7 +1,6 @@
 package com.khorunaliyev.kettu.entity.place;
 
 import com.khorunaliyev.kettu.entity.resources.Category;
-import com.khorunaliyev.kettu.entity.resources.Feature;
 import com.khorunaliyev.kettu.entity.resources.Tag;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,10 +22,6 @@ public class PlaceMetaData {
     @OneToOne
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feature_id", nullable = false)
-    private Feature feature;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)

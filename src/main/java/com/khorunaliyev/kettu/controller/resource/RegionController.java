@@ -22,7 +22,7 @@ public class RegionController {
         return regionService.createRegion(request.getCountryId(), request.getName());
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Response> byCountry(@RequestParam Long country){
         return regionService.getByCountry(country);
     }

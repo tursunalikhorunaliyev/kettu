@@ -32,7 +32,7 @@ public class CountryController {
        return countryService.importFromExcel(file);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Response> getAll(){
       return countryService.getAll();
     }

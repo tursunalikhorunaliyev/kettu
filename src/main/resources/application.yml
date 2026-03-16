@@ -27,11 +27,12 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
         format_sql: true
 
 cloudflare:

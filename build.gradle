@@ -49,6 +49,10 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
 
+
+	implementation("org.hibernate:hibernate-spatial:7.2.6.Final")
+	implementation 'org.wololo:jts2geojson:0.18.1'
+
 }
 
 tasks.named('test') {

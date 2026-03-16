@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("api/resources/districts")
 @RequiredArgsConstructor
@@ -27,8 +29,8 @@ public class DistrictController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity<Response> importFromExcel(@RequestParam("region_id") Long regionId, @RequestParam("file") MultipartFile file) {
-        return districtService.importFromExcel(regionId, file);
+    public ResponseEntity<Response> importFromGeoJson(@RequestParam("region_id") Long regionId, @RequestParam("file") MultipartFile file) throws IOException {
+        return districtService.importFromGeoJson(regionId, file);
     }
 
     @PatchMapping("/{id}/update")

@@ -3,6 +3,7 @@ package com.khorunaliyev.kettu.entity.resources;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.locationtech.jts.geom.MultiPolygon;
 
 @Getter
 @Setter
@@ -27,4 +28,6 @@ public class District {
     @Column(nullable = false)
     private Integer activeItemCount = 0;
 
+    @Column(nullable = false,columnDefinition = "geometry(MultiPolygon, 4326)")
+    private MultiPolygon geom;
 }

@@ -3,6 +3,7 @@ package com.khorunaliyev.kettu.entity.resources;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.locationtech.jts.geom.MultiPolygon;
 
 import java.util.Set;
 
@@ -23,10 +24,6 @@ public class Region {
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    @OneToMany(mappedBy = "region",cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
-    Set<District> districts;
-
     @Column(nullable = false)
     private Integer activeItemCount = 0;
-
 }

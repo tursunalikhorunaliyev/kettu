@@ -1,5 +1,7 @@
 package com.khorunaliyev.kettu.services.resource;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.reponse.resource.IDNameItemCountDTO;
@@ -12,13 +14,19 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.wololo.jts2geojson.GeoJSONReader;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -27,8 +35,9 @@ public class DistrictService {
 
     private final DistrictRepository districtRepository;
     private final RegionRepository regionRepository;
+    private final ObjectMapper objectMapper;
 
-    public ResponseEntity<Response> createCity(Long regionId, String name){
+    public ResponseEntity<Response> createCity(Long regionId, String name) {
         Region region = regionRepository.findById(regionId).orElseThrow(() -> new ResourceNotFoundException("Region not found"));
         District district = new District();
         district.setName(name);
@@ -37,36 +46,62 @@ public class DistrictService {
         return new ResponseEntity<>(new Response("District created", null), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Response> importFromExcel(Long regionId, MultipartFile file){
+    @Transactional
+    public ResponseEntity<Response> importFromGeoJson(Long regionId, MultipartFile file) throws IOException {
         Region region = regionRepository.findById(regionId).orElseThrow(() -> new ResourceNotFoundException("Region not found"));
-        try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
-            Sheet sheet = workbook.getSheetAt(0);
-            List<District> districts = new ArrayList<>();
-            for (Row row : sheet) {
-                if (row.getRowNum() == 0) continue; // Skip header row
-                String name = row.getCell(0).getStringCellValue();
-                if (name != null) {
-                    District district = new District();
-                    district.setName(name);
-                    district.setRegion(region);
-                    districts.add(district);
+        JsonNode rootNode = objectMapper.readTree(file.getInputStream());
+        JsonNode features = rootNode.get("features");
+        GeoJSONReader reader = new GeoJSONReader();
+
+        System.out.println(rootNode);
+        System.out.println("----------------------------------------------------------");
+        System.out.println(features);
+
+        List<District> districts = new LinkedList<>();
+        if (features != null && features.isArray() && !features.isEmpty()) {
+            for (JsonNode feature : features) {
+                System.out.println(feature);
+                System.out.println("fffffffffffffffffffffffffffff");
+
+                ///nomni ajratib olish
+                JsonNode properties = feature.get("properties");
+
+                System.out.println(properties);
+
+                String districtName = properties.get("ADM1_UZ").asText();
+
+
+                ///poligon kordinatalarini o'qish
+                String geoJsonString = feature.get("geometry").toString();
+                Geometry geometry = reader.read(geoJsonString);
+                District district = new District();
+                district.setRegion(region);
+                district.setName(districtName);
+
+                if(geometry instanceof Polygon){
+                    district.setGeom(geometry.getFactory().createMultiPolygon(new Polygon[]{(Polygon) geometry}));
                 }
+                else{
+                    district.setGeom((MultiPolygon) geometry);
+                }
+                districts.add(district);
             }
+
             districtRepository.saveAll(districts);
-            return new ResponseEntity<>(new Response("Successfully imported", null), HttpStatus.CREATED);
-        } catch (IOException e) {
-            return new ResponseEntity<>(new Response("Failed, something went wrong", null), HttpStatus.BAD_REQUEST);
         }
+
+        return ResponseEntity.ok(new Response("Success", "Districts created"));
     }
-    public ResponseEntity<Response> updateCityName(Long cityId, String name){
+
+    public ResponseEntity<Response> updateCityName(Long cityId, String name) {
         District district = districtRepository.findById(cityId).orElseThrow(() -> new ResourceNotFoundException("City not found"));
         district.setName(name);
         districtRepository.save(district);
         return ResponseEntity.ok(new Response("District updated", null));
     }
 
-    public ResponseEntity<Response> getByRegion(Long regionId){
-        return ResponseEntity.ok(new Response("Success",districtRepository.findByRegion_Id(regionId).stream().map(districtInfo -> new IDNameItemCountDTO(districtInfo.getId(), districtInfo.getName(), districtInfo.getActiveItemCount()))));
+    public ResponseEntity<Response> getByRegion(Long regionId) {
+        return ResponseEntity.ok(new Response("Success", districtRepository.findByRegion_Id(regionId).stream().map(districtInfo -> new IDNameItemCountDTO(districtInfo.getId(), districtInfo.getName(), districtInfo.getActiveItemCount()))));
 
     }
 }

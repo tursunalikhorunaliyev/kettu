@@ -9,6 +9,7 @@ import com.khorunaliyev.kettu.entity.resources.District;
 import com.khorunaliyev.kettu.entity.resources.Region;
 import com.khorunaliyev.kettu.repository.resource.DistrictRepository;
 import com.khorunaliyev.kettu.repository.resource.RegionRepository;
+import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +70,7 @@ public class DistrictService {
 
                 System.out.println(properties);
 
-                String districtName = properties.get("ADM1_UZ").asText();
+                String districtName = properties.get("name").asText();
 
 
                 ///poligon kordinatalarini o'qish
@@ -103,5 +105,13 @@ public class DistrictService {
     public ResponseEntity<Response> getByRegion(Long regionId) {
         return ResponseEntity.ok(new Response("Success", districtRepository.findByRegion_Id(regionId).stream().map(districtInfo -> new IDNameItemCountDTO(districtInfo.getId(), districtInfo.getName(), districtInfo.getActiveItemCount()))));
 
+    }
+
+    public ResponseEntity<Response> reverseGeoDataFromPoint(double latitude, double longitude) {
+        final Tuple data = districtRepository.findDistrictByGeoData(latitude, longitude);
+        if(data == null){
+            throw new ResourceNotFoundException("District not found");
+        }
+        return ResponseEntity.ok(new Response("Success", Map.of("district", data.get("name", String.class), "region", data.get("region_id", Long.class))));
     }
 }

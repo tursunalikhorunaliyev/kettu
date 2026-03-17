@@ -37,4 +37,9 @@ public class DistrictController {
     public ResponseEntity<Response> updateRegion(@PathVariable("id") Long cityId, @RequestBody @Valid DistrictNameRequest request){
         return  districtService.updateCityName(cityId, request.getName());
     }
+
+    @GetMapping("/geo-data")
+    public ResponseEntity<Response> geoData(@RequestParam double latitude, @RequestParam double longitude){
+        return districtService.reverseGeoDataFromPoint(latitude, longitude);
+    }
 }

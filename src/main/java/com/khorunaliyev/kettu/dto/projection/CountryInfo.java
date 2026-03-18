@@ -9,7 +9,7 @@ import java.util.Set;
  */
 public interface CountryInfo {
 
-    Long getId();
+    Integer getId();
 
     String getName();
 

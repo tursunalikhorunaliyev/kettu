@@ -6,7 +6,7 @@ import java.util.List;
  * Projection for {@link com.khorunaliyev.kettu.entity.resources.Category}
  */
 public interface CategoryInfo {
-    Long getId();
+    Integer getId();
 
     String getName();
 

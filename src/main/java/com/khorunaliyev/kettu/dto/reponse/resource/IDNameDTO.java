@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class IDNameDTO {
-    private Long id;
+    private Integer id;
     private String name;
 }

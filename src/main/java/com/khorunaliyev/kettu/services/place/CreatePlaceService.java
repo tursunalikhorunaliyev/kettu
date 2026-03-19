@@ -14,6 +14,10 @@ import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.firewall.RequestRejectedException;
@@ -52,8 +56,9 @@ public class CreatePlaceService {
 //        placeLocation.setCountry(countryRepository.findById(location.getCountryId()).orElseThrow(() -> new RequestRejectedException("Country not found")));
 //        placeLocation.setRegion(regionRepository.findById(location.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("Region not found")));
 //        placeLocation.setDistrict(districtRepository.findById(location.getDistrictId()).orElseThrow(() -> new ResourceNotFoundException("District not found")));
-        placeLocation.setLat_(location.getLat_());
-        placeLocation.setLong_(location.getLong_());
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(),4326);
+        Point point = geometryFactory.createPoint(new Coordinate(location.getLat_(), location.getLong_()));
+        placeLocation.setPoint(point);
         placeLocation.setPlace(place);
 
 

@@ -3,24 +3,16 @@ package com.khorunaliyev.kettu.services.geo;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.reponse.geo.GeoDataFromPoint;
-import com.khorunaliyev.kettu.dto.reponse.resource.IDNameDTO;
 import com.khorunaliyev.kettu.repository.resource.DistrictRepository;
-import com.khorunaliyev.kettu.services.resource.DistrictService;
-import com.khorunaliyev.kettu.services.resource.RegionService;
 import jakarta.persistence.Tuple;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
 public class GeoService {
-    private final DistrictService districtService;
-    private final RegionService regionService;
     private final DistrictRepository districtRepository;
 
     public ResponseEntity<Response> geoData(double latitude, double longitude){
@@ -37,6 +29,7 @@ public class GeoService {
 
         GeoDataFromPoint geoDataFromPoint = new GeoDataFromPoint(new GeoDataFromPoint.IdNameResponse(regionId,regionName),new GeoDataFromPoint.IdNameResponse(districtId,districtName));
 
-        return ResponseEntity.ok(new Response("Success", Map.of("district", data.get("name", String.class), "region", data.get("region_id", Long.class))));
+
+        return ResponseEntity.ok(new Response("Success", geoDataFromPoint));
     }
 }

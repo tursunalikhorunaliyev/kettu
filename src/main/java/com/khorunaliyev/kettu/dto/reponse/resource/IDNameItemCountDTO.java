@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class IDNameItemCountDTO {
-    private Long id;
+    private Integer id;
     private String name;
     private Integer itemCount;
 }

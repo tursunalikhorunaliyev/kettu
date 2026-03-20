@@ -45,7 +45,17 @@ public class SecurityConfiguration {
                         .requestMatchers("/favicon.ico").permitAll()
 
 
-                        .requestMatchers("/api/resources/**", "/admin/**", "/api/public/**", "/oauth2/**", "/login/**", "/api/auth/**", "/api/files/**", "/auth-redirect.html", "/swagger-ui/**",
+                        .requestMatchers(
+                                "/api/resources/**",
+                                "/admin/**",
+                                "/api/public/**",
+                                "/oauth2/**",
+                                "/login/**",
+                                "/api/auth/**",
+                                "/api/geo-data/**",
+                                "/api/files/**",
+                                "/auth-redirect.html",
+                                "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/swagger-ui.html",

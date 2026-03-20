@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public interface RegionInfo {
 
-    Long getId();
+    Integer getId();
 
     String getName();
 

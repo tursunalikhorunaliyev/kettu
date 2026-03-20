@@ -14,6 +14,10 @@ import com.khorunaliyev.kettu.entity.resources.*;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,8 +74,10 @@ public class UpdatePlaceService {
         if (request.getPlaceLocation() != null) {
             PlaceLocation loc = new PlaceLocation();
             loc.setPlace(place);
-            loc.setLat_(request.getPlaceLocation().getLat_());
-            loc.setLong_(request.getPlaceLocation().getLong_());
+
+            GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+            Point point = geometryFactory.createPoint(new Coordinate(request.getPlaceLocation().getLat_(), request.getPlaceLocation().getLong_()));
+            loc.setPoint(point);
             place.setLocation(loc);
         }
 

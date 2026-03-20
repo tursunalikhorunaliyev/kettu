@@ -30,7 +30,7 @@ public class Place {
     @Column(nullable = false, length = 500)
     private String description;
 
-    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<PlacePhoto> photos = new ArrayList<>();
 
     @OneToOne(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)

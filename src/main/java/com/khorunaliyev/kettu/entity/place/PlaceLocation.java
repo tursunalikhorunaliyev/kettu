@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.xmlbeans.impl.xb.xsdschema.All;
+import org.locationtech.jts.geom.Point;
 
 @Getter
 @Setter
@@ -34,9 +35,6 @@ public class PlaceLocation {
     @JoinColumn(name = "district_id", nullable = false)
     private District district;
 
-    @Column(nullable = false)
-    private double lat_;
-
-    @Column(nullable = false)
-    private double long_;
+    @Column(columnDefinition = "geography(Point,4326)", nullable = false)
+    private Point point;
 }

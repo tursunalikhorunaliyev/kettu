@@ -18,6 +18,7 @@ public class AppUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(nullable = false)
@@ -29,7 +30,7 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private String image;
 
-    @Column()
+    @Column(length = 500)
     private String backgroundImage;
 
     @Column(length = 500)

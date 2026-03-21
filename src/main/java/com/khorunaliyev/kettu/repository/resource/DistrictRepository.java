@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
-public interface DistrictRepository extends JpaRepository<District, Long> {
+public interface DistrictRepository extends JpaRepository<District, Integer> {
     List<DistrictInfo> findByRegion_Id(Long id);
 
     @Query(value = DistrictQuery.FIND_WITH_POINT, nativeQuery = true)

@@ -9,7 +9,5 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CountryRepository extends JpaRepository<Country, Long> {
-    @EntityGraph(attributePaths = {"regions.districts"})
-    List<CountryInfo> findAllBy();
+public interface CountryRepository extends JpaRepository<Country, Integer> {
 }

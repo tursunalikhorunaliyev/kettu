@@ -2,6 +2,12 @@ spring:
   application:
     name: kettu
 
+  mvc:
+    throw-exception-if-no-handler-found: true # Handler topilmasa xato otish
+  web:
+    resources:
+      add-mappings: false # Static resurslarni qidirishni to'xtatish (API uchun shart)
+
   servlet:
     multipart:
       enabled: true
@@ -51,3 +57,4 @@ logging:
         descriptor:
           sql:
             BasicBinder: TRACE
+

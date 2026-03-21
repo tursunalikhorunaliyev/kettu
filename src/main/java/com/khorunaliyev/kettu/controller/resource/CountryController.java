@@ -23,7 +23,7 @@ public class CountryController {
     }
 
     @PatchMapping("/{id}/update")
-    public ResponseEntity<Response> updateCountryName(@PathVariable("id") Long countryId, @RequestBody() @Valid CountryNameRequest request){
+    public ResponseEntity<Response> updateCountryName(@PathVariable("id") Integer countryId, @RequestBody() @Valid CountryNameRequest request){
       return countryService.updateCountryName(countryId,request.getName());
     }
 

@@ -1,15 +1,9 @@
 package com.khorunaliyev.kettu.services.place;
 
-import com.khorunaliyev.kettu.component.PlaceMappers;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
-import com.khorunaliyev.kettu.dto.projection.PlaceMetaDataInfo;
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.reponse.place.*;
-import com.khorunaliyev.kettu.repository.place.PlaceMetaDataRepository;
-import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

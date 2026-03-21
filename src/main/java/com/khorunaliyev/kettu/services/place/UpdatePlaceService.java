@@ -81,22 +81,12 @@ public class UpdatePlaceService {
             place.setLocation(loc);
         }
 
-        if (request.getPlaceMetaData() != null) {
-            PlaceMetaData placeMetaData = new PlaceMetaData();
-            placeMetaData.setCategory(categoryRepository.findById(request.getPlaceMetaData().getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category not found")));
-            place.setMetaData(placeMetaData);
-        }
 
         if (request.getPlaceLocation() != null || request.getPlacePhotos() != null || request.getName() != null || request.getDescription() != null) {
 
             place.setStatus(PlaceStatus.IN_MODERATION);
 
-            Category category = place.getMetaData().getCategory();
-            int categoryActiveItemCount = category.getActiveItemCount() - 1;
-            if (categoryActiveItemCount < 0)
-                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
-            category.setActiveItemCount(categoryActiveItemCount);
-            categoryRepository.save(category);
+
 
 
             Country country = place.getLocation().getCountry();

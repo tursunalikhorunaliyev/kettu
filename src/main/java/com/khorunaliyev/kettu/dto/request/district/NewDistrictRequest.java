@@ -10,5 +10,5 @@ import lombok.Setter;
 public class NewDistrictRequest extends DistrictNameRequest {
     @NotNull
     @Positive
-    private Long regionId;
+    private Integer regionId;
 }

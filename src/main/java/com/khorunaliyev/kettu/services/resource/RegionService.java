@@ -32,7 +32,7 @@ public class RegionService {
         return ResponseEntity.ok(new Response("Success", regionRepository.findByCountryId(countryId).stream().map(regionInfo -> new IDNameItemCountDTO(regionInfo.getId(), regionInfo.getName(), regionInfo.getActiveItemCount()))));
     }
 
-    public ResponseEntity<Response> createRegion(Long countryId, String name){
+    public ResponseEntity<Response> createRegion(Integer countryId, String name){
         Country country = countryRepository.findById(countryId).orElseThrow(() -> new ResourceNotFoundException("Country not found"));
         Region region = new Region();
         region.setName(name);
@@ -41,14 +41,14 @@ public class RegionService {
         return new ResponseEntity<>(new Response("Region created", null), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Response> updateRegionName(Long regionId, String name){
+    public ResponseEntity<Response> updateRegionName(Integer regionId, String name){
         Region region = regionRepository.findById(regionId).orElseThrow(() -> new ResourceNotFoundException("Region not found"));
         region.setName(name);
         regionRepository.save(region);
         return ResponseEntity.ok(new Response("Region updated", null));
     }
 
-    public ResponseEntity<Response> importFromExcel(Long countryId, MultipartFile file){
+    public ResponseEntity<Response> importFromExcel(Integer countryId, MultipartFile file){
         Country country = countryRepository.findById(countryId).orElseThrow(() -> new ResourceNotFoundException("Country not found"));
         try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0);

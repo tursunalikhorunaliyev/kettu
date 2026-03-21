@@ -28,12 +28,12 @@ public class RegionController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity<Response> importFromExcel(@RequestParam("country_id") Long countryId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Response> importFromExcel(@RequestParam("country_id") Integer countryId, @RequestParam("file") MultipartFile file) {
         return regionService.importFromExcel(countryId, file);
     }
 
     @PatchMapping("/{id}/update")
-    public ResponseEntity<Response> updateRegion(@PathVariable("id") Long regionId, @RequestBody @Valid RegionNameRequest request){
+    public ResponseEntity<Response> updateRegion(@PathVariable("id") Integer regionId, @RequestBody @Valid RegionNameRequest request){
         return  regionService.updateRegionName(regionId, request.getName());
     }
 }

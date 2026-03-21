@@ -29,12 +29,12 @@ public class DistrictController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity<Response> importFromGeoJson(@RequestParam("region_id") Long regionId, @RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<Response> importFromGeoJson(@RequestParam("region_id") Integer regionId, @RequestParam("file") MultipartFile file) throws IOException {
         return districtService.importFromGeoJson(regionId, file);
     }
 
     @PatchMapping("/{id}/update")
-    public ResponseEntity<Response> updateRegion(@PathVariable("id") Long cityId, @RequestBody @Valid DistrictNameRequest request){
+    public ResponseEntity<Response> updateRegion(@PathVariable("id") Integer cityId, @RequestBody @Valid DistrictNameRequest request){
         return  districtService.updateCityName(cityId, request.getName());
     }
 

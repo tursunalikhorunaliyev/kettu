@@ -13,8 +13,5 @@ public class PlaceMetaDataRequest {
     private Long featureId;
     @NotNull
     @Positive
-    private Long categoryId;
-    @NotNull
-    @Positive
     private Long subcategoryId;
 }

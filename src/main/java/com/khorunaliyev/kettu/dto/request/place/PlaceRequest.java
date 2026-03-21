@@ -3,9 +3,11 @@ package com.khorunaliyev.kettu.dto.request.place;
 import com.khorunaliyev.kettu.entity.place.PlacePhoto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import java.lang.annotation.Native;
 import java.util.List;
@@ -18,19 +20,21 @@ public class PlaceRequest {
     private String name;
 
     @NotNull
-    @Size(min = 1, max = 500)
+    @Size(min = 20, max = 500)
     private String description;
 
     @NotNull
+    @Positive
+    private Long category_id;
+
+    @NotNull
     @NotEmpty
-    private List<PlacePhotoRequest> placePhotos;
+    private List<PlacePhotoRequest> place_photos;
 
     @NotNull
-    private PlaceLocationRequest placeLocation;
+    @Size(min = 3, max = 10)
+    private List<Integer> tags;
 
     @NotNull
-    private PlaceMetaDataRequest placeMetaData;
-
-    @NotNull
-    private List<Long> nearbyThings;
+    private PlaceLocationRequest place_location;
 }

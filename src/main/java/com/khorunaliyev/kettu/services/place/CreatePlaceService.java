@@ -39,10 +39,10 @@ public class CreatePlaceService {
 
         String name = request.getName();
         String description = request.getDescription();
-        PlaceMetaDataRequest placeMetaDataRequest = request.getPlaceMetaData();
-        List<PlacePhotoRequest> placePhotos = request.getPlacePhotos();
-        PlaceLocationRequest location = request.getPlaceLocation();
-        List<Long> nearByThings = request.getNearbyThings();
+//        PlaceMetaDataRequest placeMetaDataRequest = request.getPlaceMetaData();
+//        List<PlacePhotoRequest> placePhotos = request.getPlacePhotos();
+//        PlaceLocationRequest location = request.getPlaceLocation();
+//        List<Long> nearByThings = request.getNearbyThings();
 
         Place place = new Place();
 
@@ -52,20 +52,20 @@ public class CreatePlaceService {
 //        placeLocation.setCountry(countryRepository.findById(location.getCountryId()).orElseThrow(() -> new RequestRejectedException("Country not found")));
 //        placeLocation.setRegion(regionRepository.findById(location.getRegionId()).orElseThrow(() -> new ResourceNotFoundException("Region not found")));
 //        placeLocation.setDistrict(districtRepository.findById(location.getDistrictId()).orElseThrow(() -> new ResourceNotFoundException("District not found")));
-        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(),4326);
-        Point point = geometryFactory.createPoint(new Coordinate(location.getLat_(), location.getLong_()));
-        placeLocation.setPoint(point);
-        placeLocation.setPlace(place);
+//        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(),4326);
+//        Point point = geometryFactory.createPoint(new Coordinate(location.getLat_(), location.getLong_()));
+//        placeLocation.setPoint(point);
+//        placeLocation.setPlace(place);
 
 
         //PlacePhoto entities creation
-        List<PlacePhoto> placePhotoEntities = placePhotos.stream().map(placePhotoRequest -> {
-            PlacePhoto placePhoto = new PlacePhoto();
-            placePhoto.setImage(placePhotoRequest.getImageName());
-            placePhoto.setMain(placePhotoRequest.getIsMain());
-            placePhoto.setPlace(place);
-            return placePhoto;
-        }).toList();
+//        List<PlacePhoto> placePhotoEntities = placePhotos.stream().map(placePhotoRequest -> {
+//            PlacePhoto placePhoto = new PlacePhoto();
+//            placePhoto.setImage(placePhotoRequest.getImageName());
+//            placePhoto.setMain(placePhotoRequest.getIsMain());
+//            placePhoto.setPlace(place);
+//            return placePhoto;
+//        }).toList();
 
 
         //Place NearbyThings finding
@@ -73,10 +73,10 @@ public class CreatePlaceService {
         //PlaceMetaData creating
 
 
-        place.setName(name.trim());
-        place.setDescription(description.trim());
-        place.setLocation(placeLocation);
-        place.setPhotos(placePhotoEntities);
+//        place.setName(name.trim());
+//        place.setDescription(description.trim());
+//        place.setLocation(placeLocation);
+//        place.setPhotos(placePhotoEntities);
 
         //place.setMetaData(placeMetaData);
 

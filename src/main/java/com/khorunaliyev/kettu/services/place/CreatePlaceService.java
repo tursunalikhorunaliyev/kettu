@@ -71,10 +71,6 @@ public class CreatePlaceService {
         //Place NearbyThings finding
 
         //PlaceMetaData creating
-        PlaceMetaData placeMetaData = new PlaceMetaData();
-
-        placeMetaData.setCategory(categoryRepository.findById(placeMetaDataRequest.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category not found")));
-        placeMetaData.setPlace(place);
 
 
         place.setName(name.trim());
@@ -82,7 +78,7 @@ public class CreatePlaceService {
         place.setLocation(placeLocation);
         place.setPhotos(placePhotoEntities);
 
-        place.setMetaData(placeMetaData);
+        //place.setMetaData(placeMetaData);
 
         placeRepository.save(place);
 

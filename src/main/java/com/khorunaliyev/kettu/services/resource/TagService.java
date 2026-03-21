@@ -31,8 +31,7 @@ public class TagService {
     }
 
     public ResponseEntity<Response> getAllTags() {
-        List<Tag> tags = tagRepository.findAll();
-        return new ResponseEntity<>(new Response("All tags fetched", tags), HttpStatus.OK);
+        return new ResponseEntity<>(new Response("All tags fetched", tagRepository.findAll()), HttpStatus.OK);
     }
 
     @Transactional
@@ -41,9 +40,5 @@ public class TagService {
         tag.setName(newName);
         tagRepository.save(tag);
         return ResponseEntity.ok(new Response("Success", tag));
-    }
-
-    public ResponseEntity<Response> getTagsByCategory(Integer categoryId) {
-        return ResponseEntity.ok(new Response("Success", tagRepository.findAllByCategoryId(categoryId)));
     }
 }

@@ -54,12 +54,12 @@ public class  ChangePlaceStatusService {
 
 
         if (status == PlaceStatus.ACTIVE) {
-            Category category = place.getMetaData().getCategory();
-            int categoryActiveItemCount = category.getActiveItemCount() + 1;
-            if (categoryActiveItemCount < 0)
-                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
-            category.setActiveItemCount(categoryActiveItemCount);
-            categoryRepository.save(category);
+//            Category category = place.getMetaData().getCategory();
+//            int categoryActiveItemCount = category.getActiveItemCount() + 1;
+//            if (categoryActiveItemCount < 0)
+//                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+//            category.setActiveItemCount(categoryActiveItemCount);
+//            categoryRepository.save(category);
 
             Country country = place.getLocation().getCountry();
             int countryActiveItemCount = country.getActiveItemCount() + 1;
@@ -84,12 +84,12 @@ public class  ChangePlaceStatusService {
         }
 
         if (place.getStatus() == PlaceStatus.ACTIVE && (status != PlaceStatus.ACTIVE)) {
-            Category category = place.getMetaData().getCategory();
-            int categoryActiveItemCount = category.getActiveItemCount() - 1;
-            if (categoryActiveItemCount < 0)
-                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
-            category.setActiveItemCount(categoryActiveItemCount);
-            categoryRepository.save(category);
+//            Category category = place.getMetaData().getCategory();
+//            int categoryActiveItemCount = category.getActiveItemCount() - 1;
+//            if (categoryActiveItemCount < 0)
+//                return new ResponseEntity<>(new Response("Count is negative. Problem has occurred with count", null), HttpStatus.CONFLICT);
+//            category.setActiveItemCount(categoryActiveItemCount);
+//            categoryRepository.save(category);
 
             Country country = place.getLocation().getCountry();
             int countryActiveItemCount = country.getActiveItemCount() - 1;

@@ -35,7 +35,7 @@ public class CountryService {
         return ResponseEntity.ok(new Response("All countries", countryRepository.findAll().stream().map(countryInfo -> new IDNameItemCountDTO(countryInfo.getId(), countryInfo.getName(), countryInfo.getActiveItemCount()))));
     }
 
-    public ResponseEntity<Response> updateCountryName(Long id, String name) {
+    public ResponseEntity<Response> updateCountryName(Integer id, String name) {
         Country country = countryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Country not found"));
         country.setName(name);
         countryRepository.save(country);

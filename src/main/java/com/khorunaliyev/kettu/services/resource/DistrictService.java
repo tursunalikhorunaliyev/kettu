@@ -39,7 +39,7 @@ public class DistrictService {
     private final RegionRepository regionRepository;
     private final ObjectMapper objectMapper;
 
-    public ResponseEntity<Response> createCity(Long regionId, String name) {
+    public ResponseEntity<Response> createCity(Integer regionId, String name) {
         Region region = regionRepository.findById(regionId).orElseThrow(() -> new ResourceNotFoundException("Region not found"));
         District district = new District();
         district.setName(name);
@@ -49,7 +49,7 @@ public class DistrictService {
     }
 
     @Transactional
-    public ResponseEntity<Response> importFromGeoJson(Long regionId, MultipartFile file) throws IOException {
+    public ResponseEntity<Response> importFromGeoJson(Integer regionId, MultipartFile file) throws IOException {
         Region region = regionRepository.findById(regionId).orElseThrow(() -> new ResourceNotFoundException("Region not found"));
         JsonNode rootNode = objectMapper.readTree(file.getInputStream());
         JsonNode features = rootNode.get("features");
@@ -95,7 +95,7 @@ public class DistrictService {
         return ResponseEntity.ok(new Response("Success", "Districts created"));
     }
 
-    public ResponseEntity<Response> updateCityName(Long cityId, String name) {
+    public ResponseEntity<Response> updateCityName(Integer cityId, String name) {
         District district = districtRepository.findById(cityId).orElseThrow(() -> new ResourceNotFoundException("City not found"));
         district.setName(name);
         districtRepository.save(district);

@@ -17,13 +17,6 @@ public class PlaceDiffChecker {
         if (request.getDescription() != null && !place.getDescription().trim().equals(request.getDescription().trim()))
             return true;
 
-        if (request.getPlaceMetaData() != null) {
-            PlaceMetaData placeMetaData = place.getMetaData();
-            PlaceMetaDataRequest placeMetaDataRequest = request.getPlaceMetaData();
-
-            if (!Objects.equals(placeMetaData.getCategory().getId(), placeMetaDataRequest.getCategoryId())) return true;
-
-        }
 
 
         if(request.getPlacePhotos()!=null){

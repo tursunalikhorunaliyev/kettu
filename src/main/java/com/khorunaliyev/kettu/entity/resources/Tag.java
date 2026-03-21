@@ -12,6 +12,7 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
+    @OrderBy("id ASC")
     private Integer id;
 
     @Column(nullable = false, length = 50, unique = true)

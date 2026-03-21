@@ -1,14 +1,5 @@
 package com.khorunaliyev.kettu.dto.reponse.resource;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
-public class IDNameItemCountDTO {
-    private Integer id;
-    private String name;
-    private Integer itemCount;
+public record IDNameItemCountDTO(Integer id, String name, Integer item_count) {
 }

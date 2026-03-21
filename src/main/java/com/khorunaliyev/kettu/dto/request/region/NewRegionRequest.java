@@ -10,5 +10,5 @@ import lombok.Setter;
 public class NewRegionRequest extends RegionNameRequest{
     @NotNull
     @Positive
-    private Long countryId;
+    private Integer countryId;
 }

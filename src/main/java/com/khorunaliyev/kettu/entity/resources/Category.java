@@ -1,10 +1,13 @@
 package com.khorunaliyev.kettu.entity.resources;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
@@ -21,6 +24,7 @@ public class Category {
     private String name;
 
     @Column(nullable = false)
+    @JsonProperty("item_count")
     private Integer activeItemCount = 0;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -28,5 +32,6 @@ public class Category {
             name = "uk_category_tag",
             columnNames = {"category_id", "tag_id"}
     ))
+    @OrderBy("id ASC")
     private Set<Tag> tags = new HashSet<>();
 }

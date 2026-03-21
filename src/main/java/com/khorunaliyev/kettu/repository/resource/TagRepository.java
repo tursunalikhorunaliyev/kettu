@@ -10,6 +10,4 @@ import java.util.List;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Integer> {
-    @Query(value = "select t.* from tag as t inner join category_tags as ct on t.id = ct.tag_id where ct.category_id = :category_id", nativeQuery = true)
-    List<Tag> findAllByCategoryId(@Param("category_id") Integer category_id);
 }

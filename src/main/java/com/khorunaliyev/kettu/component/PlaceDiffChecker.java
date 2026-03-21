@@ -2,15 +2,10 @@ package com.khorunaliyev.kettu.component;
 
 import com.khorunaliyev.kettu.dto.request.place.*;
 import com.khorunaliyev.kettu.entity.place.Place;
-import com.khorunaliyev.kettu.entity.place.PlaceLocation;
-import com.khorunaliyev.kettu.entity.place.PlaceMetaData;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class PlaceDiffChecker {

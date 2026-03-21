@@ -23,7 +23,10 @@ public class Category {
     @Column(nullable = false)
     private Integer activeItemCount = 0;
 
-    @ManyToMany
-    @JoinTable(name = "category_tags", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "category_tags", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"), uniqueConstraints = @UniqueConstraint(
+            name = "uk_category_tag",
+            columnNames = {"category_id", "tag_id"}
+    ))
     private Set<Tag> tags = new HashSet<>();
 }

@@ -8,7 +8,6 @@ import com.khorunaliyev.kettu.dto.request.place.PlacePhotoRequest;
 import com.khorunaliyev.kettu.dto.request.place.PlaceRequest;
 import com.khorunaliyev.kettu.entity.place.Place;
 import com.khorunaliyev.kettu.entity.place.PlaceLocation;
-import com.khorunaliyev.kettu.entity.place.PlaceMetaData;
 import com.khorunaliyev.kettu.entity.place.PlacePhoto;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
@@ -20,12 +19,9 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

@@ -33,7 +33,7 @@ public class CategoryController {
     }
 
     @PatchMapping("/{id}/update")
-    public ResponseEntity<Response> updateCategoryName(@PathVariable("id") Long categoryId, @RequestBody @Valid CategoryNameRequest request){
+    public ResponseEntity<Response> updateCategoryName(@PathVariable("id") Integer categoryId, @RequestBody @Valid CategoryNameRequest request){
         return  categoryService.updateCategoryName(categoryId, request.getName());
     }
 }

@@ -2,6 +2,8 @@ package com.khorunaliyev.kettu.entity.place;
 
 import com.khorunaliyev.kettu.entity.auth.AppUser;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
+import com.khorunaliyev.kettu.entity.resources.Category;
+import com.khorunaliyev.kettu.entity.resources.Tag;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,14 +32,24 @@ public class Place {
     @Column(nullable = false, length = 500)
     private String description;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<PlacePhoto> photos = new ArrayList<>();
 
     @OneToOne(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
     private PlaceLocation location;
 
-    @OneToOne(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
-    private PlaceMetaData metaData;
+    @ManyToMany(fetch =  FetchType.LAZY)
+    @JoinTable(name = "place_tags", joinColumns = @JoinColumn(name = "place_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 13)
+    private PlaceStatus status = PlaceStatus.IN_MODERATION;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "visited_users", joinColumns = @JoinColumn(name = "place_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
@@ -53,9 +65,6 @@ public class Place {
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer visitedCount = 0;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PlaceStatus status = PlaceStatus.IN_MODERATION;
 
     @CreatedDate
     @Column(name = "createdAt", updatable = false, nullable = false)

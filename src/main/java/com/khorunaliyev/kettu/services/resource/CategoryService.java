@@ -32,7 +32,7 @@ public class CategoryService {
         return new ResponseEntity<>(new Response("Category created", null), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Response> updateCategoryName(Long categoryId, String name){
+    public ResponseEntity<Response> updateCategoryName(Integer categoryId, String name){
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         category.setName(name);
         categoryRepository.save(category);
@@ -62,5 +62,9 @@ public class CategoryService {
 
     public ResponseEntity<Response> getAll(){
         return ResponseEntity.ok(new Response("Categories", categoryRepository.findAllBy().stream().map(categoryInfo -> new IDNameItemCountDTO(categoryInfo.getId(), categoryInfo.getName(), categoryInfo.getActiveItemCount()))));
+    }
+
+    public ResponseEntity<Response> assignTags(List<Integer> tags, Long categoryId){
+
     }
 }

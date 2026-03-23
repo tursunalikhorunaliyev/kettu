@@ -25,11 +25,7 @@ public class PlaceRequest {
 
     @NotNull
     @Positive
-    private Long category_id;
-
-    @NotNull
-    @NotEmpty
-    private List<PlacePhotoRequest> place_photos;
+    private Integer category_id;
 
     @NotNull
     @Size(min = 3, max = 10)

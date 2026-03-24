@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class GeoService {
     private final DistrictRepository districtRepository;
 
-    public ResponseEntity<Response> geoData(double latitude, double longitude){
+    public GeoDataFromPoint geoData(double latitude, double longitude){
         final Tuple data = districtRepository.findDistrictByGeoData(latitude, longitude);
         if(data == null){
             throw new ResourceNotFoundException("District not found");
@@ -27,9 +27,7 @@ public class GeoService {
         Integer districtId = data.get("district_id", Integer.class);
         String districtName = data.get("district_name", String.class);
 
-        GeoDataFromPoint geoDataFromPoint = new GeoDataFromPoint(new GeoDataFromPoint.IdNameResponse(regionId,regionName),new GeoDataFromPoint.IdNameResponse(districtId,districtName));
 
-
-        return ResponseEntity.ok(new Response("Success", geoDataFromPoint));
+        return new GeoDataFromPoint(new GeoDataFromPoint.IdNameResponse(regionId,regionName),new GeoDataFromPoint.IdNameResponse(districtId,districtName));
     }
 }

@@ -30,7 +30,7 @@ public class PlaceController {
     private final CreatePlaceService createPlaceService;
 
     @PostMapping("/save")
-    public ResponseEntity<Response> create(@RequestBody @Valid PlaceRequest request) {
+    public ResponseEntity<Response> create(@RequestPart("data") @Valid PlaceRequest request) {
         return createPlaceService.createPlace(request);
     }
 

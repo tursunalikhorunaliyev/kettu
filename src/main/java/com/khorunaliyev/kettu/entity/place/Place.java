@@ -64,4 +64,7 @@ public class Place extends FullAuditing {
 
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer visitedCount = 0;
+
+    @Column(nullable = false)
+    private Integer photoCount = 0;
 }

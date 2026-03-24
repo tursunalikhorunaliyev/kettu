@@ -19,6 +19,6 @@ public class GeoDataController {
 
     @GetMapping
     public ResponseEntity<Response> geoDataFromPoint(@RequestParam("lat") double latitude, @RequestParam("long") double longitude){
-        return geoService.geoData(latitude, longitude);
+        return ResponseEntity.ok(new Response("Success",geoService.geoData(latitude, longitude)));
     }
 }

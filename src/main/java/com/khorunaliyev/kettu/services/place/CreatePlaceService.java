@@ -14,7 +14,6 @@ import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.place.UserActiveUploadsRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
 import com.khorunaliyev.kettu.services.geo.GeoService;
-import com.khorunaliyev.kettu.util.query.DistrictQuery;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,10 +43,11 @@ public class CreatePlaceService {
     private final GeoService geoService;
     private final UserContext userContext;
     private final UserActiveUploadsRepository userActiveUploadsRepository;
+    //private final LocalStorageService localStorageService;
 
     @Transactional
     @CacheEvict(value = "places", allEntries = true)
-    public ResponseEntity<Response> createPlace(PlaceRequest request, List<MultipartFile> files) {
+    public ResponseEntity<Response> createPlace(PlaceRequest request, List<MultipartFile> files) throws IOException {
 
         if(!categoryRepository.existsById(request.getCategory_id())){
             throw new ResourceNotFoundException("Category not found");
@@ -88,12 +89,18 @@ public class CreatePlaceService {
         place.setPhotoCount(files.size());
         place.setTags(request.getTags().stream().map(tagId -> entityManager.getReference(Tag.class, tagId)).collect(Collectors.toSet()));
 
-        placeRepository.save(place);
+        Place createdPlace = placeRepository.save(place);
 
         UserActiveUploads activeUploads = new UserActiveUploads();
         activeUploads.setPlace(place);
         activeUploads.setUser(userContext.getUser());
         userActiveUploadsRepository.save(activeUploads);
+
+        //List<String> localFilePaths = localStorageService.saveToTempDirectory(createdPlace.getId().toString(), files);
+
+
+
+
 
 
 

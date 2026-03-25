@@ -1,10 +1,12 @@
-package com.khorunaliyev.kettu.services.r2service;
+package com.khorunaliyev.kettu.services.storage;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import lombok.RequiredArgsConstructor;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -12,7 +14,9 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +38,6 @@ public class R2Service {
         }
         return new ResponseEntity<>(new Response("Success", key), HttpStatus.CREATED);
     }
-
     public ResponseEntity<Response> uploadMultiple(List<MultipartFile> images) {
         List<String> imagesList = new LinkedList<>();
 
@@ -54,7 +57,7 @@ public class R2Service {
         return new ResponseEntity<>(new Response("Success", imagesList), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Response> deleteFile(String fileName){
+    public ResponseEntity<Response> deleteFile(String fileName) {
         try {
             s3Client.deleteObject(DeleteObjectRequest.builder()
                     .bucket(bucket)
@@ -66,9 +69,9 @@ public class R2Service {
         }
     }
 
-    public ResponseEntity<Response> deleteFiles(List<String> fileNames){
+    public ResponseEntity<Response> deleteFiles(List<String> fileNames) {
 
-        for (String fileName: fileNames){
+        for (String fileName : fileNames) {
             try {
                 s3Client.deleteObject(DeleteObjectRequest.builder()
                         .bucket(bucket)
@@ -98,4 +101,34 @@ public class R2Service {
             throw new RuntimeException("Failed to read object bytes from R2", e);
         }
     }
+
+
+    @Async("imageExecutor")
+    public void processAndUpload(Long placeId, List<String> filePaths, Long userId) throws IOException {
+        for (String path : filePaths) {
+            File originalFile = new File(path);
+            String fileUUID = UUID.randomUUID().toString();
+
+            uploadProcessedImage(originalFile, "high", fileUUID,1.0, 0.8f);
+            uploadProcessedImage(originalFile, "medium", fileUUID,0.5, 0.7f);
+            uploadProcessedImage(originalFile, "low", fileUUID,0.2, 0.5f);
+
+            Files.deleteIfExists(originalFile.toPath());
+        }
+    }
+
+    private void uploadProcessedImage(File source, String type, String uuid, double scale, float quality) throws IOException {
+
+        String fileName = type + "_" + uuid + ".jpg";
+
+        File tempProcessed = new File(source.getParent(), "temp_" + fileName);
+
+        Thumbnails.of(source).scale(scale).outputFormat("jpg").outputQuality(quality).toFile(tempProcessed);
+
+        String keyForR2 = type + "/" + uuid + ".jpg";
+        s3Client.putObject(PutObjectRequest.builder().bucket(bucket).key(keyForR2).contentType("image/jpeg").acl(ObjectCannedACL.PUBLIC_READ).build(), RequestBody.fromFile(tempProcessed));
+
+        Files.deleteIfExists(tempProcessed.toPath());
+    }
+
 }

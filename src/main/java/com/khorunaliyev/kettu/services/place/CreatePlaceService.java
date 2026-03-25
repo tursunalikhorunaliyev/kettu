@@ -14,6 +14,7 @@ import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.place.UserActiveUploadsRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
 import com.khorunaliyev.kettu.services.geo.GeoService;
+import com.khorunaliyev.kettu.services.storage.LocalStorageService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ public class CreatePlaceService {
     private final GeoService geoService;
     private final UserContext userContext;
     private final UserActiveUploadsRepository userActiveUploadsRepository;
-    //private final LocalStorageService localStorageService;
+    private final LocalStorageService localStorageService;
 
     @Transactional
     @CacheEvict(value = "places", allEntries = true)
@@ -92,11 +93,11 @@ public class CreatePlaceService {
         Place createdPlace = placeRepository.save(place);
 
         UserActiveUploads activeUploads = new UserActiveUploads();
-        activeUploads.setPlace(place);
+        activeUploads.setPlace(createdPlace);
         activeUploads.setUser(userContext.getUser());
         userActiveUploadsRepository.save(activeUploads);
 
-        //List<String> localFilePaths = localStorageService.saveToTempDirectory(createdPlace.getId().toString(), files);
+        List<String> localFilePaths = localStorageService.saveToTempDirectory(createdPlace.getId().toString(), files);
 
 
 

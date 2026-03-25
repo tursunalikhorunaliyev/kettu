@@ -1,6 +1,9 @@
 package com.khorunaliyev.kettu.services.storage;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.entity.place.UserActiveUploads;
+import com.khorunaliyev.kettu.repository.place.PlaceRepository;
+import com.khorunaliyev.kettu.repository.place.UserActiveUploadsRepository;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +28,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class R2Service {
     private final S3Client s3Client;
+    private final UserActiveUploadsRepository activeUploadsRepository;
+    private final PlaceRepository placeRepository;
 
     @Value("${cloudflare.r2.bucket}")
     private String bucket;
@@ -110,6 +115,7 @@ public class R2Service {
             String fileUUID = UUID.randomUUID().toString();
 
             uploadProcessedImage(originalFile, "high", fileUUID,1.0, 0.8f);
+
             uploadProcessedImage(originalFile, "medium", fileUUID,0.5, 0.7f);
             uploadProcessedImage(originalFile, "low", fileUUID,0.2, 0.5f);
 

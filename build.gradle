@@ -53,6 +53,8 @@ dependencies {
 	implementation("org.hibernate:hibernate-spatial:7.2.6.Final")
 	implementation 'org.wololo:jts2geojson:0.18.1'
 
+	implementation("net.coobird:thumbnailator:0.4.21")
+
 }
 
 tasks.named('test') {

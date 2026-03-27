@@ -23,4 +23,7 @@ public class PlacePhoto{
 
     @Column(nullable = false)
     private boolean isMain = false;
+
+    @Column(nullable = false)
+    private boolean isProcessing = true;
 }

@@ -15,6 +15,7 @@ import com.khorunaliyev.kettu.repository.place.UserActiveUploadsRepository;
 import com.khorunaliyev.kettu.repository.resource.*;
 import com.khorunaliyev.kettu.services.geo.GeoService;
 import com.khorunaliyev.kettu.services.storage.LocalStorageService;
+import com.khorunaliyev.kettu.services.storage.R2Service;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,10 +44,11 @@ public class CreatePlaceService {
     private final UserContext userContext;
     private final UserActiveUploadsRepository userActiveUploadsRepository;
     private final LocalStorageService localStorageService;
+    private final R2Service r2Service;
 
     @Transactional
     @CacheEvict(value = "places", allEntries = true)
-    public ResponseEntity<Response> createPlace(PlaceRequest request, List<MultipartFile> files) throws IOException {
+    public ResponseEntity<Response> createPlace(PlaceRequest request, MultipartFile mainPhoto, List<MultipartFile> additionalPhotos) throws IOException {
 
         if(!categoryRepository.existsById(request.getCategory_id())){
             throw new ResourceNotFoundException("Category not found");
@@ -87,7 +87,7 @@ public class CreatePlaceService {
         placeLocation.setPoint(point);
 
         place.setLocation(placeLocation);
-        place.setPhotoCount(files.size());
+        place.setPhotoCount(additionalPhotos.size());
         place.setTags(request.getTags().stream().map(tagId -> entityManager.getReference(Tag.class, tagId)).collect(Collectors.toSet()));
 
         Place createdPlace = placeRepository.save(place);
@@ -97,7 +97,16 @@ public class CreatePlaceService {
         activeUploads.setUser(userContext.getUser());
         userActiveUploadsRepository.save(activeUploads);
 
-        List<String> localFilePaths = localStorageService.saveToTempDirectory(createdPlace.getId().toString(), files);
+        Map<String, List<String>> localFilePaths = localStorageService.saveToTempDirectory(createdPlace.getId().toString(), mainPhoto, additionalPhotos);
+
+        List<String> localMainPhotoPath = localFilePaths.get("main");
+        List<String> localAdditionalPhotoPaths = localFilePaths.get("additional");
+
+        r2Service.processAndUpload(createdPlace.getId(), localMainPhotoPath.get(0), localAdditionalPhotoPaths, userContext.getUserId());
+
+
+
+
 
 
 

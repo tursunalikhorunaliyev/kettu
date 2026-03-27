@@ -1,6 +1,7 @@
 package com.khorunaliyev.kettu.services.storage;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.reponse.place.PhotoTask;
 import com.khorunaliyev.kettu.entity.place.UserActiveUploads;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.place.UserActiveUploadsRepository;
@@ -20,9 +21,8 @@ import software.amazon.awssdk.services.s3.model.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -109,21 +109,52 @@ public class R2Service {
 
 
     @Async("imageExecutor")
-    public void processAndUpload(Long placeId, List<String> filePaths, Long userId) throws IOException {
-        for (String path : filePaths) {
-            File originalFile = new File(path);
-            String fileUUID = UUID.randomUUID().toString();
+    public void processAndUpload(Long placeId, String mainPhotoPath, List<String> additionalPhotoPaths, Long userId) throws IOException {
 
-            uploadProcessedImage(originalFile, "high", fileUUID,1.0, 0.8f);
+        try {
 
-            uploadProcessedImage(originalFile, "medium", fileUUID,0.5, 0.7f);
-            uploadProcessedImage(originalFile, "low", fileUUID,0.2, 0.5f);
+            Stream<PhotoTask> mainStream = Stream.of(new PhotoTask(mainPhotoPath, true));
+            Stream<PhotoTask> additionalStream = additionalPhotoPaths.stream().map(path -> new PhotoTask(path, false));
 
-            Files.deleteIfExists(originalFile.toPath());
+            Stream.concat(mainStream, additionalStream).filter(photoTask -> photoTask.path()!=null).forEach(photoTask -> {
+                try {
+                    processSingleImage(placeId, photoTask);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+        catch (Exception e){
+
         }
     }
 
-    private void uploadProcessedImage(File source, String type, String uuid, double scale, float quality) throws IOException {
+    private void processSingleImage(Long placeId, PhotoTask photoTask) throws IOException {
+        File orginalFile = new File(photoTask.path());
+        String uuid = UUID.randomUUID().toString();
+
+        try {
+            compressAndUpload(orginalFile, "high", uuid, 1.0, 0.8f);
+            compressAndUpload(orginalFile, "medium", uuid, 1.0, 0.8f);
+            compressAndUpload(orginalFile, "high", uuid, 1.0, 0.8f);
+        }
+        catch (Exception e){
+            throw new RuntimeException("Error with processing image: " + photoTask.path() + e);
+        }
+        finally {
+            try {
+                Files.deleteIfExists(orginalFile.toPath());
+            }
+            catch (Exception e){
+                throw new RuntimeException("Could not delete temp file: " +orginalFile.getPath());
+            }
+        }
+
+
+
+    }
+
+    private void compressAndUpload(File source, String type, String uuid, double scale, float quality) throws IOException {
 
         String fileName = type + "_" + uuid + ".jpg";
 

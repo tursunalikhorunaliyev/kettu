@@ -6,6 +6,7 @@ import com.khorunaliyev.kettu.entity.place.UserActiveUploads;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.place.UserActiveUploadsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class R2Service {
     private final S3Client s3Client;
     private final UserActiveUploadsRepository activeUploadsRepository;
@@ -112,7 +114,6 @@ public class R2Service {
     public void processAndUpload(Long placeId, String mainPhotoPath, List<String> additionalPhotoPaths, Long userId) throws IOException {
 
         try {
-
             Stream<PhotoTask> mainStream = Stream.of(new PhotoTask(mainPhotoPath, true));
             Stream<PhotoTask> additionalStream = additionalPhotoPaths.stream().map(path -> new PhotoTask(path, false));
 
@@ -125,7 +126,7 @@ public class R2Service {
             });
         }
         catch (Exception e){
-
+            ///Bu yerda FAILED statusga o'zgartiraman tog'rimi
         }
     }
 
@@ -135,8 +136,8 @@ public class R2Service {
 
         try {
             compressAndUpload(orginalFile, "high", uuid, 1.0, 0.8f);
-            compressAndUpload(orginalFile, "medium", uuid, 1.0, 0.8f);
-            compressAndUpload(orginalFile, "high", uuid, 1.0, 0.8f);
+            compressAndUpload(orginalFile, "medium", uuid, 0.5, 0.7f);
+            compressAndUpload(orginalFile, "high", uuid, 0.2, 0.5f);
         }
         catch (Exception e){
             throw new RuntimeException("Error with processing image: " + photoTask.path() + e);
@@ -146,12 +147,9 @@ public class R2Service {
                 Files.deleteIfExists(orginalFile.toPath());
             }
             catch (Exception e){
-                throw new RuntimeException("Could not delete temp file: " +orginalFile.getPath());
+                log.warn("Could not delete temp file: {}", orginalFile.getPath());
             }
         }
-
-
-
     }
 
     private void compressAndUpload(File source, String type, String uuid, double scale, float quality) throws IOException {
@@ -159,13 +157,25 @@ public class R2Service {
         String fileName = type + "_" + uuid + ".jpg";
 
         File tempProcessed = new File(source.getParent(), "temp_" + fileName);
+        try{
+            Thumbnails.of(source)
+                    .scale(scale)
+                    .outputFormat("jpg")
+                    .scale(scale)
+                    .outputQuality(quality)
+                    .toFile(tempProcessed);
 
-        Thumbnails.of(source).scale(scale).outputFormat("jpg").outputQuality(quality).toFile(tempProcessed);
+            String keyForR2 = type + "/" + uuid + ".jpg";
 
-        String keyForR2 = type + "/" + uuid + ".jpg";
-        s3Client.putObject(PutObjectRequest.builder().bucket(bucket).key(keyForR2).contentType("image/jpeg").acl(ObjectCannedACL.PUBLIC_READ).build(), RequestBody.fromFile(tempProcessed));
+            s3Client.putObject(PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(keyForR2)
+                    .contentType("image/jpeg")
+                    .acl(ObjectCannedACL.PUBLIC_READ).build(), RequestBody.fromFile(tempProcessed));
 
-        Files.deleteIfExists(tempProcessed.toPath());
+        } finally {
+            Files.deleteIfExists(tempProcessed.toPath());
+        }
     }
 
 }

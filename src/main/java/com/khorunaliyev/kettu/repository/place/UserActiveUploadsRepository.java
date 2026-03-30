@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserActiveUploadsRepository extends JpaRepository<UserActiveUploads, Long> {
+    long deleteByPlace_IdAndUser_Id(Long id, Long id1);
+
 }

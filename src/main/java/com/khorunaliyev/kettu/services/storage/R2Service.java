@@ -2,12 +2,18 @@ package com.khorunaliyev.kettu.services.storage;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.reponse.place.PhotoTask;
+import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
+import com.khorunaliyev.kettu.entity.place.Place;
+import com.khorunaliyev.kettu.entity.place.PlacePhoto;
 import com.khorunaliyev.kettu.entity.place.UserActiveUploads;
+import com.khorunaliyev.kettu.repository.place.PlacePhotoRepository;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.place.UserActiveUploadsRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +35,11 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Slf4j
 public class R2Service {
+    private final PlacePhotoRepository placePhotoRepository;
     private final S3Client s3Client;
     private final UserActiveUploadsRepository activeUploadsRepository;
     private final PlaceRepository placeRepository;
+    private final EntityManager entityManager;
 
     @Value("${cloudflare.r2.bucket}")
     private String bucket;
@@ -45,6 +53,7 @@ public class R2Service {
         }
         return new ResponseEntity<>(new Response("Success", key), HttpStatus.CREATED);
     }
+
     public ResponseEntity<Response> uploadMultiple(List<MultipartFile> images) {
         List<String> imagesList = new LinkedList<>();
 
@@ -117,16 +126,21 @@ public class R2Service {
             Stream<PhotoTask> mainStream = Stream.of(new PhotoTask(mainPhotoPath, true));
             Stream<PhotoTask> additionalStream = additionalPhotoPaths.stream().map(path -> new PhotoTask(path, false));
 
-            Stream.concat(mainStream, additionalStream).filter(photoTask -> photoTask.path()!=null).forEach(photoTask -> {
+            Stream.concat(mainStream, additionalStream).filter(photoTask -> photoTask.path() != null).forEach(photoTask -> {
                 try {
                     processSingleImage(placeId, photoTask);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             });
-        }
-        catch (Exception e){
+
+            updatePlaceStatus(placeId, PlaceStatus.IN_MODERATION);
+        } catch (Exception e) {
             ///Bu yerda FAILED statusga o'zgartiraman tog'rimi
+
+            updatePlaceStatus(placeId, PlaceStatus.FAILED);
+        } finally {
+            activeUploadsRepository.deleteByPlace_IdAndUser_Id(placeId, userId);
         }
     }
 
@@ -137,16 +151,14 @@ public class R2Service {
         try {
             compressAndUpload(orginalFile, "high", uuid, 1.0, 0.8f);
             compressAndUpload(orginalFile, "medium", uuid, 0.5, 0.7f);
-            compressAndUpload(orginalFile, "high", uuid, 0.2, 0.5f);
-        }
-        catch (Exception e){
+            compressAndUpload(orginalFile, "low", uuid, 0.2, 0.5f);
+            savePhotoToDB(placeId, uuid, photoTask.isMain());
+        } catch (Exception e) {
             throw new RuntimeException("Error with processing image: " + photoTask.path() + e);
-        }
-        finally {
+        } finally {
             try {
                 Files.deleteIfExists(orginalFile.toPath());
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 log.warn("Could not delete temp file: {}", orginalFile.getPath());
             }
         }
@@ -157,11 +169,10 @@ public class R2Service {
         String fileName = type + "_" + uuid + ".jpg";
 
         File tempProcessed = new File(source.getParent(), "temp_" + fileName);
-        try{
+        try {
             Thumbnails.of(source)
                     .scale(scale)
                     .outputFormat("jpg")
-                    .scale(scale)
                     .outputQuality(quality)
                     .toFile(tempProcessed);
 
@@ -178,4 +189,28 @@ public class R2Service {
         }
     }
 
+    private void updatePlaceStatus(Long placeId, PlaceStatus placeStatus) {
+        Place place = placeRepository.findById(placeId).get();
+        place.setStatus(placeStatus);
+        placeRepository.save(place);
+    }
+
+    private void savePhotoToDB(Long placeId, String uuid, boolean isMain) {
+        PlacePhoto photo = new PlacePhoto();
+        photo.setPlace(entityManager.getReference(Place.class, placeId));
+        photo.setImage(uuid);
+        photo.setMain(isMain);
+        placePhotoRepository.save(photo);
+    }
+
+    private void cleanupFailedUpload(Long placeId) {
+        List<PlacePhoto> placePhotos = placePhotoRepository.findByPlace_Id(placeId);
+        for (PlacePhoto photo : placePhotos) {
+            String uuid = photo.getImage();
+
+            deleteFile("high/" + uuid + ".jpg");
+            deleteFile("medium/" + uuid + ".jpg");
+            deleteFile("low/" + uuid + ".jpg");
+        }
+    }
 }

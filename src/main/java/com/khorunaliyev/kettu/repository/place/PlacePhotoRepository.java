@@ -12,4 +12,6 @@ import java.util.List;
 public interface PlacePhotoRepository extends JpaRepository<PlacePhoto, Long> {
     @Query("SELECT p FROM PlacePhoto p WHERE p.place.id = :placeId AND p.image IN :imageNames")
     List<PlacePhoto> findByPlaceIdAndImageIn(@Param("placeId") Long placeId, @Param("imageNames") List<String> imageNames);
+
+    List<PlacePhoto> findByPlace_Id(Long id);
 }

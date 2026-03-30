@@ -5,5 +5,6 @@ public enum PlaceStatus {
     IN_MODERATION,
     ACTIVE,
     REJECTED,
-    INACTIVE
+    INACTIVE,
+    FAILED
 }

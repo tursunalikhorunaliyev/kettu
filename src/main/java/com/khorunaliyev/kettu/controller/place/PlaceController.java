@@ -1,8 +1,6 @@
 package com.khorunaliyev.kettu.controller.place;
 
-import com.khorunaliyev.kettu.dto.projection.PlaceInfo;
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.reponse.place.PlaceDTO;
 import com.khorunaliyev.kettu.dto.request.place.PlaceRequest;
 import com.khorunaliyev.kettu.dto.request.place.PlaceUpdateRequest;
 import com.khorunaliyev.kettu.dto.request.place.PlaceUpdateStatusRequest;
@@ -12,8 +10,8 @@ import com.khorunaliyev.kettu.services.place.PlaceService;
 import com.khorunaliyev.kettu.services.place.UpdatePlaceService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +29,7 @@ public class PlaceController {
     private final ChangePlaceStatusService changePlaceStatusService;
     private final CreatePlaceService createPlaceService;
 
-    @PostMapping("/save")
+    @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Response> create(@RequestPart("data") @Valid PlaceRequest request, @RequestPart("main_photo") MultipartFile mainPhoto, @RequestPart(value = "additional_photos", required = false) List<MultipartFile> additionalPhotos) throws IOException {
         return createPlaceService.createPlace(request, mainPhoto, additionalPhotos);
     }

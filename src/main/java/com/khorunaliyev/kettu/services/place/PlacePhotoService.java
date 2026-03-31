@@ -53,6 +53,7 @@ public class PlacePhotoService {
 
             updatePlaceStatus(placeId, PlaceStatus.IN_MODERATION);
         } catch (Exception e) {
+            System.out.println(e);
             updatePlaceStatus(placeId, PlaceStatus.FAILED);
             cleanupFailedUpload(placeId);
         } finally {
@@ -100,9 +101,7 @@ public class PlacePhotoService {
     }
 
     private void updatePlaceStatus(Long placeId, PlaceStatus placeStatus) {
-        Place place = entityManager.getReference(Place.class, placeId);
-        place.setStatus(placeStatus);
-        placeRepository.save(place);
+        placeRepository.updateStatus(placeId, placeStatus);
     }
 
     private void savePhotoToDB(Long placeId, String uuid, boolean isMain) {

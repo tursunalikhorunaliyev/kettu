@@ -28,7 +28,7 @@ public class PlaceRequest {
     private Integer category_id;
 
     @NotNull
-    @Size(min = 3, max = 10)
+    @Size(min = 1, max = 10)
     private List<Integer> tags;
 
     @NotNull

@@ -50,7 +50,6 @@ public class R2Service {
                 .key(key)
                 .contentType("image/jpeg")
                 .acl(ObjectCannedACL.PUBLIC_READ).build(), RequestBody.fromFile(image));
-
         return key;
     }
 

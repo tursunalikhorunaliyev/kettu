@@ -27,7 +27,7 @@ spring:
             # client-secret: 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
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/kettu
+    url: jdbc:postgresql://localhost:5432/kettu
     username: postgres
     password: wtmlopuhfgfdaz
     driver-class-name: org.postgresql.Driver
@@ -43,11 +43,11 @@ spring:
 
 cloudflare:
   r2:
-    access-key: 396aaeec2983a57c46c3f850de5d02c5
-    secret-key: a1bce2d5f563a709effc70c9f0e57a8ece963ffc11df8943a938aff7d0cae56b
+    access-key: 2612357a234fa7657af4c36ee51531e2
+    secret-key: 1926a91bf05fe064ad37d14f6e7d1b82ca862439368bd6e193867104b57e6355
     region: auto
     endpoint: https://7331730e9e5c69b9c7599dc3151cbb36.r2.cloudflarestorage.com
-    bucket: kettu
+    bucket: khorunaliyev-kettu
 
 logging:
   level:

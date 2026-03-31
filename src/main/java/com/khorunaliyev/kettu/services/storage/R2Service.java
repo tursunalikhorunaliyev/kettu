@@ -53,6 +53,16 @@ public class R2Service {
         return key;
     }
 
+    public ResponseEntity<Response> upload(MultipartFile image) {
+        String key = UUID.randomUUID() + "-" + image.getOriginalFilename();
+        try {
+            s3Client.putObject(PutObjectRequest.builder().bucket(bucket).key(key).contentType(image.getContentType()).acl(ObjectCannedACL.PUBLIC_READ).build(), RequestBody.fromInputStream(image.getInputStream(), image.getSize()));
+        } catch (IOException e) {
+            return new ResponseEntity<>(new Response("Something went wrong while file uploading", null), HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(new Response("Success", key), HttpStatus.CREATED);
+    }
+
     public ResponseEntity<Response> uploadMultiple(List<MultipartFile> images) {
         List<String> imagesList = new LinkedList<>();
 

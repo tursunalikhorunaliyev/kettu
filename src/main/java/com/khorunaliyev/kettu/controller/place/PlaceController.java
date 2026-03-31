@@ -32,8 +32,8 @@ public class PlaceController {
     private final CreatePlaceService createPlaceService;
 
     @PostMapping("/save")
-    public ResponseEntity<Response> create(@RequestPart("data") @Valid PlaceRequest request, @RequestPart("photos") List<MultipartFile> photos) throws IOException {
-        return createPlaceService.createPlace(request, photos);
+    public ResponseEntity<Response> create(@RequestPart("data") @Valid PlaceRequest request, @RequestPart("main_photo") MultipartFile mainPhoto, @RequestPart(value = "additional_photos", required = false) List<MultipartFile> additionalPhotos) throws IOException {
+        return createPlaceService.createPlace(request, mainPhoto, additionalPhotos);
     }
 
     @PatchMapping("/{id}/update")

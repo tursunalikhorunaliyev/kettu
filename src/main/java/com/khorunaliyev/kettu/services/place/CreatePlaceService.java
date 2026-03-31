@@ -45,6 +45,7 @@ public class CreatePlaceService {
     private final UserActiveUploadsRepository userActiveUploadsRepository;
     private final LocalStorageService localStorageService;
     private final R2Service r2Service;
+    private final PlacePhotoService placePhotoService;
 
     @Transactional
     @CacheEvict(value = "places", allEntries = true)
@@ -102,18 +103,7 @@ public class CreatePlaceService {
         List<String> localMainPhotoPath = localFilePaths.get("main");
         List<String> localAdditionalPhotoPaths = localFilePaths.get("additional");
 
-        r2Service.processAndUpload(createdPlace.getId(), localMainPhotoPath.get(0), localAdditionalPhotoPaths, userContext.getUserId());
-
-
-
-
-
-
-
-
-
-
-
+        placePhotoService.processAndUpload(createdPlace.getId(), localMainPhotoPath.get(0), localAdditionalPhotoPaths, userContext.getUserId());
 
         return new ResponseEntity<>(new Response("Success", "Place created successfully"), HttpStatus.CREATED);
     }

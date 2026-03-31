@@ -44,14 +44,14 @@ public class R2Service {
     @Value("${cloudflare.r2.bucket}")
     private String bucket;
 
-    public ResponseEntity<Response> upload(MultipartFile image) {
-        String key = UUID.randomUUID() + "-" + image.getOriginalFilename();
-        try {
-            s3Client.putObject(PutObjectRequest.builder().bucket(bucket).key(key).contentType(image.getContentType()).acl(ObjectCannedACL.PUBLIC_READ).build(), RequestBody.fromInputStream(image.getInputStream(), image.getSize()));
-        } catch (IOException e) {
-            return new ResponseEntity<>(new Response("Something went wrong while file uploading", null), HttpStatus.CONFLICT);
-        }
-        return new ResponseEntity<>(new Response("Success", key), HttpStatus.CREATED);
+    public String upload(File image, String key) {
+        s3Client.putObject(PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .contentType("image/jpeg")
+                .acl(ObjectCannedACL.PUBLIC_READ).build(), RequestBody.fromFile(image));
+
+        return key;
     }
 
     public ResponseEntity<Response> uploadMultiple(List<MultipartFile> images) {
@@ -73,15 +73,15 @@ public class R2Service {
         return new ResponseEntity<>(new Response("Success", imagesList), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Response> deleteFile(String fileName) {
+    public boolean deleteFile(String fileName) {
         try {
             s3Client.deleteObject(DeleteObjectRequest.builder()
                     .bucket(bucket)
                     .key(fileName)
                     .build());
-            return ResponseEntity.ok(new Response("Deleted", null));
+            return true;
         } catch (S3Exception e) {
-            return new ResponseEntity<>(new Response("Something went wrong while deleting file", null), HttpStatus.CONFLICT);
+            return false;
         }
     }
 
@@ -119,98 +119,5 @@ public class R2Service {
     }
 
 
-    @Async("imageExecutor")
-    public void processAndUpload(Long placeId, String mainPhotoPath, List<String> additionalPhotoPaths, Long userId) throws IOException {
 
-        try {
-            Stream<PhotoTask> mainStream = Stream.of(new PhotoTask(mainPhotoPath, true));
-            Stream<PhotoTask> additionalStream = additionalPhotoPaths.stream().map(path -> new PhotoTask(path, false));
-
-            Stream.concat(mainStream, additionalStream).filter(photoTask -> photoTask.path() != null).forEach(photoTask -> {
-                try {
-                    processSingleImage(placeId, photoTask);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-
-            updatePlaceStatus(placeId, PlaceStatus.IN_MODERATION);
-        } catch (Exception e) {
-            ///Bu yerda FAILED statusga o'zgartiraman tog'rimi
-
-            updatePlaceStatus(placeId, PlaceStatus.FAILED);
-        } finally {
-            activeUploadsRepository.deleteByPlace_IdAndUser_Id(placeId, userId);
-        }
-    }
-
-    private void processSingleImage(Long placeId, PhotoTask photoTask) throws IOException {
-        File orginalFile = new File(photoTask.path());
-        String uuid = UUID.randomUUID().toString();
-
-        try {
-            compressAndUpload(orginalFile, "high", uuid, 1.0, 0.8f);
-            compressAndUpload(orginalFile, "medium", uuid, 0.5, 0.7f);
-            compressAndUpload(orginalFile, "low", uuid, 0.2, 0.5f);
-            savePhotoToDB(placeId, uuid, photoTask.isMain());
-        } catch (Exception e) {
-            throw new RuntimeException("Error with processing image: " + photoTask.path() + e);
-        } finally {
-            try {
-                Files.deleteIfExists(orginalFile.toPath());
-            } catch (Exception e) {
-                log.warn("Could not delete temp file: {}", orginalFile.getPath());
-            }
-        }
-    }
-
-    private void compressAndUpload(File source, String type, String uuid, double scale, float quality) throws IOException {
-
-        String fileName = type + "_" + uuid + ".jpg";
-
-        File tempProcessed = new File(source.getParent(), "temp_" + fileName);
-        try {
-            Thumbnails.of(source)
-                    .scale(scale)
-                    .outputFormat("jpg")
-                    .outputQuality(quality)
-                    .toFile(tempProcessed);
-
-            String keyForR2 = type + "/" + uuid + ".jpg";
-
-            s3Client.putObject(PutObjectRequest.builder()
-                    .bucket(bucket)
-                    .key(keyForR2)
-                    .contentType("image/jpeg")
-                    .acl(ObjectCannedACL.PUBLIC_READ).build(), RequestBody.fromFile(tempProcessed));
-
-        } finally {
-            Files.deleteIfExists(tempProcessed.toPath());
-        }
-    }
-
-    private void updatePlaceStatus(Long placeId, PlaceStatus placeStatus) {
-        Place place = placeRepository.findById(placeId).get();
-        place.setStatus(placeStatus);
-        placeRepository.save(place);
-    }
-
-    private void savePhotoToDB(Long placeId, String uuid, boolean isMain) {
-        PlacePhoto photo = new PlacePhoto();
-        photo.setPlace(entityManager.getReference(Place.class, placeId));
-        photo.setImage(uuid);
-        photo.setMain(isMain);
-        placePhotoRepository.save(photo);
-    }
-
-    private void cleanupFailedUpload(Long placeId) {
-        List<PlacePhoto> placePhotos = placePhotoRepository.findByPlace_Id(placeId);
-        for (PlacePhoto photo : placePhotos) {
-            String uuid = photo.getImage();
-
-            deleteFile("high/" + uuid + ".jpg");
-            deleteFile("medium/" + uuid + ".jpg");
-            deleteFile("low/" + uuid + ".jpg");
-        }
-    }
 }

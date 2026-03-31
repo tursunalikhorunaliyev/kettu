@@ -1,5 +1,6 @@
 package com.khorunaliyev.kettu.repository.place;
 
+import com.khorunaliyev.kettu.entity.place.Place;
 import com.khorunaliyev.kettu.entity.place.PlacePhoto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,8 @@ public interface PlacePhotoRepository extends JpaRepository<PlacePhoto, Long> {
     List<PlacePhoto> findByPlaceIdAndImageIn(@Param("placeId") Long placeId, @Param("imageNames") List<String> imageNames);
 
     List<PlacePhoto> findByPlace_Id(Long id);
+
+    long deleteByPlace_Id(Long id);
+
+
 }

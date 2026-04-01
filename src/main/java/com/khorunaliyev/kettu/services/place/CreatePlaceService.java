@@ -51,13 +51,13 @@ public class CreatePlaceService {
     @CacheEvict(value = "places", allEntries = true)
     public ResponseEntity<Response> createPlace(PlaceRequest request, MultipartFile mainPhoto, List<MultipartFile> additionalPhotos) throws IOException {
 
-        if(!categoryRepository.existsById(request.getCategory_id())){
+        if (!categoryRepository.existsById(request.getCategory_id())) {
             throw new ResourceNotFoundException("Category not found");
         }
 
         Set<Integer> tagsSet = new HashSet<>(request.getTags());
 
-        if(tagsSet.size() != categoryRepository.countByCategoryAndTags(request.getCategory_id(),tagsSet)){
+        if (tagsSet.size() != categoryRepository.countByCategoryAndTags(request.getCategory_id(), tagsSet)) {
             throw new ResourceNotFoundException("Some tags not found");
         }
 
@@ -88,7 +88,7 @@ public class CreatePlaceService {
         placeLocation.setPoint(point);
 
         place.setLocation(placeLocation);
-        place.setPhotoCount(additionalPhotos.size());
+        place.setPhotoCount(1 + (additionalPhotos != null ? additionalPhotos.size() : 0));
         place.setTags(request.getTags().stream().map(tagId -> entityManager.getReference(Tag.class, tagId)).collect(Collectors.toSet()));
 
         Place createdPlace = placeRepository.save(place);

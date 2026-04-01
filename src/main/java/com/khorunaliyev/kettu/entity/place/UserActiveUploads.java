@@ -20,7 +20,7 @@ public class UserActiveUploads {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUser user;
 
-    @OneToOne()
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 }

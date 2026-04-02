@@ -49,9 +49,13 @@ public class PlaceController {
                                                     @RequestParam(required = false) Long districtId,
                                                     @RequestParam(required = false) Long regionId,
                                                     @RequestParam(required = false) Long countryId,
-                                                    Pageable pageable
-    ) {
+                                                    Pageable pageable) {
         return placeService.getAllPlaces(categoryId, districtId, regionId, countryId, pageable);
+    }
+
+    @GetMapping("/uploading")
+    public ResponseEntity<Response> uploading(){
+        return placeService.checkUploadingPlaces();
     }
 
 }

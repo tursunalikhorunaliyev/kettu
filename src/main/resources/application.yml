@@ -1,4 +1,5 @@
 spring:
+
   application:
     name: kettu
 
@@ -12,7 +13,7 @@ spring:
     multipart:
       enabled: true
       max-file-size: 10MB
-      max-request-size: 10MB
+      max-request-size: 50MB
 
   security:
     oauth2:

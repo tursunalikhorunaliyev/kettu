@@ -7,6 +7,7 @@ import com.khorunaliyev.kettu.entity.auth.AppUser;
 import com.khorunaliyev.kettu.repository.auth.UserRepository;
 import com.khorunaliyev.kettu.services.storage.LocalStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,6 +26,7 @@ public class UserService {
     private final UserImageService userImageService;
 
 
+    @Cacheable(value = "user_info", key = "#authentication.name")
     public ResponseEntity<Response> getMe(Authentication authentication) {
         return ResponseEntity.ok(new Response("User data", userRepository.findDetachedByEmail(authentication.getName())));
     }

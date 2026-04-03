@@ -28,6 +28,4 @@ public interface UserRepository extends JpaRepository<AppUser, Long> {
   @Modifying
   @Query("update AppUser a set a.backgroundImage = ?1")
   int updateBackgroundImageBy(String backgroundImage);
-
-
 }

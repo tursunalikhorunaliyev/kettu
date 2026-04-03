@@ -1,23 +1,15 @@
 package com.khorunaliyev.kettu.services.storage;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.reponse.place.PhotoTask;
-import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
-import com.khorunaliyev.kettu.entity.place.Place;
-import com.khorunaliyev.kettu.entity.place.PlacePhoto;
-import com.khorunaliyev.kettu.entity.place.UserActiveUploads;
 import com.khorunaliyev.kettu.repository.place.PlacePhotoRepository;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.place.UserActiveUploadsRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnails;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -27,9 +19,7 @@ import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -82,15 +72,14 @@ public class R2Service {
         return new ResponseEntity<>(new Response("Success", imagesList), HttpStatus.CREATED);
     }
 
-    public boolean deleteFile(String fileName) {
+    public void deleteFile(String fileName) {
         try {
             s3Client.deleteObject(DeleteObjectRequest.builder()
                     .bucket(bucket)
                     .key(fileName)
                     .build());
-            return true;
         } catch (S3Exception e) {
-            return false;
+            throw e;
         }
     }
 

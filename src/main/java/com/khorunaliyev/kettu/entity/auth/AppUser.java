@@ -1,5 +1,6 @@
 package com.khorunaliyev.kettu.entity.auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,7 @@ public class AppUser implements UserDetails {
     private String image;
 
     @Column(length = 500)
+    @JsonProperty("background_image")
     private String backgroundImage;
 
     @Column(length = 500)

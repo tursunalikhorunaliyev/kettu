@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
@@ -27,4 +28,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     @EntityGraph(attributePaths = {"tags"})
     Optional<Category> findWithTagsById(Integer id);
+
+    @Query(value = "select count(*) from category_tags where category_id = :category_id and tag_id IN(:tag_ids)", nativeQuery = true)
+    int countByCategoryAndTags(@Param("category_id") Integer categoryId, @Param("tag_ids") Set<Integer> tagIds);
 }

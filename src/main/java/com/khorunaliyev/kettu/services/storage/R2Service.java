@@ -1,10 +1,23 @@
-package com.khorunaliyev.kettu.services.r2service;
+package com.khorunaliyev.kettu.services.storage;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
+import com.khorunaliyev.kettu.dto.reponse.place.PhotoTask;
+import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
+import com.khorunaliyev.kettu.entity.place.Place;
+import com.khorunaliyev.kettu.entity.place.PlacePhoto;
+import com.khorunaliyev.kettu.entity.place.UserActiveUploads;
+import com.khorunaliyev.kettu.repository.place.PlacePhotoRepository;
+import com.khorunaliyev.kettu.repository.place.PlaceRepository;
+import com.khorunaliyev.kettu.repository.place.UserActiveUploadsRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -12,18 +25,33 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class R2Service {
+    private final PlacePhotoRepository placePhotoRepository;
     private final S3Client s3Client;
+    private final UserActiveUploadsRepository activeUploadsRepository;
+    private final PlaceRepository placeRepository;
+    private final EntityManager entityManager;
 
     @Value("${cloudflare.r2.bucket}")
     private String bucket;
+
+    public String upload(File image, String key) {
+        s3Client.putObject(PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .contentType("image/jpeg")
+                .acl(ObjectCannedACL.PUBLIC_READ).build(), RequestBody.fromFile(image));
+        return key;
+    }
 
     public ResponseEntity<Response> upload(MultipartFile image) {
         String key = UUID.randomUUID() + "-" + image.getOriginalFilename();
@@ -54,21 +82,21 @@ public class R2Service {
         return new ResponseEntity<>(new Response("Success", imagesList), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Response> deleteFile(String fileName){
+    public boolean deleteFile(String fileName) {
         try {
             s3Client.deleteObject(DeleteObjectRequest.builder()
                     .bucket(bucket)
                     .key(fileName)
                     .build());
-            return ResponseEntity.ok(new Response("Deleted", null));
+            return true;
         } catch (S3Exception e) {
-            return new ResponseEntity<>(new Response("Something went wrong while deleting file", null), HttpStatus.CONFLICT);
+            return false;
         }
     }
 
-    public ResponseEntity<Response> deleteFiles(List<String> fileNames){
+    public ResponseEntity<Response> deleteFiles(List<String> fileNames) {
 
-        for (String fileName: fileNames){
+        for (String fileName : fileNames) {
             try {
                 s3Client.deleteObject(DeleteObjectRequest.builder()
                         .bucket(bucket)
@@ -98,4 +126,7 @@ public class R2Service {
             throw new RuntimeException("Failed to read object bytes from R2", e);
         }
     }
+
+
+
 }

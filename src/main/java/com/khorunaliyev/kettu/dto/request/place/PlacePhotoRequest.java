@@ -12,6 +12,7 @@ public class PlacePhotoRequest {
     @NotNull
     @NotBlank
     private String imageName;
+
     @NotNull
     @JsonProperty("isMain")
     private Boolean isMain;

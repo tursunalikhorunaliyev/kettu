@@ -1,4 +1,5 @@
 spring:
+
   application:
     name: kettu
 
@@ -12,7 +13,7 @@ spring:
     multipart:
       enabled: true
       max-file-size: 10MB
-      max-request-size: 10MB
+      max-request-size: 50MB
 
   security:
     oauth2:
@@ -43,11 +44,11 @@ spring:
 
 cloudflare:
   r2:
-    access-key: 05fa964f2862a2c608cd12514ce1f5d6
-    secret-key: 25a00f0d9d588b0d21b3aa2c316504ec44fa8943672d6870dc30bf9160c4a742
+    access-key: 2612357a234fa7657af4c36ee51531e2
+    secret-key: 1926a91bf05fe064ad37d14f6e7d1b82ca862439368bd6e193867104b57e6355
     region: auto
     endpoint: https://7331730e9e5c69b9c7599dc3151cbb36.r2.cloudflarestorage.com
-    bucket: kettu
+    bucket: khorunaliyev-kettu
 
 logging:
   level:

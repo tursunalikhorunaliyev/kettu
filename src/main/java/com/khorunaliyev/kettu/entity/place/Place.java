@@ -1,5 +1,6 @@
 package com.khorunaliyev.kettu.entity.place;
 
+import com.khorunaliyev.kettu.entity.auditing.FullAuditing;
 import com.khorunaliyev.kettu.entity.auth.AppUser;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import com.khorunaliyev.kettu.entity.resources.Category;
@@ -20,7 +21,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "place")
-public class Place {
+public class Place extends FullAuditing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -50,7 +51,6 @@ public class Place {
     @Column(nullable = false, length = 13)
     private PlaceStatus status = PlaceStatus.IN_MODERATION;
 
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "visited_users", joinColumns = @JoinColumn(name = "place_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<AppUser> visitedKettuUsers = new HashSet<>();
@@ -65,12 +65,6 @@ public class Place {
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer visitedCount = 0;
 
-
-    @CreatedDate
-    @Column(name = "createdAt", updatable = false, nullable = false)
-    protected LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updatedAt", nullable = false)
-    protected LocalDateTime updatedAt;
+    @Column(nullable = false)
+    private Integer photoCount = 0;
 }

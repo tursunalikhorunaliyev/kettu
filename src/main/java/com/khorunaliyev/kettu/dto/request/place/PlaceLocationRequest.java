@@ -11,6 +11,7 @@ public class PlaceLocationRequest {
     @NotNull
     @Positive
     private double lat_;
+
     @NotNull
     @Positive
     private double long_;

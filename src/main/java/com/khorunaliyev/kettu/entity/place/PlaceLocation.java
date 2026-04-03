@@ -35,6 +35,6 @@ public class PlaceLocation {
     @JoinColumn(name = "district_id", nullable = false)
     private District district;
 
-    @Column(columnDefinition = "geography(Point,4326)", nullable = false)
+    @Column(columnDefinition = "geography(Point,4326)", nullable = false, unique = true)
     private Point point;
 }

@@ -1,7 +1,7 @@
 package com.khorunaliyev.kettu.controller.storage;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.services.r2service.R2Service;
+import com.khorunaliyev.kettu.services.storage.R2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;

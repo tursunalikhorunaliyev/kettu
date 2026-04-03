@@ -10,15 +10,9 @@ import lombok.Setter;
 @Setter
 public class UserUpdate {
 
-    @NotNull
-    private Long userId;
-
     @NotBlank
+    @Size(min = 1, max = 255)
     private String name;
-
-    private String image;
-
-    private String backgroundImage;
 
     @Size(min = 1, max = 500)
     private String bio;

@@ -50,4 +50,12 @@ public class LocalStorageService {
         photo.transferTo(targetPath.toFile());
         return targetPath.toAbsolutePath().toString();
     }
+
+    public String saveToTempOne(String key, MultipartFile photo) throws IOException {
+        Path baseTempFile = Paths.get(System.getProperty("java.io.tmpdir"), "kettu_uploads", key);
+        if(!Files.exists(baseTempFile)){
+            Files.createDirectories(baseTempFile);
+        }
+        return processOne(photo, baseTempFile);
+    }
 }

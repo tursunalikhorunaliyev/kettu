@@ -3,6 +3,7 @@ package com.khorunaliyev.kettu.repository.auth;
 import com.khorunaliyev.kettu.dto.projection.UserInfo;
 import com.khorunaliyev.kettu.entity.auth.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,16 @@ public interface UserRepository extends JpaRepository<AppUser, Long> {
   @Query("SELECT u FROM AppUser u WHERE u.email = :email")
   @Transactional(readOnly = true)
   Optional<UserInfo> findDetachedByEmail(@Param("email") String email);
+
+  @Transactional
+  @Modifying
+  @Query("update AppUser a set a.image = ?1")
+  void updateImageBy(String image);
+
+  @Transactional
+  @Modifying
+  @Query("update AppUser a set a.backgroundImage = ?1")
+  int updateBackgroundImageBy(String backgroundImage);
+
+
 }

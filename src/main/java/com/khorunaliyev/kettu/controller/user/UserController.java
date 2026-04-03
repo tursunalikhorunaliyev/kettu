@@ -11,6 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("api/user")
@@ -23,7 +26,7 @@ public class UserController {
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<Response> update(Authentication authentication, @RequestBody @Valid UserUpdate userUpdate){
-        return userService.update(authentication,userUpdate);
+    public ResponseEntity<Response> update(@RequestPart(value = "data", required = false) @Valid UserUpdate userUpdate, @RequestPart(value = "profile_photo", required = false) MultipartFile profilePhoto, @RequestPart(value = "background_photo", required = false) MultipartFile backgroundMusic) throws IOException {
+        return userService.update(userUpdate, profilePhoto, backgroundMusic);
     }
 }

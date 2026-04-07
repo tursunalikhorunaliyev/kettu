@@ -26,7 +26,6 @@ public class UserService {
     private final UserImageService userImageService;
 
 
-    @Cacheable(value = "user_info", key = "#authentication.name")
     public ResponseEntity<Response> getMe(Authentication authentication) {
         return ResponseEntity.ok(new Response("User data", userRepository.findDetachedByEmail(authentication.getName())));
     }
@@ -35,7 +34,9 @@ public class UserService {
         Long userId = userContext.getUserId();
         final AppUser appUser = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+
         if(userUpdate!=null){
+            System.out.println("---------");
             if (userUpdate.getName() != null) {
                 appUser.setName(userUpdate.getName().trim());
             }

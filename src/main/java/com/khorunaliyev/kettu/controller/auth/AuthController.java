@@ -19,4 +19,5 @@ public class AuthController {
     public ResponseEntity<String> loginRedirect(HttpServletResponse response){
         return ResponseEntity.ok("You successfully logged in");
     }
+
 }

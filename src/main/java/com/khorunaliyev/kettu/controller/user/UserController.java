@@ -6,6 +6,7 @@ import com.khorunaliyev.kettu.services.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,8 +26,9 @@ public class UserController {
         return userService.getMe(authentication);
     }
 
-    @PatchMapping("/update")
-    public ResponseEntity<Response> update(@RequestPart(value = "data", required = false) @Valid UserUpdate userUpdate, @RequestPart(value = "profile_photo", required = false) MultipartFile profilePhoto, @RequestPart(value = "background_photo", required = false) MultipartFile backgroundMusic) throws IOException {
-        return userService.update(userUpdate, profilePhoto, backgroundMusic);
+
+    @PatchMapping(value = "/update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Response> update(@RequestPart(value = "data", required = false) @Valid UserUpdate userUpdate, @RequestPart(value = "profile_photo", required = false) MultipartFile profilePhoto, @RequestPart(value = "background_photo", required = false) MultipartFile backgroundPhoto) throws IOException {
+        return userService.update(userUpdate, profilePhoto, backgroundPhoto);
     }
 }

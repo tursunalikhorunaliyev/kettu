@@ -40,7 +40,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PUT, "/api/resources/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/resources/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/places/**").permitAll()
-                        .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/index.html","/auth-redirect.html", "/css/**", "/js/**", "/images/**").permitAll()
                         // allow favicon
                         .requestMatchers("/favicon.ico").permitAll()
 

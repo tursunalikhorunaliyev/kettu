@@ -1,5 +1,7 @@
 package com.khorunaliyev.kettu.dto.projection;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.List;
 
 /**
@@ -10,5 +12,6 @@ public interface CategoryInfo {
 
     String getName();
 
+    @Value("#{target.active_item_count}")
     Integer getActiveItemCount();
 }

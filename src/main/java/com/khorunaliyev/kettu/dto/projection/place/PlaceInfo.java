@@ -2,6 +2,7 @@ package com.khorunaliyev.kettu.dto.projection.place;
 
 import com.khorunaliyev.kettu.dto.projection.CategoryInfo;
 import com.khorunaliyev.kettu.dto.projection.TagInfo;
+import com.khorunaliyev.kettu.dto.projection.UserInfo;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -26,8 +27,8 @@ public interface PlaceInfo {
 
     @Value("#{target.visited_count}")
     Integer getVisitedCount();
-    @Value("#{target.likes_count}")
 
+    @Value("#{target.photo_count}")
     Integer getPhotoCount();
 
     CategoryInfo getCategory();
@@ -36,8 +37,13 @@ public interface PlaceInfo {
 
     Set<TagInfo> getTags();
 
+    @Value("#{target.created_at}")
     LocalDateTime getCreatedAt();
 
+    @Value("#{target.updated_at}")
     LocalDateTime getUpdatedAt();
+
+    @Value("#{target.created_by}")
+    UserInfo getCreatedBy();
 
 }

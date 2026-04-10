@@ -4,6 +4,8 @@ import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.request.place.PlaceRequest;
 import com.khorunaliyev.kettu.dto.request.place.PlaceUpdateRequest;
 import com.khorunaliyev.kettu.dto.request.place.PlaceUpdateStatusRequest;
+import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
+import com.khorunaliyev.kettu.entity.place.Place;
 import com.khorunaliyev.kettu.services.place.ChangePlaceStatusService;
 import com.khorunaliyev.kettu.services.place.CreatePlaceService;
 import com.khorunaliyev.kettu.services.place.PlaceService;
@@ -11,6 +13,7 @@ import com.khorunaliyev.kettu.services.place.UpdatePlaceService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,12 +48,13 @@ public class PlaceController {
     }
 
     @GetMapping
-    public ResponseEntity<Response> getPlaces(@RequestParam(required = false) Long categoryId,
-                                                    @RequestParam(required = false) Long districtId,
-                                                    @RequestParam(required = false) Long regionId,
-                                                    @RequestParam(required = false) Long countryId,
-                                                    Pageable pageable) {
-        return placeService.getAllPlaces(categoryId, districtId, regionId, countryId, pageable);
+    public ResponseEntity<Response> getPlaces(@RequestParam(value = "status",required = false) PlaceStatus status,
+                                              @RequestParam(value = "name",required = false) String name,
+                                              @RequestParam(value = "category_id", required = false) Integer categoryId,
+                                              @RequestParam(value = "tag_ids",required = false) List<Integer> tagsId,
+                                              @RequestParam(value = "region_id",required = false) Integer regionId,
+                                              @RequestParam(value = "district_id",required = false) Integer districtId) {
+        return placeService.getAllPlaces(status, name, categoryId, tagsId, regionId, districtId);
     }
 
     @GetMapping("/uploading")

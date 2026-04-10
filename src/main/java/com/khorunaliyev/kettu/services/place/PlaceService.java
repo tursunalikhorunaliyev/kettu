@@ -2,17 +2,24 @@ package com.khorunaliyev.kettu.services.place;
 
 import com.khorunaliyev.kettu.component.UserContext;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
+import com.khorunaliyev.kettu.dto.projection.place.PlaceInfo;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.reponse.place.PhotoData;
 import com.khorunaliyev.kettu.dto.reponse.place.UploadingPlaceData;
+import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
+import com.khorunaliyev.kettu.entity.place.Place;
 import com.khorunaliyev.kettu.repository.place.PlaceRepository;
 import com.khorunaliyev.kettu.repository.place.UserActiveUploadsRepository;
+import com.khorunaliyev.kettu.util.query.PlaceSpecification;
 import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -23,11 +30,18 @@ public class PlaceService {
     private final UserContext userContext;
     private final UserActiveUploadsRepository activeUploadsRepository;
     private final PlaceRepository placeRepository;
+    private final ProjectionFactory projectionFactory;
 
-    @Cacheable("places")
-    public ResponseEntity<Response> getAllPlaces(Long categoryId, Long districtId, Long regionId, Long countryId, Pageable pageable) {
+    @Cacheable(value = "places")
+    public ResponseEntity<Response> getAllPlaces(PlaceStatus status,
+                                                 String name,
+                                                 Integer categoryId,
+                                                 List<Integer> tagIds,
+                                                 Integer regionId,
+                                                 Integer districtId) {
 
-        return ResponseEntity.ok(new Response("ok", placeRepository.findAllWithDetails(pageable)));
+        Specification<Place> spec = PlaceSpecification.filterBy(status,name,categoryId,tagIds,regionId,districtId);
+        return ResponseEntity.ok(new Response("ok", placeRepository.findAll(spec).stream().map(place -> projectionFactory.createProjection(PlaceInfo.class,place)).toList()));
 
     }
 

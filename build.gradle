@@ -55,6 +55,9 @@ dependencies {
 
 	implementation("net.coobird:thumbnailator:0.4.21")
 
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-database-postgresql'
+
 }
 
 tasks.named('test') {

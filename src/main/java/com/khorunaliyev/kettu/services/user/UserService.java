@@ -1,6 +1,7 @@
 package com.khorunaliyev.kettu.services.user;
 
 import com.khorunaliyev.kettu.component.UserContext;
+import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.request.user.UserUpdate;
 import com.khorunaliyev.kettu.entity.auth.AppUser;
@@ -35,8 +36,7 @@ public class UserService {
         final AppUser appUser = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
 
-        if(userUpdate!=null){
-            System.out.println("---------");
+        if (userUpdate != null) {
             if (userUpdate.getName() != null) {
                 appUser.setName(userUpdate.getName().trim());
             }
@@ -54,12 +54,21 @@ public class UserService {
                 ? localStorageService.saveToTempOne(appUser.getEmail(), backgroundPhoto)
                 : null;
 
+        if (appUser.isFirstLogin()) {
+            appUser.setFirstLogin(false);
+        }
+
         userImageService.processAndUpload(userId, profilePhotoPath, backgroundPhotoPath);
 
         return ResponseEntity.ok(new Response("User updated", appUser));
     }
 
-
+    public ResponseEntity<Response> firstLogin() {
+        AppUser appUser = userContext.getUser();
+        appUser.setFirstLogin(false);
+        userRepository.save(appUser);
+        return ResponseEntity.ok(new Response("Success", "First login has completed"));
+    }
 
 
 }

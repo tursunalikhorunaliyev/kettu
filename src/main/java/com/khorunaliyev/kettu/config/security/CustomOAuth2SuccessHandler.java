@@ -54,13 +54,15 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         userRoles.add(userRole);
 
         assert email != null;
-        if(email.equals("khorunaliyev@gmail.com")){
+        if (email.equals("khorunaliyev@gmail.com")) {
             userRoles.add(adminRole);
         }
 
         appUser.setEmail(email);
         appUser.setName(name);
-        appUser.setImage(image);
+        if (image != null) {
+            appUser.setImage(image.substring(0, image.lastIndexOf("=")) + "=s1024");
+        }
         appUser.setRoles(userRoles);
         userRepository.save(appUser);
 

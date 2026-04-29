@@ -28,7 +28,7 @@ CREATE TABLE public.app_user (
     image character varying(255) NOT NULL,
     name character varying(255) NOT NULL,
     visited_places_count integer NOT NULL,
-    first_login boolean DEFAULT false NOT NULL
+    first_login boolean DEFAULT true NOT NULL
 );
 
 

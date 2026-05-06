@@ -11,4 +11,8 @@ public class CategoryNameRequest {
     @NotNull
     @Size(min = 1, max = 100)
     private String name;
+
+    @NotNull
+    @Size(min = 1, max = 100)
+    private String slug;
 }

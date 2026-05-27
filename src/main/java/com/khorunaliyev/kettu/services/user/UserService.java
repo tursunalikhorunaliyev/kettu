@@ -56,6 +56,7 @@ public class UserService {
 
         if (appUser.isFirstLogin()) {
             appUser.setFirstLogin(false);
+            userRepository.save(appUser);
         }
 
         userImageService.processAndUpload(userId, profilePhotoPath, backgroundPhotoPath);

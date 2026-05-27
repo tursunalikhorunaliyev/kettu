@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -35,36 +36,36 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
 
         // Save or update user
-        AppUser appUser = userRepository.findByEmail(email).orElseGet(AppUser::new);
+        Optional<AppUser> optionalAppUser = userRepository.findByEmail(email);
+        AppUser appUser = optionalAppUser.orElseGet(AppUser::new);
+        if (optionalAppUser.isEmpty()) {
+            Role userRole = roleRepository.findByName("USER").orElseGet(() -> {
+                Role role = new Role();
+                role.setName("USER");
+                return roleRepository.save(role);
+            });
+            Role adminRole = roleRepository.findByName("ADMIN").orElseGet(() -> {
+                Role role = new Role();
+                role.setName("ADMIN");
+                return roleRepository.save(role);
+            });
 
-        Role userRole = roleRepository.findByName("USER")
-                .orElseGet(() -> {
-                    Role role = new Role();
-                    role.setName("USER");
-                    return roleRepository.save(role);
-                });
-        Role adminRole = roleRepository.findByName("ADMIN")
-                .orElseGet(() -> {
-                    Role role = new Role();
-                    role.setName("ADMIN");
-                    return roleRepository.save(role);
-                });
+            Set<Role> userRoles = new HashSet<>();
+            userRoles.add(userRole);
 
-        Set<Role> userRoles = new HashSet<>();
-        userRoles.add(userRole);
+            assert email != null;
+            if (email.equals("khorunaliyev@gmail.com")) {
+                userRoles.add(adminRole);
+            }
 
-        assert email != null;
-        if (email.equals("khorunaliyev@gmail.com")) {
-            userRoles.add(adminRole);
+            appUser.setEmail(email);
+            appUser.setName(name);
+            if (image != null) {
+                appUser.setImage(image.substring(0, image.lastIndexOf("=")) + "=s1024");
+            }
+            appUser.setRoles(userRoles);
+            userRepository.save(appUser);
         }
-
-        appUser.setEmail(email);
-        appUser.setName(name);
-        if (image != null) {
-            appUser.setImage(image.substring(0, image.lastIndexOf("=")) + "=s1024");
-        }
-        appUser.setRoles(userRoles);
-        userRepository.save(appUser);
 
         // Generate JWT
         String jwtToken = jwtService.generateToken(appUser);

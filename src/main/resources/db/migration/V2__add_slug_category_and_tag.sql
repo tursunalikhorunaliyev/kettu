@@ -1,0 +1,10 @@
+ALTER TABLE category ADD COLUMN slug VARCHAR (100);
+UPDATE category SET slug = LOWER(REPLACE(name, ' ', '-')) WHERE SLUG IS NULL;
+ALTER TABLE category ALTER COLUMN slug SET NOT NULL;
+ALTER TABLE category ADD CONSTRAINT uk_category_slug UNIQUE (slug);
+
+
+ALTER TABLE tag ADD COLUMN slug VARCHAR (100);
+UPDATE tag SET slug = LOWER(REPLACE(name, ' ', '-')) WHERE slug IS NULL;
+ALTER TABLE tag ALTER COLUMN slug SET NOT NULL;
+ALTER TABLE tag ADD CONSTRAINT uk_tag_slug UNIQUE (slug);

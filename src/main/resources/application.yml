@@ -28,15 +28,15 @@ spring:
             # client-secret: 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
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/kettu
-    username: khorunaliyev
+    url: jdbc:postgresql://localhost:5433/kettu
+    username: postgres
     password: wtmlopuhfgfdaz
     driver-class-name: org.postgresql.Driver
 
   jpa:
     database-platform: org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect

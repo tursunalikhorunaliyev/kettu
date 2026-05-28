@@ -26,9 +26,14 @@ public class UserController {
         return userService.getMe(authentication);
     }
 
-
     @PatchMapping(value = "/update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Response> update(@RequestPart(value = "data", required = false) @Valid UserUpdate userUpdate, @RequestPart(value = "profile_photo", required = false) MultipartFile profilePhoto, @RequestPart(value = "background_photo", required = false) MultipartFile backgroundPhoto) throws IOException {
+    public ResponseEntity<Response> update(@RequestParam(value = "data", required = false) @Valid UserUpdate userUpdate, @RequestParam(value = "profile_photo", required = false) MultipartFile profilePhoto, @RequestParam(value = "background_photo", required = false) MultipartFile backgroundPhoto) throws IOException {
         return userService.update(userUpdate, profilePhoto, backgroundPhoto);
     }
+
+    @PostMapping("/first-login")
+    public ResponseEntity<Response> firstLogin(){
+        return userService.firstLogin();
+    }
+
 }

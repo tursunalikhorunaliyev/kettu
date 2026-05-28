@@ -8,7 +8,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+		languageVersion = JavaLanguageVersion.of(18)
 	}
 }
 
@@ -54,6 +54,9 @@ dependencies {
 	implementation 'org.wololo:jts2geojson:0.18.1'
 
 	implementation("net.coobird:thumbnailator:0.4.21")
+
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-database-postgresql'
 
 }
 

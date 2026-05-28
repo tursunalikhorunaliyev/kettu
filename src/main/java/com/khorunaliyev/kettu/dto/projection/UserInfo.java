@@ -27,4 +27,7 @@ public interface UserInfo {
 
     @JsonProperty("visited_places_count")
     Integer getVisitedPlacesCount();
+
+    @JsonProperty("first_login")
+    Boolean getFirstLogin();
 }

@@ -1,11 +1,8 @@
 package com.khorunaliyev.kettu.services.place;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
-import com.khorunaliyev.kettu.component.PlaceMappers;
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.reponse.place.PlaceHistoryDTO;
 import com.khorunaliyev.kettu.dto.request.place.PlaceUpdateStatusRequest;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import com.khorunaliyev.kettu.entity.place.Place;
@@ -15,7 +12,6 @@ import com.khorunaliyev.kettu.repository.resource.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,7 +24,6 @@ public class  ChangePlaceStatusService {
     private final CountryRepository countryRepository;
     private final RegionRepository regionRepository;
     private final DistrictRepository districtRepository;
-    private final PlaceMappers placeMappers;
 
     public ResponseEntity<Response> changePlaceStatus(Long placeID, PlaceUpdateStatusRequest request) {
 

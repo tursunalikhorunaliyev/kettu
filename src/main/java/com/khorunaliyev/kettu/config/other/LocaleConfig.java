@@ -9,7 +9,6 @@ import java.util.Locale;
 
 @Configuration
 public class LocaleConfig {
-
     @Bean
     public LocaleResolver localeResolver() {
         return new FixedLocaleResolver(Locale.ENGLISH);

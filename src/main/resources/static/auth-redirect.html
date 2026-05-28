@@ -31,14 +31,10 @@
 <button onclick="openApp()">Open App</button>
 
 <script>
-    const token = new URLSearchParams(window.location.search).get("token");
-
-    function openApp() {
-      window.location.href = `thekettu://auth?token=${token}`;
-    }
-
-    // Optional: auto-open after delay (can be removed if unwanted)
-    // setTimeout(openApp, 3000);
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const token = new URLSearchParams(window.location.search).get("token");
+        window.location.href = `thekettu://auth?token=${token}`;
+    });
 </script>
 </body>
 </html>

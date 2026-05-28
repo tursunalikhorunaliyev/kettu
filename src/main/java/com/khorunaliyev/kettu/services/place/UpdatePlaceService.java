@@ -1,12 +1,9 @@
 package com.khorunaliyev.kettu.services.place;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khorunaliyev.kettu.component.PlaceDiffChecker;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
-import com.khorunaliyev.kettu.component.PlaceMappers;
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.dto.reponse.place.*;
 import com.khorunaliyev.kettu.dto.request.place.PlaceUpdateRequest;
 import com.khorunaliyev.kettu.entity.enums.PlaceStatus;
 import com.khorunaliyev.kettu.entity.place.*;
@@ -23,9 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +33,6 @@ public class UpdatePlaceService {
     private final CountryRepository countryRepository;
     private final CategoryRepository categoryRepository;
     private final ObjectMapper objectMapper;
-    private final PlaceMappers placeMappers;
 
     @CacheEvict(value = "places", allEntries = true)
     public ResponseEntity<Response> update(Long placeId, PlaceUpdateRequest request) {

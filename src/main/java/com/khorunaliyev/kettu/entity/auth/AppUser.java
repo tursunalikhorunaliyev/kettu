@@ -44,7 +44,8 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private Integer visitedPlacesCount = 0;
 
-
+    @Column(nullable = false,columnDefinition = "boolean default true")
+    private boolean firstLogin = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

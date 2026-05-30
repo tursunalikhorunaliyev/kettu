@@ -15,19 +15,17 @@ public class District {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-
     @Column(nullable = false, unique = true, length = 100)
     private String name;
-
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;
-
 
     @Column(nullable = false)
     private Integer activeItemCount = 0;
 
     @Column(nullable = false,columnDefinition = "geometry(MultiPolygon, 4326)")
     private MultiPolygon geom;
+
 }

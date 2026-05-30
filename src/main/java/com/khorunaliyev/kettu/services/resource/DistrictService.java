@@ -70,7 +70,7 @@ public class DistrictService {
 
                 System.out.println(properties);
 
-                String districtName = properties.get("name").asText();
+                String districtName = properties.get("slug").asText();
 
 
                 ///poligon kordinatalarini o'qish
@@ -83,8 +83,11 @@ public class DistrictService {
                 if(geometry instanceof Polygon){
                     district.setGeom(geometry.getFactory().createMultiPolygon(new Polygon[]{(Polygon) geometry}));
                 }
-                else{
+                else if(geometry instanceof MultiPolygon){
                     district.setGeom((MultiPolygon) geometry);
+                }
+                else{
+                    continue;
                 }
                 districts.add(district);
             }

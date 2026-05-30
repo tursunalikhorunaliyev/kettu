@@ -28,8 +28,8 @@ public class RegionService {
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
 
-    public ResponseEntity<Response> getByCountry(Long countryId){
-        return ResponseEntity.ok(new Response("Success", regionRepository.findByCountryId(countryId).stream().map(regionInfo -> new IDNameItemCountDTO(regionInfo.getId(), regionInfo.getName(), regionInfo.getActiveItemCount()))));
+    public ResponseEntity<Response> getByCountry(String country){
+        return ResponseEntity.ok(new Response("Success", regionRepository.findByCountryName(country).stream().map(regionInfo -> new IDNameItemCountDTO(regionInfo.getId(), regionInfo.getName(), regionInfo.getActiveItemCount()))));
     }
 
     public ResponseEntity<Response> createRegion(Integer countryId, String name){

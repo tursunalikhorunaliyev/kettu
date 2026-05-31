@@ -27,7 +27,7 @@ public class GeoService {
         }
 
         Integer regionId = data.get("region_id", Integer.class);
-        String regionName = messageSource.getMessage(data.get("region_name", String.class), null, LocaleContextHolder.getLocale());
+        String regionName = messageSource.getMessage("region."+data.get("region_name", String.class), null, LocaleContextHolder.getLocale());
 
         Integer districtId = data.get("district_id", Integer.class);
         String districtName = data.get("district_name", String.class);

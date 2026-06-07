@@ -23,9 +23,6 @@ public class Category {
     @Column(nullable = false, unique = true, length = 100)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 100)
-    private String slug;
-
     @Column(nullable = false)
     @JsonProperty("item_count")
     private Integer activeItemCount = 0;

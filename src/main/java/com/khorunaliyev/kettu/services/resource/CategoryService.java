@@ -11,6 +11,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,10 +28,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final MessageSource messageSource;
 
 
+    @Cacheable(value = "categories", key = "T(org.springframework.context.i18n.LocaleContextHolder).getLocale().toLanguageTag()")
     public ResponseEntity<Response> getAll(){
-        List<IDNameItemCountDTO> dtoList = categoryRepository.findAll().stream().map(category -> new IDNameItemCountDTO(category.getId(), category.getName(), category.getActiveItemCount())).toList();
+        List<IDNameItemCountDTO> dtoList = categoryRepository.findAll().stream().map(category -> new IDNameItemCountDTO(category.getId(), messageSource.getMessage(category.getName(), null, LocaleContextHolder.getLocale()), category.getActiveItemCount())).toList();
         return ResponseEntity.ok(new Response("All categories", dtoList));
     }
     public ResponseEntity<Response> one(Integer categoryId){

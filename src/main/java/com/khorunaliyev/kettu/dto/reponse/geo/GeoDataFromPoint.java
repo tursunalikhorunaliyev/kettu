@@ -1,5 +1,8 @@
 package com.khorunaliyev.kettu.dto.reponse.geo;
 
-public record GeoDataFromPoint(IdNameResponse region, IdNameResponse district) {
-    public record IdNameResponse(Integer id, String name){}
+import java.util.Map;
+
+public record GeoDataFromPoint(Point point ,IdSlugName region, IdSlugName district) {
+    public record IdSlugName(Integer id,String slug, String name){}
+    public record Point(double latitude, double longitude){};
 }

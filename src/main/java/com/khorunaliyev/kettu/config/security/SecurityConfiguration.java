@@ -52,7 +52,7 @@ public class SecurityConfiguration {
                                 "/oauth2/**",
                                 "/login/**",
                                 "/api/auth/**",
-                                "/api/geo-data/**",
+                                "/api/geo-service/**",
                                 "/api/files/**",
                                 "/auth-redirect.html",
                                 "/swagger-ui/**",

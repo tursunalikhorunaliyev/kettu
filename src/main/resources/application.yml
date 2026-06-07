@@ -35,7 +35,7 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/kettu
-    username: postgres
+    username: khorunaliyev
     password: wtmlopuhfgfdaz
     driver-class-name: org.postgresql.Driver
 

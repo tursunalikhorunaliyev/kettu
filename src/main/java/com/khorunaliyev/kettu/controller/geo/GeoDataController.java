@@ -11,14 +11,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/geo-data")
+@RequestMapping("api/geo-service")
 @RequiredArgsConstructor
 public class GeoDataController {
 
     private final GeoService geoService;
 
-    @GetMapping
+    @GetMapping("/reverse")
     public ResponseEntity<Response> geoDataFromPoint(@RequestParam("lat") double latitude, @RequestParam("long") double longitude){
         return ResponseEntity.ok(new Response("Success",geoService.geoData(latitude, longitude)));
+    }
+
+    @GetMapping("/regions")
+    public ResponseEntity<Response> regionSlugs(){
+        return ResponseEntity.ok(new Response("Success", geoService.regionSlugs()));
+    }
+
+    @GetMapping("/districts")
+    public ResponseEntity<Response> districtSlugs(@RequestParam("region") String region){
+        return ResponseEntity.ok(new Response("Success", geoService.regionDistrictCache(region)));
     }
 }

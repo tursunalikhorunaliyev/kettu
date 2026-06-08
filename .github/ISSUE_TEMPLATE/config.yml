@@ -1,0 +1,7 @@
+# Keep blank issues enabled so users can still report things that don't fit a
+# template; the two provided templates cover the common cases.
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/tursunalikhorunaliyev/kettu/blob/master/SECURITY.md
+    about: Please do NOT open a public issue for security problems. Follow the security policy instead.

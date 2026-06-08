@@ -63,6 +63,23 @@ dependencies {
 
 }
 
+// The default `test` task runs fast, self-contained unit tests only. Tests that
+// require external infrastructure (a live Postgres/PostGIS database) are tagged
+// "integration" and excluded here so CI and local runs stay green without Docker.
 tasks.named('test') {
-	useJUnitPlatform()
+	useJUnitPlatform {
+		excludeTags 'integration'
+	}
+}
+
+// Opt-in task for the database-backed integration/smoke tests.
+// Run with: ./gradlew integrationTest  (requires a configured database)
+tasks.register('integrationTest', Test) {
+	description = 'Runs tests tagged "integration" (requires external infrastructure).'
+	group = 'verification'
+	testClassesDirs = sourceSets.test.output.classesDirs
+	classpath = sourceSets.test.runtimeClasspath
+	useJUnitPlatform {
+		includeTags 'integration'
+	}
 }

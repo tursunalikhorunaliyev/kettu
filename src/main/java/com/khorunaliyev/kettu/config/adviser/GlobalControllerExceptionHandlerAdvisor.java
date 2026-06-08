@@ -2,6 +2,7 @@ package com.khorunaliyev.kettu.config.adviser;
 
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +29,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalControllerExceptionHandlerAdvisor {
 
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Response> handleGeneric(Exception ex) {
-        ex.printStackTrace();
+        // Log the full detail server-side for diagnostics, but never leak internal
+        // exception messages / stack traces to the client (information disclosure).
+        log.error("Unhandled exception while processing request", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new Response("error", "Server error: " + ex.getMessage()));
+                .body(new Response("error", "An unexpected error occurred. Please try again later."));
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)

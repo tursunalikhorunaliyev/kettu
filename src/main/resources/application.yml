@@ -26,9 +26,9 @@ spring:
             client-secret: ${GOOGLE_CLIENT_SECRET:}
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/kettu
-    username: postgres
-    password: wtmlopuhfgfdaz
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/kettu}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:}
     driver-class-name: org.postgresql.Driver
 
   jpa:

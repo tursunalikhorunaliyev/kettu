@@ -20,12 +20,10 @@ spring:
       client:
         registration:
           google:
-            # prod
-            client-id: 747364489357-qr0dm321jo33pq4v8g4m2896dhju87cn.apps.googleusercontent.com
-            client-secret: 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
-            # local (currently commented out)
-            # client-id: 747364489357-qr0dm321jo33pq4v8g4m2896dhju87cn.apps.googleusercontent.com
-            # client-secret: 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
+            # The client-id is public by OAuth2 design; the client-secret is sensitive
+            # and MUST be provided via the GOOGLE_CLIENT_SECRET environment variable.
+            client-id: ${GOOGLE_CLIENT_ID:}
+            client-secret: ${GOOGLE_CLIENT_SECRET:}
 
   datasource:
     url: jdbc:postgresql://localhost:5433/kettu

@@ -22,8 +22,6 @@ public class PlaceDiffChecker {
         if(request.getPlacePhotos()!=null){
             List<String> placePhotos = place.getPhotos().stream().map(placePhoto -> placePhoto.getImage()+placePhoto.isMain()).toList();
             List<String> placePhotoRequests = request.getPlacePhotos().stream().map(placePhotoRequest -> placePhotoRequest.getImageName()+placePhotoRequest.getIsMain()).toList();
-            System.out.println(placePhotos);
-            System.out.println(request.getPlacePhotos().get(0).getIsMain());
             return !placePhotos.equals(placePhotoRequests);
         }
 

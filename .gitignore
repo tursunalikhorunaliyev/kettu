@@ -37,3 +37,9 @@ out/
 .vscode/
 
 application.properties
+
+### Local secrets / environment ###
+.env
+application-local.yml
+application-local.yaml
+application-secret.yml

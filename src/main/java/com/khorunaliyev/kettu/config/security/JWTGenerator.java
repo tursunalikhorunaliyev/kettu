@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +19,24 @@ import java.util.stream.Collectors;
 
 @Component
 public class JWTGenerator {
-    private static final String SECRET_KEY = "M1grationT0JWTwithGoogleOAuth2isSecure2025lllllll";
+
+    /**
+     * Signing secret. Externalised so it can be overridden per environment via the
+     * {@code JWT_SECRET} environment variable (see application.yml -> {@code jwt.secret}).
+     * The default below preserves the historically-used development key so existing
+     * dev tokens stay valid; production MUST override it with a strong, private value.
+     */
+    private final String secretKey;
+
+    /** Token lifetime in milliseconds (default ~40h, preserving prior behaviour). */
+    private final long expirationMillis;
+
+    public JWTGenerator(
+            @Value("${jwt.secret:M1grationT0JWTwithGoogleOAuth2isSecure2025lllllll}") String secretKey,
+            @Value("${jwt.expiration-ms:144000000}") long expirationMillis) {
+        this.secretKey = secretKey;
+        this.expirationMillis = expirationMillis;
+    }
 
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
@@ -33,7 +50,7 @@ public class JWTGenerator {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -58,7 +75,7 @@ public class JWTGenerator {
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(getSigningKey()).compact();
     }
 

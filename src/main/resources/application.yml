@@ -20,17 +20,15 @@ spring:
       client:
         registration:
           google:
-            # prod
-            client-id: 747364489357-qr0dm321jo33pq4v8g4m2896dhju87cn.apps.googleusercontent.com
-            client-secret: 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
-            # local (currently commented out)
-            # client-id: 747364489357-qr0dm321jo33pq4v8g4m2896dhju87cn.apps.googleusercontent.com
-            # client-secret: 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
+            # The client-id is public by OAuth2 design; the client-secret is sensitive
+            # and MUST be provided via the GOOGLE_CLIENT_SECRET environment variable.
+            client-id: ${GOOGLE_CLIENT_ID:}
+            client-secret: ${GOOGLE_CLIENT_SECRET:}
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/kettu
-    username: postgres
-    password: wtmlopuhfgfdaz
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/kettu}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -46,20 +44,25 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
+# JSON Web Token settings. The secret MUST be overridden in production via JWT_SECRET.
+jwt:
+  secret: ${JWT_SECRET:M1grationT0JWTwithGoogleOAuth2isSecure2025lllllll}
+  expiration-ms: ${JWT_EXPIRATION_MS:144000000}
+
 cloudflare:
   r2:
-    access-key: 2612357a234fa7657af4c36ee51531e2
-    secret-key: 1926a91bf05fe064ad37d14f6e7d1b82ca862439368bd6e193867104b57e6355
-    region: auto
-    endpoint: https://7331730e9e5c69b9c7599dc3151cbb36.r2.cloudflarestorage.com
-    bucket: khorunaliyev-kettu
+    # All R2 credentials are sensitive and MUST be supplied via environment variables.
+    access-key: ${R2_ACCESS_KEY:}
+    secret-key: ${R2_SECRET_KEY:}
+    region: ${R2_REGION:auto}
+    endpoint: ${R2_ENDPOINT:}
+    bucket: ${R2_BUCKET:khorunaliyev-kettu}
 
 logging:
   level:
     org.hibernate:
-      SQL: DEBUG
+      SQL: ${HIBERNATE_SQL_LOG_LEVEL:INFO}
       type:
         descriptor:
           sql:
-            BasicBinder: TRACE
-
+            BasicBinder: ${HIBERNATE_BIND_LOG_LEVEL:INFO}

@@ -8,7 +8,10 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(18)
+		// Java 18 is end-of-life and receives no security updates. Java 21 is the
+		// current LTS and is fully supported by Spring Boot 3.4.x. This is a safe,
+		// source-compatible bump (Java 18 sources compile unchanged on 21).
+		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
 
@@ -60,6 +63,23 @@ dependencies {
 
 }
 
+// The default `test` task runs fast, self-contained unit tests only. Tests that
+// require external infrastructure (a live Postgres/PostGIS database) are tagged
+// "integration" and excluded here so CI and local runs stay green without Docker.
 tasks.named('test') {
-	useJUnitPlatform()
+	useJUnitPlatform {
+		excludeTags 'integration'
+	}
+}
+
+// Opt-in task for the database-backed integration/smoke tests.
+// Run with: ./gradlew integrationTest  (requires a configured database)
+tasks.register('integrationTest', Test) {
+	description = 'Runs tests tagged "integration" (requires external infrastructure).'
+	group = 'verification'
+	testClassesDirs = sourceSets.test.output.classesDirs
+	classpath = sourceSets.test.runtimeClasspath
+	useJUnitPlatform {
+		includeTags 'integration'
+	}
 }

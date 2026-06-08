@@ -61,9 +61,8 @@ cloudflare:
 logging:
   level:
     org.hibernate:
-      SQL: DEBUG
+      SQL: ${HIBERNATE_SQL_LOG_LEVEL:INFO}
       type:
         descriptor:
           sql:
-            BasicBinder: TRACE
-
+            BasicBinder: ${HIBERNATE_BIND_LOG_LEVEL:INFO}

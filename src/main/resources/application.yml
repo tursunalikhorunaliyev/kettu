@@ -44,6 +44,11 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
+# JSON Web Token settings. The secret MUST be overridden in production via JWT_SECRET.
+jwt:
+  secret: ${JWT_SECRET:M1grationT0JWTwithGoogleOAuth2isSecure2025lllllll}
+  expiration-ms: ${JWT_EXPIRATION_MS:144000000}
+
 cloudflare:
   r2:
     access-key: 2612357a234fa7657af4c36ee51531e2

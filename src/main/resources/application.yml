@@ -51,11 +51,12 @@ jwt:
 
 cloudflare:
   r2:
-    access-key: 2612357a234fa7657af4c36ee51531e2
-    secret-key: 1926a91bf05fe064ad37d14f6e7d1b82ca862439368bd6e193867104b57e6355
-    region: auto
-    endpoint: https://7331730e9e5c69b9c7599dc3151cbb36.r2.cloudflarestorage.com
-    bucket: khorunaliyev-kettu
+    # All R2 credentials are sensitive and MUST be supplied via environment variables.
+    access-key: ${R2_ACCESS_KEY:}
+    secret-key: ${R2_SECRET_KEY:}
+    region: ${R2_REGION:auto}
+    endpoint: ${R2_ENDPOINT:}
+    bucket: ${R2_BUCKET:khorunaliyev-kettu}
 
 logging:
   level:

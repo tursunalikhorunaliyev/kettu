@@ -84,6 +84,9 @@ public class R2Service {
     }
 
     public ResponseEntity<Response> deleteFiles(List<String> fileNames) {
+        if (fileNames == null || fileNames.isEmpty()) {
+            return ResponseEntity.ok(new Response("Deleted", null));
+        }
 
         for (String fileName : fileNames) {
             try {
@@ -91,12 +94,12 @@ public class R2Service {
                         .bucket(bucket)
                         .key(fileName)
                         .build());
-                return ResponseEntity.ok(new Response("Deleted", null));
             } catch (S3Exception e) {
+                log.error("Failed to delete object '{}' from R2 bucket '{}'", fileName, bucket, e);
                 return new ResponseEntity<>(new Response("Something went wrong while deleting file", null), HttpStatus.CONFLICT);
             }
         }
-        return null;
+        return ResponseEntity.ok(new Response("Deleted", null));
     }
 
     public ResponseEntity<Response> getFileUrl(String key) {

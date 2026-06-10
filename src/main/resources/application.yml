@@ -15,6 +15,12 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
 
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
+    use-code-as-default-message: true
+
   security:
     oauth2:
       client:
@@ -28,8 +34,8 @@ spring:
             # client-secret: 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
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/kettu
-    username: postgres
+    url: jdbc:postgresql://localhost:5432/kettu
+    username: khorunaliyev
     password: wtmlopuhfgfdaz
     driver-class-name: org.postgresql.Driver
 
@@ -62,4 +68,6 @@ logging:
         descriptor:
           sql:
             BasicBinder: TRACE
+
+kind: Application
 

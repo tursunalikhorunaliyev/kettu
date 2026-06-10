@@ -1,0 +1,1 @@
+ALTER TABLE category ALTER COLUMN active_item_count SET DEFAULT 0;

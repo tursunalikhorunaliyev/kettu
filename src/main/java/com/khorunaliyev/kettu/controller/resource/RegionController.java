@@ -19,11 +19,11 @@ public class RegionController {
 
     @PostMapping("/save")
     public ResponseEntity<Response> save(@RequestBody @Valid NewRegionRequest request) {
-        return regionService.createRegion(request.getCountryId(), request.getName());
+        return regionService.createRegion(request.getCountry_id(), request.getName());
     }
 
     @GetMapping
-    public ResponseEntity<Response> byCountry(@RequestParam Long country){
+    public ResponseEntity<Response> byCountry(@RequestParam String country){
         return regionService.getByCountry(country);
     }
 

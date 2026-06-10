@@ -62,30 +62,30 @@ public class DistrictService {
         List<District> districts = new LinkedList<>();
         if (features != null && features.isArray() && !features.isEmpty()) {
             for (JsonNode feature : features) {
-                System.out.println(feature);
-                System.out.println("fffffffffffffffffffffffffffff");
 
                 ///nomni ajratib olish
                 JsonNode properties = feature.get("properties");
 
-                System.out.println(properties);
-
-                String districtName = properties.get("name").asText();
-
-
                 ///poligon kordinatalarini o'qish
                 String geoJsonString = feature.get("geometry").toString();
                 Geometry geometry = reader.read(geoJsonString);
+
                 District district = new District();
-                district.setRegion(region);
-                district.setName(districtName);
 
                 if(geometry instanceof Polygon){
                     district.setGeom(geometry.getFactory().createMultiPolygon(new Polygon[]{(Polygon) geometry}));
                 }
-                else{
+                else if(geometry instanceof MultiPolygon){
                     district.setGeom((MultiPolygon) geometry);
                 }
+                else{
+                    continue;
+                }
+                String districtName = properties.get("slug").toString();
+
+                district.setRegion(region);
+                district.setName(districtName);
+
                 districts.add(district);
             }
 

@@ -16,4 +16,6 @@ public interface DistrictRepository extends JpaRepository<District, Integer> {
 
     @Query(value = DistrictQuery.FIND_WITH_POINT, nativeQuery = true)
     Tuple findDistrictByGeoData(@Param("lat") double latitude, @Param("lng") double longitude);
+
+    List<District> findByRegion_Name(String name);
 }

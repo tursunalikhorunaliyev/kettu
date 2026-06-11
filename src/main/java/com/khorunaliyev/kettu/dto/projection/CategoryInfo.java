@@ -2,12 +2,10 @@ package com.khorunaliyev.kettu.dto.projection;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.springframework.beans.factory.annotation.Value;
-
-import java.util.List;
+import com.khorunaliyev.kettu.entity.resources.SubCategory;
 
 /**
- * Projection for {@link com.khorunaliyev.kettu.entity.resources.Category}
+ * Projection for {@link SubCategory}
  */
 
 @JsonPropertyOrder({ "id", "name", "item_count"})

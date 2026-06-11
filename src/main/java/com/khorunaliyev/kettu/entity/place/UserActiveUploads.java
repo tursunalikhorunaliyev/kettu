@@ -1,7 +1,6 @@
 package com.khorunaliyev.kettu.entity.place;
 
 import com.khorunaliyev.kettu.entity.auth.AppUser;
-import com.khorunaliyev.kettu.entity.resources.Category;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

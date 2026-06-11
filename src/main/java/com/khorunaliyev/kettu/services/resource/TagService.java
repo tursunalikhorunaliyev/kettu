@@ -2,7 +2,6 @@ package com.khorunaliyev.kettu.services.resource;
 
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
-import com.khorunaliyev.kettu.entity.resources.Category;
 import com.khorunaliyev.kettu.entity.resources.Tag;
 import com.khorunaliyev.kettu.repository.resource.CategoryRepository;
 import com.khorunaliyev.kettu.repository.resource.TagRepository;
@@ -11,9 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.security.PublicKey;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

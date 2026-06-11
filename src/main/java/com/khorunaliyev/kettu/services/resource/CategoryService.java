@@ -3,8 +3,7 @@ package com.khorunaliyev.kettu.services.resource;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.reponse.resource.IDNameItemCountDTO;
-import com.khorunaliyev.kettu.entity.resources.Category;
-import com.khorunaliyev.kettu.entity.resources.Country;
+import com.khorunaliyev.kettu.entity.resources.SubCategory;
 import com.khorunaliyev.kettu.repository.resource.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
@@ -37,19 +36,19 @@ public class CategoryService {
         return ResponseEntity.ok(new Response("All categories", dtoList));
     }
     public ResponseEntity<Response> one(Integer categoryId){
-        Category category = categoryRepository.findWithTagsById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        SubCategory category = categoryRepository.findWithTagsById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         return ResponseEntity.ok(new Response("Success", category));
     }
 
     public ResponseEntity<Response> createCategory(String name){
-        Category category = new Category();
+        SubCategory category = new SubCategory();
         category.setName(name);
         categoryRepository.save(category);
         return new ResponseEntity<>(new Response("Category created", null), HttpStatus.CREATED);
     }
 
     public ResponseEntity<Response> updateCategoryName(Integer categoryId, String name){
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        SubCategory category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         category.setName(name);
         categoryRepository.save(category);
         return ResponseEntity.ok(new Response("Category updated", null));
@@ -59,12 +58,12 @@ public class CategoryService {
 
         try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0);
-            List<Category> categories = new ArrayList<>();
+            List<SubCategory> categories = new ArrayList<>();
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue; // Skip header row
                 String name = row.getCell(0).getStringCellValue();
                 if (name != null) {
-                    Category category = new Category();
+                    SubCategory category = new SubCategory();
                     category.setName(name);
                     categories.add(category);
                 }

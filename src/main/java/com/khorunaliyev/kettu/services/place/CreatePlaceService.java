@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CreatePlaceService {
 
-    private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository categoryRepository;
     private final PlaceRepository placeRepository;
     private final EntityManager entityManager;
     private final GeoService geoService;

@@ -3,7 +3,7 @@ package com.khorunaliyev.kettu.services.resource;
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.entity.resources.Tag;
-import com.khorunaliyev.kettu.repository.resource.CategoryRepository;
+import com.khorunaliyev.kettu.repository.resource.SubCategoryRepository;
 import com.khorunaliyev.kettu.repository.resource.TagRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TagService {
 
-    private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository categoryRepository;
     private final TagRepository tagRepository;
 
 

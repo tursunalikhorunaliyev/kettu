@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 public class CategoryTagsRequest {
     @NotNull(message = "Maydon null bo'lishi mumkin emas")
-    private Integer category_id;
+    private Integer sub_category_id;
 
     @NotNull(message = "Maydon null bo'lishi mumkin emas")
     @NotEmpty(message = "Maydon bo'sh bo'lishi mumkin emas")

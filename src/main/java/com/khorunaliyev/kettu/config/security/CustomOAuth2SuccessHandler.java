@@ -39,6 +39,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         Optional<AppUser> optionalAppUser = userRepository.findByEmail(email);
         AppUser appUser = optionalAppUser.orElseGet(AppUser::new);
         if (optionalAppUser.isEmpty()) {
+            System.out.println("-----------------------------------------------------------");
             Role userRole = roleRepository.findByName("USER").orElseGet(() -> {
                 Role role = new Role();
                 role.setName("USER");
@@ -66,6 +67,8 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
             appUser.setRoles(userRoles);
             userRepository.save(appUser);
         }
+
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+appUser.getEmail());
 
         // Generate JWT
         String jwtToken = jwtService.generateToken(appUser);

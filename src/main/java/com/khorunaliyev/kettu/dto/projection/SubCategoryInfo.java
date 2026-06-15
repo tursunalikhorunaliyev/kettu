@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonKey;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.khorunaliyev.kettu.component.Translator;
+import org.hibernate.event.spi.SaveOrUpdateEvent;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Projection for {@link com.khorunaliyev.kettu.entity.resources.SubCategory}
  */
-@JsonPropertyOrder({"id", "name", "activeItemCount",})
+@JsonPropertyOrder({"id", "slug", "title", "item_count"})
 public interface SubCategoryInfo {
     Integer getId();
 
@@ -19,8 +20,6 @@ public interface SubCategoryInfo {
     @JsonProperty("item_count")
     Integer getActiveItemCount();
 
-    default String getTitle() {
-        return Translator.translate(getName());
-    }
-
+    @JsonProperty("title")
+    default String getTitle() {return Translator.translate("sub-category."+getName());}
 }

@@ -15,6 +15,6 @@ public class Translator {
 
     public static String translate(String key) {
         if (key == null) return "";
-        return messageSource.getMessage(key, null, key, LocaleContextHolder.getLocale());
+        return messageSource.getMessage(key, null, LocaleContextHolder.getLocale());
     }
 }

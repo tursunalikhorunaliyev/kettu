@@ -19,16 +19,11 @@ public class SubCategoryController {
     private final SubCategoryService subCategoryService;
 
     @GetMapping
-    public ResponseEntity<Response> getAll(@RequestParam(value = "category", required = false) String category) {
+    public ResponseEntity<Response> getAll(@RequestParam(value = "category") String category) {
         return subCategoryService.getAll(category);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Response> getOne(@PathVariable("id") Integer categoryId) {
-        return subCategoryService.one(categoryId);
-    }
-
-    @PostMapping("/new")
+    @PostMapping
     public ResponseEntity<Response> save(@RequestBody @Valid NewSubCategoryRequest request) {
         return subCategoryService.create(request.getCategory_id(), request.getName());
     }
@@ -38,17 +33,11 @@ public class SubCategoryController {
         return subCategoryService.importFromExcel(categoryId, file);
     }
 
-    @PutMapping("/{id}/update")
-    public ResponseEntity<Response> updateCategoryName(@PathVariable("id") Integer categoryId, @RequestBody @Valid CategoryNameRequest request) {
-        return subCategoryService.updateName(categoryId, request.getName());
-    }
-
     @PostMapping("/assign-tags")
     public ResponseEntity<Response> assignTags(@RequestBody @Valid CategoryTagsRequest tagsRequest) {
         return subCategoryService.assignTags(tagsRequest.getTag_ids(), tagsRequest.getSub_category_id());
     }
-
-    @DeleteMapping("/unassign-tags")
+    @PostMapping("/unassign-tags")
     public ResponseEntity<Response> unassignTags(@RequestBody @Valid CategoryTagsRequest tagsRequest) {
         return subCategoryService.unassignTags(tagsRequest.getTag_ids(), tagsRequest.getSub_category_id());
     }

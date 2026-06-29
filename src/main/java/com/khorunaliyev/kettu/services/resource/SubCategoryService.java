@@ -31,13 +31,11 @@ import java.util.List;
 public class SubCategoryService {
     private final SubCategoryRepository subCategoryRepository;
     private final CategoryRepository categoryRepository;
-    private final MessageSource messageSource;
-    private final EntityManager entityManager;
 
 
     @Cacheable(
             value = "subcategories",
-            key = "T(org.springframework.context.i18n.LocaleContextHolder).getLocale().toLanguageTag() + '_' + (#category ?: 'all')"
+            key = "T(org.springframework.context.i18n.LocaleContextHolder).getLocale().toLanguageTag() + '_' + #category"
     )
     public ResponseEntity<Response> getAll(String category) {
         return ResponseEntity.ok(new Response("All categories", category == null ? subCategoryRepository.findAllBy() : subCategoryRepository.findByCategory_Name(category)));
@@ -57,18 +55,6 @@ public class SubCategoryService {
         subCategory.setCategory(categoryRepository.getReferenceById(categoryId));
         subCategoryRepository.save(subCategory);
         return new ResponseEntity<>(new Response("Category created", null), HttpStatus.CREATED);
-    }
-
-
-    @Caching(evict = {
-            @CacheEvict(value = "subcategories", allEntries = true),
-            @CacheEvict(value = "subcategory-detail", key = "#subcategoryId")
-    })
-    public ResponseEntity<Response> updateName(Integer subcategoryId, String name) {
-        SubCategory category = subCategoryRepository.findById(subcategoryId).orElseThrow(() -> new ResourceNotFoundException("Subcategory not found"));
-        category.setName(name);
-        subCategoryRepository.save(category);
-        return ResponseEntity.ok(new Response("Category updated", null));
     }
 
     @CacheEvict(value = "subcategories", allEntries = true)
@@ -106,12 +92,12 @@ public class SubCategoryService {
     }
 
     @Transactional
-    public ResponseEntity<Response> unassignTags(List<Integer> tags, Integer categoryId) {
-        validateCategory(categoryId);
+    public ResponseEntity<Response> unassignTags(List<Integer> tags, Integer subcategoryId) {
+        validateCategory(subcategoryId);
 
         Integer[] tagsArray = tags.toArray(new Integer[0]);
 
-        subCategoryRepository.unassignTagsBatch(categoryId, tagsArray);
+        subCategoryRepository.unassignTagsBatch(subcategoryId, tagsArray);
 
         return ResponseEntity.ok(new Response("Success", "Tags unassigned"));
     }

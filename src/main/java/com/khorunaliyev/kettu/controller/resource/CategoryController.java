@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/resources/categories")
@@ -20,13 +21,13 @@ public class CategoryController {
         return categoryService.all();
     }
 
-    @PostMapping("/new")
+    @PostMapping
     public ResponseEntity<Response> save(CategoryNameRequest request) {
         return categoryService.create(request.getName());
     }
 
-    @PutMapping("/{id}/update")
-    public ResponseEntity<Response> update(@PathVariable("id") Integer categoryId, @RequestBody @Valid CategoryNameRequest request) {
-        return categoryService.update(categoryId, request.getName());
+    @PostMapping("/import")
+    public ResponseEntity<Response> importFromExcel(@RequestParam("file") MultipartFile file){
+       return categoryService.importFromExcel(file);
     }
 }

@@ -7,6 +7,7 @@ import com.khorunaliyev.kettu.repository.resource.SubCategoryRepository;
 import com.khorunaliyev.kettu.repository.resource.TagRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,16 +19,17 @@ public class TagService {
     private final SubCategoryRepository categoryRepository;
     private final TagRepository tagRepository;
 
+    @Cacheable(value = "tags", key = "#subcategory")
+    public ResponseEntity<Response> getAllTags(String subcategory) {
+        return new ResponseEntity<>(new Response("All tags fetched", tagRepository.findAllBySubCategoryNameNative(subcategory)), HttpStatus.OK);
+    }
+
 
     public ResponseEntity<Response> createTag(String name) {
         Tag tag = new Tag();
         tag.setName(name);
         tagRepository.save(tag);
         return new ResponseEntity<>(new Response("New tag added", null ), HttpStatus.CREATED);
-    }
-
-    public ResponseEntity<Response> getAllTags() {
-        return new ResponseEntity<>(new Response("All tags fetched", tagRepository.findAll()), HttpStatus.OK);
     }
 
     @Transactional

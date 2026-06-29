@@ -34,10 +34,13 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory, Intege
     @Query(value = "select count(*) from subcategory_tags where subcategory_id = :subcategory_id and tag_id IN(:tag_ids)", nativeQuery = true)
     int countByCategoryAndTags(@Param("subcategory_id") Integer categoryId, @Param("tag_ids") Set<Integer> tagIds);
 
+
     @EntityGraph(attributePaths = {"category"})
     List<SubCategoryWithCategoryInfo> findAllBy();
 
     List<SubCategoryInfo> findByCategory_Name(String name);
+
+
 
 
 }

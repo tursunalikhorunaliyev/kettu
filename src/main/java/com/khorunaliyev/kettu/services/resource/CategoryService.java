@@ -4,14 +4,22 @@ import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
 import com.khorunaliyev.kettu.dto.projection.CategoryInfo;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.entity.resources.Category;
+import com.khorunaliyev.kettu.entity.resources.SubCategory;
 import com.khorunaliyev.kettu.repository.resource.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,11 +41,23 @@ public class CategoryService {
         return new ResponseEntity<>(new Response("Success", "Category created"), HttpStatus.CREATED);
     }
 
-    @CacheEvict(value = "categories", allEntries = true)
-    public ResponseEntity<Response> update(Integer id,String name){
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        category.setName(name);
-        categoryRepository.save(category);
-        return ResponseEntity.ok(new Response("Success", "Category updated"));
+    public ResponseEntity<Response> importFromExcel(MultipartFile file){
+        try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
+            Sheet sheet = workbook.getSheetAt(0);
+            List<Category> categories = new ArrayList<>();
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) continue; // Skip header row
+                String name = row.getCell(0).getStringCellValue();
+                if (name != null) {
+                    Category category = new Category();
+                    category.setName(name);
+                    categories.add(category);
+                }
+            }
+            categoryRepository.saveAll(categories);
+            return new ResponseEntity<>(new Response("Successfully imported", null), HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>(new Response("Failed, something went wrong", null), HttpStatus.BAD_REQUEST);
+        }
     }
 }

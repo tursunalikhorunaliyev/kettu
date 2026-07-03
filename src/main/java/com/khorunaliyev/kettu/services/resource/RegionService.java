@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -30,9 +31,9 @@ public class RegionService {
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
     private final MessageSource messageSource;
-
+    @Cacheable(value = "regions", key = "#country")
     public ResponseEntity<Response> getByCountry(String country){
-        return ResponseEntity.ok(new Response("Success", regionRepository.findByCountryName(country).stream().map(regionInfo -> new IDNameItemCountDTO(regionInfo.getId(), messageSource.getMessage(regionInfo.getName(), null, LocaleContextHolder.getLocale()), regionInfo.getActiveItemCount()))));
+        return ResponseEntity.ok(new Response("Success", regionRepository.findByCountryName(country)));
     }
 
     public ResponseEntity<Response> createRegion(Integer countryId, String name){

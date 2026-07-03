@@ -13,9 +13,14 @@ public class TagController {
 
     private final TagService tagService;
 
+    @GetMapping("by-sub")
+    public ResponseEntity<Response> bySubcategory(@RequestParam(name = "sub") String subcategory) {
+        return tagService.bySubcategory(subcategory);
+    }
+
     @GetMapping
-    public ResponseEntity<Response> getAll(@RequestParam(name = "sub") String subcategory) {
-        return tagService.getAllTags(subcategory);
+    public ResponseEntity<Response> getAll(@RequestParam(defaultValue = "0") int page){
+        return tagService.getAll(page);
     }
 
     @PostMapping

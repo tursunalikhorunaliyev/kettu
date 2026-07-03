@@ -2,6 +2,8 @@ package com.khorunaliyev.kettu.repository.resource;
 
 import com.khorunaliyev.kettu.dto.projection.TagInfo;
 import com.khorunaliyev.kettu.entity.resources.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,5 +20,10 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
             "WHERE sc.name = :subName " +
             "ORDER BY t.id ASC",
             nativeQuery = true)
-    List<TagInfo> findAllBySubCategoryNameNative(@Param("subName") String subName);
+    List<TagInfo> findAllBySubCategory(@Param("subName") String subName);
+
+    @Query(value = "select * from tag", nativeQuery = true)
+    List<TagInfo> findAllByQuery();
+
+    Page<TagInfo> findAllProjectedBy(Pageable pageable);
 }

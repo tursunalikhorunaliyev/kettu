@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("api/resources/region")
+@RequestMapping("api/resources/regions")
 @RequiredArgsConstructor
 public class RegionController {
 

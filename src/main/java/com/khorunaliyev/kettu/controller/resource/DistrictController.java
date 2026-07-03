@@ -23,8 +23,8 @@ public class DistrictController {
         return districtService.createCity(request.getRegionId(), request.getName());
     }
 
-    @GetMapping("/")
-    public ResponseEntity<Response> byRegion(@RequestParam Long region){
+    @GetMapping
+    public ResponseEntity<Response> byRegion(@RequestParam String region){
         return districtService.getByRegion(region);
     }
 

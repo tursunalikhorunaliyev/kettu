@@ -6,7 +6,6 @@ import com.khorunaliyev.kettu.entity.resources.SubCategory;
 import com.khorunaliyev.kettu.repository.resource.CategoryRepository;
 import com.khorunaliyev.kettu.repository.resource.SubCategoryRepository;
 import com.khorunaliyev.kettu.dto.projection.SubcategoryDetailInfo;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,8 +13,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -80,9 +77,11 @@ public class SubCategoryService {
         }
     }
 
+
     @Transactional
-    public ResponseEntity<Response> assignTags(List<Integer> tags, Integer subcategoryId) {
-        validateCategory(subcategoryId);
+    @CacheEvict(value = "tags", key = "#subcategorySlug")
+    public ResponseEntity<Response> assignTags(List<Integer> tags, Integer subcategoryId, String subcategorySlug) {
+        validateSubCategoryById(subcategoryId);
 
         Integer[] tagsArray = tags.toArray(new Integer[0]);
 
@@ -92,8 +91,9 @@ public class SubCategoryService {
     }
 
     @Transactional
-    public ResponseEntity<Response> unassignTags(List<Integer> tags, Integer subcategoryId) {
-        validateCategory(subcategoryId);
+    @CacheEvict(value = "tags", key = "#subcategorySlug")
+    public ResponseEntity<Response> unassignTags(List<Integer> tags, Integer subcategoryId, String subcategorySlug) {
+        validateSubCategoryById(subcategoryId);
 
         Integer[] tagsArray = tags.toArray(new Integer[0]);
 
@@ -102,9 +102,21 @@ public class SubCategoryService {
         return ResponseEntity.ok(new Response("Success", "Tags unassigned"));
     }
 
-    private void validateCategory(Integer categoryId) {
-        if (!subCategoryRepository.existsById(categoryId)) {
-            throw new ResourceNotFoundException("Kategoriya topilmadi: ID " + categoryId);
+    @Cacheable(value = "tags", key = "#slug")
+    public ResponseEntity<Response> tags(String slug) {
+        return new ResponseEntity<>(new Response("Success", subCategoryRepository.findTagsBySubCategorySlug(slug)), HttpStatus.OK);
+    }
+
+    private void validateSubCategoryById(Integer subcategoryId) {
+        if (!subCategoryRepository.existsById(subcategoryId)) {
+            throw new ResourceNotFoundException("Not found");
         }
     }
+
+    private void validateSubcategoryBySlug(String slug) {
+        if(!subCategoryRepository.existsByName(slug)){
+            throw new ResourceNotFoundException("Not found");
+        }
+    }
+
 }

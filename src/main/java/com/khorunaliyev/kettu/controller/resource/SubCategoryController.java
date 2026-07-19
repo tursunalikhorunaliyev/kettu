@@ -23,6 +23,11 @@ public class SubCategoryController {
         return subCategoryService.getAll(category);
     }
 
+    @GetMapping("/{slug}/tags")
+    public ResponseEntity<Response> tags(@PathVariable("slug") String slug) {
+        return subCategoryService.tags(slug);
+    }
+
     @PostMapping
     public ResponseEntity<Response> save(@RequestBody @Valid NewSubCategoryRequest request) {
         return subCategoryService.create(request.getCategory_id(), request.getName());
@@ -35,10 +40,11 @@ public class SubCategoryController {
 
     @PostMapping("/assign-tags")
     public ResponseEntity<Response> assignTags(@RequestBody @Valid CategoryTagsRequest tagsRequest) {
-        return subCategoryService.assignTags(tagsRequest.getTag_ids(), tagsRequest.getSub_category_id());
+        return subCategoryService.assignTags(tagsRequest.getTag_ids(), tagsRequest.getSub_category_id(), tagsRequest.getSub_category_slug().trim());
     }
+
     @PostMapping("/unassign-tags")
     public ResponseEntity<Response> unassignTags(@RequestBody @Valid CategoryTagsRequest tagsRequest) {
-        return subCategoryService.unassignTags(tagsRequest.getTag_ids(), tagsRequest.getSub_category_id());
+        return subCategoryService.unassignTags(tagsRequest.getTag_ids(), tagsRequest.getSub_category_id(), tagsRequest.getSub_category_slug().trim());
     }
 }

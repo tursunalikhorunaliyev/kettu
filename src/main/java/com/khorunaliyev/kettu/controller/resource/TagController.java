@@ -13,7 +13,7 @@ public class TagController {
 
     private final TagService tagService;
 
-    @GetMapping("by-sub")
+    @GetMapping("/by-sub")
     public ResponseEntity<Response> bySubcategory(@RequestParam(name = "sub") String subcategory) {
         return tagService.bySubcategory(subcategory);
     }

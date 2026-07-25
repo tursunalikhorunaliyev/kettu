@@ -5,6 +5,7 @@ import com.khorunaliyev.kettu.entity.auth.Role;
 import com.khorunaliyev.kettu.repository.auth.RoleRepository;
 import com.khorunaliyev.kettu.repository.auth.UserRepository;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,17 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+
+        String platform = "mobile";
+
+        if(request.getCookies()!=null){
+            for (Cookie cookie: request.getCookies()){
+                if(cookie.getName().equals("oauth_platform")){
+                    platform = cookie.getValue();
+                    break;
+                }
+            }
+        }
 
         DefaultOAuth2User oauthUser = (DefaultOAuth2User) authentication.getPrincipal();
         String email = oauthUser.getAttribute("email");
@@ -68,17 +80,17 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
             userRepository.save(appUser);
         }
 
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+appUser.getEmail());
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + appUser.getEmail());
 
         // Generate JWT
         String jwtToken = jwtService.generateToken(appUser);
 
-        response.sendRedirect("http://localhost:8080/auth-redirect.html?token=" + jwtToken);
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//        response.getWriter().write("{\"token\": \"" + jwtToken + "\"}");
+        Cookie clearCookie = new Cookie("oauth_platform", null);
+        clearCookie.setPath("/");
+        clearCookie.setHttpOnly(true);
+        clearCookie.setMaxAge(0);
+        response.addCookie(clearCookie);
 
-        // Redirect to Flutter app via deep link with token
-        //response.sendRedirect("http://localhost:8080/user?token=" + jwtToken);
+        response.sendRedirect("http://localhost:8080/auth-redirect.html?token=" + jwtToken + "&platform=" + platform);
     }
 }

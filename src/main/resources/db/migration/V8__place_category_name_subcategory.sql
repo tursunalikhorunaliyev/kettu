@@ -1,0 +1,1 @@
+ALTER TABLE place RENAME COLUMN category_id to subcategory_id

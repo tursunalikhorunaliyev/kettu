@@ -65,7 +65,7 @@ public class CreatePlaceService {
         place.setName(request.getName());
         place.setDescription(request.getDescription().trim());
         place.setStatus(PlaceStatus.UPLOADING);
-        place.setCategory(entityManager.getReference(SubCategory.class, request.getCategory_id()));
+        place.setSubCategory(entityManager.getReference(SubCategory.class, request.getCategory_id()));
 
         GeoDataFromPoint geoDataFromPoint = geoService.geoData(request.getPlace_location().getLat_(), request.getPlace_location().getLong_());
 

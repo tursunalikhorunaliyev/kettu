@@ -1,5 +1,7 @@
-spring:
+server:
+  port: 8080
 
+spring:
   application:
     name: kettu
 
@@ -34,8 +36,8 @@ spring:
             # client-secret: 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
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/kettu
-    username: khorunaliyev
+    url: jdbc:postgresql://localhost:5433/kettu
+    username: postgres
     password: wtmlopuhfgfdaz
     driver-class-name: org.postgresql.Driver
 

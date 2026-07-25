@@ -1,9 +1,12 @@
 package com.khorunaliyev.kettu.controller.auth;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 
@@ -11,13 +14,19 @@ import java.io.IOException;
 public class AuthController {
 
     @RequestMapping("api/auth/login")
-    public void login(HttpServletResponse response) throws IOException {
+    public void login(@RequestParam(value = "platform", defaultValue = "mobile") String platform, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        Cookie platformCookie = new Cookie("oauth_platform", platform);
+        platformCookie.setPath("/");
+        platformCookie.setHttpOnly(true);
+        platformCookie.setMaxAge(60);
+        response.addCookie(platformCookie);
+
         response.sendRedirect("/oauth2/authorization/google");
     }
 
     @RequestMapping("api/auth/login/redirect")
-    public ResponseEntity<String> loginRedirect(HttpServletResponse response){
+    public ResponseEntity<String> loginRedirect(HttpServletResponse response) {
         return ResponseEntity.ok("You successfully logged in");
     }
-
 }

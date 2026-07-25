@@ -41,7 +41,7 @@ public class JWTGenerator {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public String extractUserName(String token){
+    public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -56,9 +56,7 @@ public class JWTGenerator {
 
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24))
+        return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername()).issuedAt(new Date(System.currentTimeMillis())).expiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24))
                 .signWith(getSigningKey()).compact();
     }
 
@@ -73,8 +71,6 @@ public class JWTGenerator {
         }
         return generateToken(claims, userDetails);
     }
-
-
 
 
 }

@@ -28,12 +28,37 @@
 <h1>✅ You have successfully logged in!</h1>
 <p>Click the button below to continue to the app.</p>
 
-<button onclick="openApp()">Open App</button>
+<button onclick="openApp()">Continue</button>
 
 <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    const platform = urlParams.get("platform") || "mobile";
+
+    function handleRedirect() {
+        if (!token) {
+            document.body.innerHTML = "<h1>❌ Token topilmadi!</h1>";
+            return;
+        }
+
+        if (platform === "web") {
+            // Web sayt (Production)
+            window.location.href = `https://thekettu.com/auth/callback?token=${token}`;
+        } else if (platform === "admin") {
+            // Admin Panel (Localhost Vite server)
+            window.location.href = `http://localhost:5173/auth/callback?token=${token}`;
+        } else {
+            // Mobil ilova (Deep Link)
+            window.location.href = `thekettu://auth?token=${token}`;
+        }
+    }
+
+    function openApp() {
+        handleRedirect();
+    }
+
     window.addEventListener('DOMContentLoaded', (event) => {
-        const token = new URLSearchParams(window.location.search).get("token");
-        window.location.href = `thekettu://auth?token=${token}`;
+        handleRedirect();
     });
 </script>
 </body>

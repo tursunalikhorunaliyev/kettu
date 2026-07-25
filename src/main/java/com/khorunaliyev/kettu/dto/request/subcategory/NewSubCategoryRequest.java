@@ -2,13 +2,14 @@ package com.khorunaliyev.kettu.dto.request.subcategory;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class NewSubCategoryRequest extends SubCategoryNameRequest{
+public class NewSubCategoryRequest extends SubCategoryNameRequest {
     @NotNull
     @Positive
-    private Long categoryId;
+    private Integer category_id;
 }

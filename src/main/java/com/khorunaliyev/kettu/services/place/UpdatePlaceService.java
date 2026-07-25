@@ -31,7 +31,7 @@ public class UpdatePlaceService {
     private final DistrictRepository districtRepository;
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
-    private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository categoryRepository;
     private final ObjectMapper objectMapper;
 
     @CacheEvict(value = "places", allEntries = true)

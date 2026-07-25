@@ -20,7 +20,7 @@ public class  ChangePlaceStatusService {
 
     private final PlaceRepository placeRepository;
     private final ObjectMapper objectMapper;
-    private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository categoryRepository;
     private final CountryRepository countryRepository;
     private final RegionRepository regionRepository;
     private final DistrictRepository districtRepository;

@@ -1,6 +1,7 @@
 package com.khorunaliyev.kettu.services.geo;
 
 import com.khorunaliyev.kettu.config.adviser.ResourceNotFoundException;
+import com.khorunaliyev.kettu.dto.projection.DistrictInfo;
 import com.khorunaliyev.kettu.dto.reponse.Response;
 import com.khorunaliyev.kettu.dto.reponse.geo.GeoDataFromPoint;
 import com.khorunaliyev.kettu.entity.resources.District;
@@ -52,6 +53,6 @@ public class GeoService {
 
     @Cacheable(value = "regionDistrictCache")
     public List<String> regionDistrictCache(String region){
-        return districtRepository.findByRegion_Name(region).stream().map(District::getName).toList();
+        return districtRepository.findByRegion_Name(region).stream().map(DistrictInfo::getName).toList();
     }
 }

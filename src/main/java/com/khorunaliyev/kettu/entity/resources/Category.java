@@ -1,14 +1,13 @@
 package com.khorunaliyev.kettu.entity.resources;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.khorunaliyev.kettu.entity.auditing.FullAuditing;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,15 +22,10 @@ public class Category {
     @Column(nullable = false, unique = true, length = 100)
     private String name;
 
-    @Column(nullable = false, columnDefinition = "integer default 0")
+    @Column(name = "active_item_count",nullable = false, columnDefinition = "integer default 0")
     @JsonProperty("item_count")
     private Integer activeItemCount = 0;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "category_tags", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"), uniqueConstraints = @UniqueConstraint(
-            name = "uk_category_tag",
-            columnNames = {"category_id", "tag_id"}
-    ))
-    @OrderBy("id ASC")
-    private Set<Tag> tags = new HashSet<>();
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<SubCategory> subCategories = new ArrayList<>();
 }

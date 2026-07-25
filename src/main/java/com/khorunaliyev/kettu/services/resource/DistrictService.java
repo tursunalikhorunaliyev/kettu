@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -102,8 +103,9 @@ public class DistrictService {
         return ResponseEntity.ok(new Response("District updated", null));
     }
 
-    public ResponseEntity<Response> getByRegion(Long regionId) {
-        return ResponseEntity.ok(new Response("Success", districtRepository.findByRegion_Id(regionId).stream().map(districtInfo -> new IDNameItemCountDTO(districtInfo.getId(), districtInfo.getName(), districtInfo.getActiveItemCount()))));
+    @Cacheable(value = "districts", key = "#region")
+    public ResponseEntity<Response> getByRegion(String region) {
+        return ResponseEntity.ok(new Response("Success", districtRepository.findByRegion_Name(region)));
 
     }
 

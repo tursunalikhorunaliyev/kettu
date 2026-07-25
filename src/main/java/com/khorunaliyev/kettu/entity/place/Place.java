@@ -31,8 +31,8 @@ public class Place extends FullAuditing {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    private SubCategory category;
+    @JoinColumn(name = "sub_category_id", nullable = false)
+    private SubCategory subCategory;
 
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<PlacePhoto> photos = new ArrayList<>();
